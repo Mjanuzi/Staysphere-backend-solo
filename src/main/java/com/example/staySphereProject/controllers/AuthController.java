@@ -52,7 +52,11 @@ public class AuthController {
         // map the AuthRequest to a User entity
         User user = new User();
         user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setActive(registerRequest.isActive());
+        user.setAge(registerRequest.getAge());
         user.setPassword(registerRequest.getPassword());
+        user.setCountry(registerRequest.getCountry());
 
         // assign roles
         if(registerRequest.getRoles() == null || registerRequest.getRoles().isEmpty()) {
