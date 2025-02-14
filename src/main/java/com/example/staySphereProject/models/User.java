@@ -16,6 +16,7 @@ public class User {
     @NotEmpty(message = "Username cannot be empty")
     private String username;
 
+
     /*@Pattern(
             regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})" +
                     ".*$",
