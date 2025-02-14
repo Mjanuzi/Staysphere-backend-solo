@@ -1,7 +1,6 @@
 package com.example.staySphereProject.models;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -24,20 +23,36 @@ public class User {
     @Email(message = "Please use vaild email format")
     private String email;
 
+
     //När listings är klar lägg till detta
    // private List<Listiings >OwnedListings = new ArrayList<>();
+
+
+    @NotBlank
     private String country;
     //private String gender;
     //private String phoneNmr;
+
+    @NotNull(message = "Age can not be null")
+    @PositiveOrZero(message = "Age can not be negative")
+    @Min(value = 1, message = "Age must be at least 1")
     private Integer age;
+
+    @NotNull(message = "isActive can not be null")
     private boolean isActive;
 
     /*@Pattern(
-                regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})" +
-                        ".*$",
-                message = "Password must be at least 8 characters long and contain at least " +
-                        "one uppercase letter, one number, and one special character"
-        )*/
+               regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})" +
+                       ".*$",
+               message = "Password must be at least 8 characters long and contain at least " +
+                       "one uppercase letter, one number, and one special character"
+       )*/
+
+    private String password;
+    
+    private Set<Role> roles;
+
+
     public User(String id, String username, String country, String email,
                 String gender, String phoneNmr, Integer age, boolean isActive,
                 String password, Set<Role> roles) {
@@ -57,8 +72,7 @@ public class User {
 
     public User() {
     }
-    private String password;
-    private Set<Role> roles;
+
 
     public String getId() {
         return id;
@@ -123,6 +137,7 @@ public class User {
     public void setActive(boolean active) {
         isActive = active;
     }
+
 
     public Set<Role> getRoles() {
         return roles;
