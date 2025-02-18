@@ -19,6 +19,7 @@ public class User {
     @NotEmpty(message = "Username cannot be empty")
     private String username;
 
+
     @Indexed(unique = true)
     @Email(message = "Please use vaild email format")
     private String email;
@@ -40,6 +41,7 @@ public class User {
 
     @NotNull(message = "isActive can not be null")
     private boolean isActive;
+
 
     /*@Pattern(
                regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\\-_=+{};:,<.>])(?=.{8,})" +
