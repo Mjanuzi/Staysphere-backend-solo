@@ -38,4 +38,17 @@ public class Review {
     private LocalDateTime reviewDateSet;
 
 
+    public Review() {
+    }
+
+    public Review(String id, User userReviewer, Listing listingReviewed, String comment, Integer rating, boolean likeComment, boolean dislikeComment, LocalDateTime reviewDateSet) {
+        this.id = id;
+        this.userReviewer = userReviewer;
+        this.listingReviewed = listingReviewed;
+        this.comment = comment;
+        this.rating = rating;
+        LikeComment = likeComment;
+        DislikeComment = dislikeComment;
+        this.reviewDateSet = reviewDateSet;
+    }
 }
