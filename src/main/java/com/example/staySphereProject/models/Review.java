@@ -25,6 +25,7 @@ public class Review {
     private Listing listingReviewed;
 
     @Max(value = 500, message = "Review can not have more than 500 characters")
+    @NotBlank(message = "Comment can not be blank")
     private String comment;
 
     @Min(value = 1)
@@ -49,6 +50,70 @@ public class Review {
         this.rating = rating;
         LikeComment = likeComment;
         DislikeComment = dislikeComment;
+        this.reviewDateSet = reviewDateSet;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public @NotNull(message = "User can not be null in a review") @NotBlank(message = "User can not be empty in a review") User getUserReviewer() {
+        return userReviewer;
+    }
+
+    public void setUserReviewer(@NotNull(message = "User can not be null in a review") @NotBlank(message = "User can not be empty in a review") User userReviewer) {
+        this.userReviewer = userReviewer;
+    }
+
+    public Listing getListingReviewed() {
+        return listingReviewed;
+    }
+
+    public void setListingReviewed(Listing listingReviewed) {
+        this.listingReviewed = listingReviewed;
+    }
+
+    public @Max(value = 500, message = "Review can not have more than 500 characters") @NotBlank(message = "Comment can not be blank") String getComment() {
+        return comment;
+    }
+
+    public void setComment(@Max(value = 500, message = "Review can not have more than 500 characters") @NotBlank(message = "Comment can not be blank") String comment) {
+        this.comment = comment;
+    }
+
+    public @Min(value = 1) @Max(value = 5) Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(@Min(value = 1) @Max(value = 5) Integer rating) {
+        this.rating = rating;
+    }
+
+    public boolean isLikeComment() {
+        return LikeComment;
+    }
+
+    public void setLikeComment(boolean likeComment) {
+        LikeComment = likeComment;
+    }
+
+    public boolean isDislikeComment() {
+        return DislikeComment;
+    }
+
+    public void setDislikeComment(boolean dislikeComment) {
+        DislikeComment = dislikeComment;
+    }
+
+    public LocalDateTime getReviewDateSet() {
+        return reviewDateSet;
+    }
+
+    public void setReviewDateSet(LocalDateTime reviewDateSet) {
         this.reviewDateSet = reviewDateSet;
     }
 }
