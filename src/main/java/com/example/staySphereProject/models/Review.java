@@ -30,29 +30,29 @@ public class Review {
 
     @Min(value = 1)
     @Max(value = 5)
-    private Integer rating;
+    private Integer reviewRating;
 
-    private boolean LikeComment;
+    private boolean likeComment;
 
-    private boolean DislikeComment;
+    private boolean dislikeComment;
 
     private LocalDateTime reviewDateSet;
 
-
+    //------------CONSTRUCTORS---------------
     public Review() {
     }
 
-    public Review(String id, User userReviewer, Listing listingReviewed, String comment, Integer rating, boolean likeComment, boolean dislikeComment, LocalDateTime reviewDateSet) {
+    public Review(String id, User userReviewer, Listing listingReviewed, String comment, Integer reviewRating, boolean likeComment, boolean dislikeComment, LocalDateTime reviewDateSet) {
         this.id = id;
         this.userReviewer = userReviewer;
         this.listingReviewed = listingReviewed;
         this.comment = comment;
-        this.rating = rating;
-        LikeComment = likeComment;
-        DislikeComment = dislikeComment;
+        this.reviewRating = reviewRating;
+        this.likeComment = likeComment;
+        this.dislikeComment = dislikeComment;
         this.reviewDateSet = reviewDateSet;
     }
-
+    //--------------GETTERS AND SETTERS--------------
     public String getId() {
         return id;
     }
@@ -85,28 +85,28 @@ public class Review {
         this.comment = comment;
     }
 
-    public @Min(value = 1) @Max(value = 5) Integer getRating() {
-        return rating;
+    public @Min(value = 1) @Max(value = 5) Integer getReviewRating() {
+        return reviewRating;
     }
 
-    public void setRating(@Min(value = 1) @Max(value = 5) Integer rating) {
-        this.rating = rating;
+    public void setReviewRating(@Min(value = 1) @Max(value = 5) Integer reviewRating) {
+        this.reviewRating = reviewRating;
     }
 
     public boolean isLikeComment() {
-        return LikeComment;
+        return likeComment;
     }
 
     public void setLikeComment(boolean likeComment) {
-        LikeComment = likeComment;
+        this.likeComment = likeComment;
     }
 
     public boolean isDislikeComment() {
-        return DislikeComment;
+        return dislikeComment;
     }
 
     public void setDislikeComment(boolean dislikeComment) {
-        DislikeComment = dislikeComment;
+        this.dislikeComment = dislikeComment;
     }
 
     public LocalDateTime getReviewDateSet() {
@@ -116,4 +116,9 @@ public class Review {
     public void setReviewDateSet(LocalDateTime reviewDateSet) {
         this.reviewDateSet = reviewDateSet;
     }
+
+
+
+
+
 }
