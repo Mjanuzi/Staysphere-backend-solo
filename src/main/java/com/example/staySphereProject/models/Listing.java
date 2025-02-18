@@ -1,7 +1,12 @@
 package com.example.staySphereProject.models;
 
-import jdk.jfr.Description;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -12,9 +17,21 @@ public class Listing {
 
     @Id
     private String listingId;
+    //@DBRef
+
+    //private db.Review review;
 
     private String listingTitle;
 
+    @NotNull
+    private double listingPricePerNight;
+
+    @NotNull(message = "You Need to add atleast one guest")
+    @Min(value = 1)
+    private Integer listingGuestLimit;
+
+    @Max(value = 2500, message = "The limit is 2500 characters")
+    @NotBlank(message = "You cant leave this emppty")
     private String listingDescription;
 
     private ArrayList<String> listingImages;
@@ -23,7 +40,10 @@ public class Listing {
 
     private boolean isbooked;
 
-    public Listing(String listingId, String listingTitle, String listingDescription, ArrayList<String> listingImages, boolean listingActive, boolean isbooked) {
+
+
+    public Listing(String listingId, String listingTitle, String listingDescription, ArrayList<String>
+            listingImages, boolean listingActive, boolean isbooked, double listingPricePerNight) {
         this.listingId = listingId;
         this.listingTitle = listingTitle;
         this.listingDescription = listingDescription;
@@ -35,7 +55,13 @@ public class Listing {
     public String getListingId() {
         return listingId;
     }
+    public double getListingPricePerNight() {
+        return listingPricePerNight;
+    }
 
+    public void setListingPricePerNight(double listingPricePerNight) {
+        this.listingPricePerNight = listingPricePerNight;
+    }
     public void setListingId(String listingId) {
         this.listingId = listingId;
     }
