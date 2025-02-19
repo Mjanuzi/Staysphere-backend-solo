@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -39,10 +40,16 @@ public class Listing {
     @NotBlank(message = "You cant leave this emppty")
     private String listingDescription;
 
+    //@NotNull
     private ArrayList<String> listingImages;
 
+    @NotNull
+    private ArrayList<LocalDateTime> unavailableDates;
+
+    @NotNull
     private boolean listingActive;
 
+    @NotNull
     private boolean isBooked;
 
 
@@ -52,9 +59,11 @@ public class Listing {
     }
 
 
+
+
     public Listing(String listingId, User host, String listingTitle, double listingPricePerNight,
                    String listingDescription, Integer listingGuestLimit,
-                   ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review) {
+                   ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review, ArrayList<LocalDateTime> unavailableDates) {
         this.listingId = listingId;
         this.host = host;
         this.listingTitle = listingTitle;
@@ -65,6 +74,7 @@ public class Listing {
         this.isBooked = isBooked;
         this.listingActive = listingActive;
         this.review = review;
+        this.unavailableDates = unavailableDates;
     }
     public String getListingId() {
         return listingId;
@@ -72,7 +82,13 @@ public class Listing {
     public Review getReview() {
         return review;
     }
+    public ArrayList<LocalDateTime> getUnavailableDates() {
+        return unavailableDates;
+    }
 
+    public void setUnavailableDates(ArrayList<LocalDateTime> unavailableDates) {
+        this.unavailableDates = unavailableDates;
+    }
     public void setReview(Review review) {
         this.review = review;
     }
