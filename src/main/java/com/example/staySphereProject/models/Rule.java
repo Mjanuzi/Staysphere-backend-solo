@@ -6,10 +6,7 @@ public enum Rule {
     NoParties,           // Inga fester eller evenemang
     QuietHours,          // Tysta timmar gäller
     NoSubletting,        // Ingen andrahandsuthyrning
-    MinimumStay,         // Minsta antal nätter som krävs
-    MaximumGuests,       // Max antal gäster tillåtna
     CleaningFee,         // Städavgift tillkommer
     NoCommercialUse,     // Endast för privat bruk
-    CheckInInstructions, // Specifika incheckningsinstruktioner
     CheckOutTime         // Specifik utcheckningstid
 }
