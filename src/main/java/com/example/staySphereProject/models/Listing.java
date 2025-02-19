@@ -12,15 +12,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 
 
-@Document(collection = "listing")
+@Document(collection = "listings")
 public class Listing {
 
     @Id
     private String listingId;
-    //@DBRef
 
-    //private db.Review review;
+    @DBRef
+    private Review review;
 
+    @DBRef
+    @NotBlank
+    private User host;
+
+    @NotBlank(message = "You need to give a title")
     private String listingTitle;
 
     @NotNull
@@ -38,47 +43,81 @@ public class Listing {
 
     private boolean listingActive;
 
-    private boolean isbooked;
+    private boolean isBooked;
 
 
+    public Listing() {
 
-    public Listing(String listingId, String listingTitle, String listingDescription, ArrayList<String>
-            listingImages, boolean listingActive, boolean isbooked, double listingPricePerNight) {
-        this.listingId = listingId;
-        this.listingTitle = listingTitle;
-        this.listingDescription = listingDescription;
-        this.listingImages = listingImages;
-        this.listingActive = listingActive;
-        this.isbooked = isbooked;
+
     }
 
+
+    public Listing(String listingId, User host, String listingTitle, double listingPricePerNight,
+                   String listingDescription, Integer listingGuestLimit,
+                   ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review) {
+        this.listingId = listingId;
+        this.host = host;
+        this.listingTitle = listingTitle;
+        this.listingPricePerNight = listingPricePerNight;
+        this.listingDescription = listingDescription;
+        this.listingGuestLimit = listingGuestLimit;
+        this.listingImages = listingImages;
+        this.isBooked = isBooked;
+        this.listingActive = listingActive;
+        this.review = review;
+    }
     public String getListingId() {
         return listingId;
     }
-    public double getListingPricePerNight() {
-        return listingPricePerNight;
+    public Review getReview() {
+        return review;
     }
 
-    public void setListingPricePerNight(double listingPricePerNight) {
-        this.listingPricePerNight = listingPricePerNight;
+    public void setReview(Review review) {
+        this.review = review;
     }
     public void setListingId(String listingId) {
         this.listingId = listingId;
     }
 
-    public String getListingTitle() {
+    public @NotBlank User getHost() {
+        return host;
+    }
+
+    public void setHost(@NotBlank User host) {
+        this.host = host;
+    }
+
+    public @NotBlank(message = "You need to give a title") String getListingTitle() {
         return listingTitle;
     }
 
-    public void setListingTitle(String listingTitle) {
+    public void setListingTitle(@NotBlank(message = "You need to give a title") String listingTitle) {
         this.listingTitle = listingTitle;
     }
 
-    public String getListingDescription() {
+    @NotNull
+    public double getListingPricePerNight() {
+        return listingPricePerNight;
+    }
+
+    public void setListingPricePerNight(@NotNull double listingPricePerNight) {
+        this.listingPricePerNight = listingPricePerNight;
+    }
+
+    public @NotNull(message = "You Need to add atleast one guest") @Min(value = 1) Integer getListingGuestLimit() {
+        return listingGuestLimit;
+    }
+
+    public void setListingGuestLimit(@NotNull(message = "You Need to add atleast one guest") @Min(value = 1) Integer listingGuestLimit) {
+        this.listingGuestLimit = listingGuestLimit;
+    }
+
+    public @Max(value = 2500, message = "The limit is 2500 characters") @NotBlank(message = "You cant leave this emppty") String getListingDescription() {
         return listingDescription;
     }
 
-    public void setListingDescription(String listingDescription) {
+    public void setListingDescription(@Max(value = 2500, message = "The limit is 2500 characters") @NotBlank(message = "You cant leave this emppty") String listingDescription) {
         this.listingDescription = listingDescription;
     }
 
@@ -90,6 +129,14 @@ public class Listing {
         this.listingImages = listingImages;
     }
 
+    public boolean isBooked() {
+        return isBooked;
+    }
+
+    public void setBooked(boolean booked) {
+        isBooked = booked;
+    }
+
     public boolean isListingActive() {
         return listingActive;
     }
@@ -98,12 +145,5 @@ public class Listing {
         this.listingActive = listingActive;
     }
 
-    public boolean isIsbooked() {
-        return isbooked;
-    }
-
-    public void setIsbooked(boolean isbooked) {
-        this.isbooked = isbooked;
-    }
 
 }
