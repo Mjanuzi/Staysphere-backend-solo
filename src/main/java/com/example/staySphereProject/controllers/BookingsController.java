@@ -1,6 +1,9 @@
 package com.example.staySphereProject.controllers;
 
 
+import com.example.staySphereProject.dto.BookingsDTO;
+import com.example.staySphereProject.dto.BookingsResponse;
+import com.example.staySphereProject.services.BookingsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +20,8 @@ public class BookingsController {
     }
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody BookingDTO bookingDTO) {
-        Booking newBooking = bookingsService.createBooking(bookingDTO);
+    public ResponseEntity<Booking> createBooking(@RequestBody BookingsDTO bookingsDTO) {
+        Booking newBooking = bookingsService.createBooking(bookingsDTO);
         return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
     }
 
@@ -32,5 +35,23 @@ public class BookingsController {
     public ResponseEntity<List<BookingsResponse>> getUserBookings(@PathVariable String userId) {
         List<BookingsResponse> bookings = bookingsService.getUserBookings(userId);
         return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<BookingsResponse> getBookingById(@PathVariable String bookingId) {
+        BookingsRespone booking = bookingsService.getBookingById(bookingId);
+        return ResponseEntity.ok(booking);
+    }
+
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<BookingsResponse> updateBooking(@PathVariable String bookingId, @RequestBody BookingsDTO bookingsDTO) {
+        BookingsResponse updatedBooking = bookingsService.updateBooking(bookingId, bookingsDTO);
+        return ResponseEntity.ok(updatedBooking);
+    }
+
+    @DeleteMapping("/{bookingId}")
+    public ResponseEntity<Void> deleteBooking(@PathVariable String bookingId) {
+        bookingsService.deleteBooking(bookingId);
+        return ResponseEntity.noContent().build();
     }
 }
