@@ -29,7 +29,7 @@ public class BookingsController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BookingsRespone>> getUserBookings(@PathVariable String userId) {
+    public ResponseEntity<List<BookingsResponse>> getUserBookings(@PathVariable String userId) {
         List<BookingsResponse> bookings = bookingsService.getUserBookings(userId);
         return ResponseEntity.ok(bookings);
     }
