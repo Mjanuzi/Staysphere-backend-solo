@@ -6,7 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-/**
+
     public class BookingsDTO {
 
     @NotNull(message = "User ID req")
@@ -34,5 +34,32 @@ import java.util.Date;
     private boolean status;
     private boolean isPending;
 
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getListingId() { return listingId; }
+    public void setListingId(String listingId) { this.listingId = listingId; }
+
+    public String getBookingName() { return bookingName; }
+    public void setBookingName(String bookingName) { this.bookingName = bookingName; }
+
+    public LocalDateTime getBookingDate() { return bookingDate; }
+    public void setBookingDate(LocalDateTime bookingDate) { this.bookingDate = bookingDate; }
+
+    public Date getStartDate() { return startDate; }
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
+
+    public Date getEndDate() { return endDate; }
+    public void setEndDate(Date endDate) { this.endDate = endDate; }
+
+    public double getTotalCost() { return totalCost; }
+    public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
+
+    public boolean isStatus() { return status; }
+    public void setStatus(boolean status) { this.status = status; }
+
+    public boolean isPending() { return isPending; }
+    public void setPending(boolean pending) { this.isPending = pending; }
+
+
 }
-**/

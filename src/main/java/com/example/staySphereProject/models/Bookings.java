@@ -12,6 +12,7 @@ import java.util.Date;
 @Document(collection = "bookings")
 public class Bookings {
 
+    /**
     @Id
     private String bookingID;
 
@@ -24,6 +25,19 @@ public class Bookings {
     @NotNull(message = "Booking can't have null")
     @NotBlank(message = "Need to connect listing to booking")
     private Listing bookingListing;
+     **/
+
+    @NotNull
+    private String userId;
+
+    @NotNull String listingId;
+
+/**
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getListingId() { return listingId; }
+    public void setListingId(String listingId) { this.listingId = listingId; }
 
     @NotEmpty
     private String bookingName;
@@ -39,21 +53,24 @@ public class Bookings {
     private double totalCost;
     private boolean status;
     private boolean isPending;
+    **/
 
 
-    public Bookings(String bookingID, User bookingUser, Listing bookingListing, String bookingName, LocalDateTime bookingDate, Date startDate, Date endDate, double totalCost, boolean status, boolean isPending) {
-        this.bookingID = bookingID;
-        this.bookingUser = bookingUser;
-        this.bookingListing = bookingListing;
-        this.bookingName = bookingName;
-        this.bookingDate = bookingDate;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.totalCost = totalCost;
-        this.status = status;
-        this.isPending = isPending;
-    }
-
+public Bookings(String bookingID, String userId, String listingId, String bookingName,
+                LocalDateTime bookingDate, Date startDate, Date endDate,
+                double totalCost, boolean status, boolean isPending) {
+    this.bookingID = bookingID;
+    this.userId = userId;
+    this.listingId = listingId;
+    this.bookingName = bookingName;
+    this.bookingDate = bookingDate;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.totalCost = totalCost;
+    this.status = status;
+    this.isPending = isPending;
+}
+    /**
     public Bookings() {
     }
 
@@ -138,4 +155,5 @@ public class Bookings {
     public void setPending(boolean pending) {
         isPending = pending;
     }
+    **/
 }

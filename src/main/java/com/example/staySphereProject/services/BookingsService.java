@@ -1,9 +1,18 @@
 package com.example.staySphereProject.services;
 
+import com.example.staySphereProject.dto.BookingsDTO;
+import com.example.staySphereProject.dto.BookingsResponse;
+import com.example.staySphereProject.exeptions.ResourceNotFoundException;
+import com.example.staySphereProject.models.Bookings;
+import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingsService {
@@ -15,5 +24,96 @@ public class BookingsService {
         this.bookingsRepository = bookingsRepository;
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
+    }
+    // Create a new booking
+    public Bookings createBooking(BookingsDTO bookingsDTO) {
+        // Fetch the user
+        User user = userRepository.findById(bookingsDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Fetch the listing
+        Listing listing = listingRepository.findById(bookingsDTO.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found with id " + bookingsDTO.getListingId()));
+
+        // Create a new booking
+        Bookings newBooking = new Bookings();
+        newBooking.setUserId(user.getId());
+        newBooking.setListingId(listing.getId());
+        newBooking.setBookingName(bookingsDTO.getBookingName());
+        newBooking.setBookingDate(bookingsDTO.getBookingDate());
+        newBooking.setStartDate(bookingsDTO.getStartDate());
+        newBooking.setEndDate(bookingsDTO.getEndDate());
+        newBooking.setTotalCost(bookingsDTO.getTotalCost());
+        newBooking.setStatus(bookingsDTO.isStatus());
+        newBooking.setPending(bookingsDTO.isPending());
+
+        return bookingsRepository.save(newBooking);
+    }
+
+    // Get all bookings
+    public List<BookingsResponse> getAllBookings() {
+        List<Bookings> bookings = bookingsRepository.findAll();
+
+        return bookings.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Get bookings for a specific user
+    public List<BookingsResponse> getUserBookings(String userId) {
+        // Check if the user exists
+        if (!userRepository.existsById(userId)) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        // Fetch bookings for the user
+        List<Bookings> bookings = bookingsRepository.findByUserId(userId);
+
+        return bookings.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+    // Convert Bookings entity to BookingsResponse DTO
+    private BookingsResponse convertToDTO(Bookings booking) {
+        BookingsResponse response = new BookingsResponse();
+        response.setBookingID(booking.getBookingID());
+        response.setUserId(booking.getUserId());
+        response.setListingId(booking.getListingId());
+        response.setBookingName(booking.getBookingName());
+        response.setBookingDate(booking.getBookingDate());
+        response.setStartDate(booking.getStartDate());
+        response.setEndDate(booking.getEndDate());
+        response.setTotalCost(booking.getTotalCost());
+        response.setStatus(booking.isStatus());
+        response.setPending(booking.isPending());
+
+        return response;
+    }
+    **/
+
+    public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
+        User user = userRepository.findById(bookingsDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Listing listing = listingRepository.findById(bookingsDTO.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        Bookings booking = new Bookings();
+        booking.setUserId(bookingDTO.getUserId()); // Use DTO getter
+        booking.setListingId(bookingDTO.getListingId());
+        booking.setBookingName(bookingDTO.getBookingName());
+        booking.setBookingDate(bookingDTO.getBookingDate());
+        booking.setStartDate(bookingDTO.getStartDate());
+        booking.setEndDate(bookingDTO.getEndDate());
+        booking.setTotalCost(bookingDTO.getTotalCost());
+        booking.setStatus(bookingDTO.isStatus());
+        booking.setPending(bookingDTO.isPending());
+
+        // Save and convert to response
+        Bookings savedBooking = bookingsRepository.save(booking);
+        return convertToDTO(savedBooking);
     }
 }

@@ -3,6 +3,7 @@ package com.example.staySphereProject.controllers;
 
 import com.example.staySphereProject.dto.BookingsDTO;
 import com.example.staySphereProject.dto.BookingsResponse;
+import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.services.BookingsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class BookingsController {
     }
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody BookingsDTO bookingsDTO) {
-        Booking newBooking = bookingsService.createBooking(bookingsDTO);
+    public ResponseEntity<Bookings> createBooking(@RequestBody BookingsDTO bookingsDTO) {
+        Bookings newBooking = bookingsService.createBooking(bookingsDTO);
         return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
     }
 
@@ -39,7 +40,7 @@ public class BookingsController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingsResponse> getBookingById(@PathVariable String bookingId) {
-        BookingsRespone booking = bookingsService.getBookingById(bookingId);
+        BookingsResponse booking = bookingsService.getBookingById(bookingId);
         return ResponseEntity.ok(booking);
     }
 
