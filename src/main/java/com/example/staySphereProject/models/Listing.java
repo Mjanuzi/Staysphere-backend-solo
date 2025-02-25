@@ -103,7 +103,7 @@ public class Listing {
         return host;
     }
 
-    public void setHost(@NotBlank User host) {
+    public void setHost( User host) {
         this.host = host;
     }
 
