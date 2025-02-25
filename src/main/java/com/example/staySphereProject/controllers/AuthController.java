@@ -53,7 +53,7 @@ public class AuthController {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
-        user.setActive(registerRequest.isActive());
+        user.setActive(true);
         user.setAge(registerRequest.getAge());
         user.setPassword(registerRequest.getPassword());
         user.setCountry(registerRequest.getCountry());
