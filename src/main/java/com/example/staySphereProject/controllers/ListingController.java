@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,11 +34,7 @@ public class ListingController {
         this.listingRepository = listingRepository;
     }
 
-    @GetMapping("/getall")
-    public ResponseEntity<List<Listing>> getAllListings() {
-        List<Listing> existingListings = listingRepository.findAll();
-        return ResponseEntity.ok(existingListings);
-    }
+
     @PostMapping("/register/{userId}")
     public ResponseEntity<Listing> registerListing(@Valid @RequestBody Listing listing, @PathVariable String userId) {
         Listing registerListing = listingService.registerListing(listing);
@@ -51,6 +48,57 @@ public class ListingController {
         listing.setHost(user);
         return new ResponseEntity<>(registerListing, HttpStatus.CREATED);
     }
+
+    @GetMapping("/getall")
+    public ResponseEntity<List<Listing>> getAllListings() {
+        List<Listing> existingListings = listingRepository.findAll();
+        return ResponseEntity.ok(existingListings);
+    }
+
+    @PatchMapping("/patch/{userId}")
+    public ResponseEntity<Listing> patchListing(@PathVariable String userId, @RequestBody Listing listing) {
+        Optional<Listing> existingListing = Optional.of(listingRepository.findById(userId))
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Listing not found"));
+
+        if (listing.getListingPricePerNight() != 0){
+            existingListing.get().setListingPricePerNight(listing.getListingPricePerNight());
+        }
+        if (listing.isListingActive() != false ){
+            existingListing.get().setListingActive(listing.isListingActive());
+        }
+        if (listing.getListingTitle() != null){
+            existingListing.get().setListingTitle(listing.getListingTitle());
+        }
+        if (listing.getListingDescription() != null){
+            existingListing.get().setListingDescription(listing.getListingDescription());
+        }
+        if (listing.isBooked() != false){
+            existingListing.get().setBooked(listing.isBooked());
+        }
+        if (listing.getAvailable() != null) {
+            existingListing.get().setAvailable(listing.getAvailable());
+        }
+
+        if (listing.getListingImages() != null) {
+            existingListing.get().setListingImages(listing.getListingImages());
+        }
+        if (listing.getListingGuestLimit() != null){
+            existingListing.get().setListingGuestLimit(listing.getListingGuestLimit());
+        }
+        if (listing.getHost() != null){
+            existingListing.get().setHost(listing.getHost());
+        }
+
+        Listing savedListing = listingRepository.save(existingListing.get());
+        return ResponseEntity.ok(savedListing);
+
+    }
+
+
+
+
+
+
 
 
 
