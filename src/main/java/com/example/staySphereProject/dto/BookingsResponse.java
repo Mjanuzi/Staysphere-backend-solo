@@ -3,6 +3,8 @@ package com.example.staySphereProject.dto;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+
 public class BookingsResponse {
 
     private String bookingID;
@@ -16,3 +18,4 @@ public class BookingsResponse {
     private boolean status;
     private boolean isPending;
 }
+ **/

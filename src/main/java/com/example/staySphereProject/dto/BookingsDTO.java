@@ -6,8 +6,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-
-public class BookingsDTO {
+/**
+    public class BookingsDTO {
 
     @NotNull(message = "User ID req")
     private String userId;
@@ -33,4 +33,6 @@ public class BookingsDTO {
 
     private boolean status;
     private boolean isPending;
+
 }
+**/
