@@ -1,5 +1,7 @@
 package com.example.staySphereProject.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -13,9 +15,12 @@ public class BookingsResponse {
     private Date endDate;
     private double totalCost;
     private boolean status;
-    private boolean isPending;
+    private boolean pending;
 
     // Getters and Setters
+    public String getBookingID() { return bookingID; }
+    public void setBookingID( String bookingID) { this.bookingID = bookingID; }
+
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
 
@@ -40,7 +45,7 @@ public class BookingsResponse {
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
 
-    public boolean isPending() { return isPending; }
-    public void setPending(boolean pending) { isPending = pending; }
+    public boolean isPending() { return pending; }
+    public void setPending(boolean pending) { pending = pending; }
 
 }

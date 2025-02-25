@@ -32,7 +32,7 @@ import java.util.Date;
     private double totalCost;
 
     private boolean status;
-    private boolean isPending;
+    private boolean pending;
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
@@ -58,8 +58,8 @@ import java.util.Date;
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
 
-    public boolean isPending() { return isPending; }
-    public void setPending(boolean pending) { this.isPending = pending; }
+    public boolean isPending() { return pending; }
+    public void setPending(boolean pending) { this.pending = pending; }
 
 
 }

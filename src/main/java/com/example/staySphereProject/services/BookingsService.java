@@ -26,6 +26,7 @@ public class BookingsService {
         this.userRepository = userRepository;
     }
     // Create a new booking
+    /**
     public Bookings createBooking(BookingsDTO bookingsDTO) {
         // Fetch the user
         User user = userRepository.findById(bookingsDTO.getUserId())
@@ -47,7 +48,36 @@ public class BookingsService {
         newBooking.setStatus(bookingsDTO.isStatus());
         newBooking.setPending(bookingsDTO.isPending());
 
-        return bookingsRepository.save(newBooking);
+        return convertToDTO.save(booking);
+    }
+     **/
+    public BookingsResponse getBookingById(String bookingId) {
+        Bookings booking = bookingsRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+        return convertToDTO(booking);
+    }
+
+    public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
+        Bookings existingBooking = bookingsRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        existingBooking.setBookingName(bookingsDTO.getBookingName());
+        existingBooking.setBookingDate(bookingsDTO.getBookingDate());
+        existingBooking.setStartDate(bookingsDTO.getStartDate());
+        existingBooking.setEndDate(bookingsDTO.getEndDate());
+        existingBooking.setTotalCost(bookingsDTO.getTotalCost());
+        existingBooking.setStatus(bookingsDTO.isStatus());
+        existingBooking.setPending(bookingsDTO.isPending());
+
+        Bookings updatedBooking = bookingsRepository.save(existingBooking);
+        return convertToDTO(updatedBooking);
+    }
+
+    public void deleteBooking(String bookingId) {
+        if (!bookingsRepository.existsById(bookingId)) {
+            throw new ResourceNotFoundException("Booking not found");
+        }
+        bookingsRepository.deleteById(bookingId);
     }
 
     // Get all bookings
@@ -75,8 +105,9 @@ public class BookingsService {
     }
 
 
-    /**
+
     // Convert Bookings entity to BookingsResponse DTO
+
     private BookingsResponse convertToDTO(Bookings booking) {
         BookingsResponse response = new BookingsResponse();
         response.setBookingID(booking.getBookingID());
@@ -92,7 +123,7 @@ public class BookingsService {
 
         return response;
     }
-    **/
+
 
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
         User user = userRepository.findById(bookingsDTO.getUserId())
@@ -102,18 +133,18 @@ public class BookingsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         Bookings booking = new Bookings();
-        booking.setUserId(bookingDTO.getUserId()); // Use DTO getter
-        booking.setListingId(bookingDTO.getListingId());
-        booking.setBookingName(bookingDTO.getBookingName());
-        booking.setBookingDate(bookingDTO.getBookingDate());
-        booking.setStartDate(bookingDTO.getStartDate());
-        booking.setEndDate(bookingDTO.getEndDate());
-        booking.setTotalCost(bookingDTO.getTotalCost());
-        booking.setStatus(bookingDTO.isStatus());
-        booking.setPending(bookingDTO.isPending());
+        booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
+        booking.setListingId(bookingsDTO.getListingId());
+        booking.setBookingName(bookingsDTO.getBookingName());
+        booking.setBookingDate(bookingsDTO.getBookingDate());
+        booking.setStartDate(bookingsDTO.getStartDate());
+        booking.setEndDate(bookingsDTO.getEndDate());
+        booking.setTotalCost(bookingsDTO.getTotalCost());
+        booking.setStatus(bookingsDTO.isStatus());
+        booking.setPending(bookingsDTO.isPending());
 
         // Save and convert to response
         Bookings savedBooking = bookingsRepository.save(booking);
-        return convertToDTO(savedBooking);
+        return convertToDTO(bookingsRepository.save(booking));
     }
 }

@@ -12,10 +12,10 @@ import java.util.Date;
 @Document(collection = "bookings")
 public class Bookings {
 
-    /**
     @Id
     private String bookingID;
 
+    /**
     @DBRef
     @NotNull(message = "Booking can't have null")
     @NotBlank(message = "Need to connect user to booking")
@@ -30,14 +30,16 @@ public class Bookings {
     @NotNull
     private String userId;
 
-    @NotNull String listingId;
+    @NotNull
+    private String listingId;
 
-/**
+
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
 
     public String getListingId() { return listingId; }
     public void setListingId(String listingId) { this.listingId = listingId; }
+
 
     @NotEmpty
     private String bookingName;
@@ -53,7 +55,8 @@ public class Bookings {
     private double totalCost;
     private boolean status;
     private boolean isPending;
-    **/
+
+
 
 
 public Bookings(String bookingID, String userId, String listingId, String bookingName,
@@ -70,18 +73,10 @@ public Bookings(String bookingID, String userId, String listingId, String bookin
     this.status = status;
     this.isPending = isPending;
 }
+
+
+
     /**
-    public Bookings() {
-    }
-
-    public String getBookingID() {
-        return bookingID;
-    }
-
-    public void setBookingID(String bookingID) {
-        this.bookingID = bookingID;
-    }
-
     public @NotNull(message = "Booking can't have null") @NotBlank(message = "Need to connect user to booking") User getBookingUser() {
         return bookingUser;
     }
@@ -90,12 +85,25 @@ public Bookings(String bookingID, String userId, String listingId, String bookin
         this.bookingUser = bookingUser;
     }
 
+
     public Listing getBookingListing() {
         return bookingListing;
     }
 
     public void setBookingListing(Listing bookingListing) {
         this.bookingListing = bookingListing;
+    }
+     **/
+
+    public @NotEmpty String getBookingID() {
+        return bookingID;
+    }
+
+    public void setBookingID(@NotEmpty String bookingID) {
+        this.bookingID = bookingID;
+    }
+
+    public Bookings() {
     }
 
     public @NotEmpty String getBookingName() {
@@ -155,5 +163,4 @@ public Bookings(String bookingID, String userId, String listingId, String bookin
     public void setPending(boolean pending) {
         isPending = pending;
     }
-    **/
 }
