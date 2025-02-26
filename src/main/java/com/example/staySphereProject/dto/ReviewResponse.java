@@ -8,9 +8,7 @@ public class ReviewResponse {
     private String reviewedListing;
     private String reviewComment;
     private String reviewedRating;
-    private boolean likedComment;
-    private boolean dislikedComment;
-    private LocalDateTime reviewDate;
+
 
 
     //------------------GETTER & SETTER--------------------
@@ -30,15 +28,6 @@ public class ReviewResponse {
 
     public void setReviewedRating(String reviewedRating) {this.reviewedRating = reviewedRating;}
 
-    public boolean isLikedComment() {return likedComment;}
 
-    public void setLikedComment(boolean likedComment) {this.likedComment = likedComment;}
 
-    public boolean isDislikedComment() {return dislikedComment;}
-
-    public void setDislikedComment(boolean dislikedComment) {this.dislikedComment = dislikedComment;}
-
-    public LocalDateTime getReviewDate() {return reviewDate;}
-
-    public void setReviewDate(LocalDateTime reviewDate) {this.reviewDate = reviewDate;}
 }

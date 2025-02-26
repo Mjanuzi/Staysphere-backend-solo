@@ -1,5 +1,6 @@
 package com.example.staySphereProject.controllers;
 
+import com.example.staySphereProject.dto.ReviewRequest;
 import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ReviewRepository;
@@ -28,13 +29,9 @@ public class ReviewController {
     }
 
     @PostMapping("/user/{id}")
-    public ResponseEntity<?> registerReview (@Valid @RequestBody Review review, @PathVariable String id) {
-        // Get user from database
-        User user = userRepository.findById(id).get()
-
-
-        /*Review newReview = reviewService.createReview(review);
-        return new ResponseEntity<>(newReview, HttpStatus.CREATED);*/
+    public ResponseEntity<?> registerReview (@Valid @RequestBody ReviewRequest reviewRequest) {
+        Review newReview = reviewService.createReview(reviewRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newReview);
 
     }
 }
