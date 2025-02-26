@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/reviews")
 public class ReviewController {
@@ -33,5 +35,10 @@ public class ReviewController {
         Review newReview = reviewService.createReview(reviewRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(newReview);
 
+    }
+    @GetMapping("/all")
+    public ResponseEntity<List<Review>> getAllReviews() {
+        List<Review> allReviews = reviewService.getAllReviews();
+        return ResponseEntity.ok(allReviews);
     }
 }
