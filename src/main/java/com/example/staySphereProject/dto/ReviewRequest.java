@@ -21,11 +21,6 @@ public class ReviewRequest {
     @Max(value = 5, message = "Maximum rating is 5")
     private Integer reviewRating;
 
-    private boolean likedComment;
-
-    private boolean dislikedComment;
-
-    private LocalDate reviewDate;
 
 
     //---------------GETTERS & SETTERS----------------
@@ -45,15 +40,4 @@ public class ReviewRequest {
 
     public void setReviewRating(Integer reviewRating) {this.reviewRating = reviewRating;}
 
-    public boolean isLikedComment() {return likedComment;}
-
-    public void setLikedComment(boolean likedComment) {this.likedComment = likedComment;}
-
-    public boolean isDislikedComment() {return dislikedComment;}
-
-    public void setDislikedComment(boolean dislikedComment) {this.dislikedComment = dislikedComment;}
-
-    public LocalDate getReviewDate() {return reviewDate;}
-
-    public void setReviewDate(LocalDate reviewDate) {this.reviewDate = reviewDate;}
 }

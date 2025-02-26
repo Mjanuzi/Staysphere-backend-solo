@@ -1,6 +1,5 @@
 package com.example.staySphereProject.services;
 
-import com.example.staySphereProject.controllers.ReviewController;
 import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.ReviewRepository;
@@ -20,7 +19,12 @@ public class ReviewService {
         this.listingRepository = listingRepository;
     }
 
-    public void registerReview(Review review) {
+    public Review createReview(Review review) {
+        /**if(review.getComment() == null || review.getComment().isEmpty()) {
+            throw new IllegalArgumentException("Review comment cannot be empty");
+        }**/
         reviewRepository.save(review);
+        return review;
     }
+
 }
