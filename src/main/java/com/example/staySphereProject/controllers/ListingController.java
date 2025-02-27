@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +52,12 @@ public class ListingController {
     public ResponseEntity<List<Listing>> getAllListings() {
         List<Listing> existingListings = listingRepository.findAll();
         return ResponseEntity.ok(existingListings);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Listing> getProductById(@PathVariable String id) {
+        Optional<Listing> listing = listingService.getListingById(id);
+        return listing.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PatchMapping("/patch/{userId}")
