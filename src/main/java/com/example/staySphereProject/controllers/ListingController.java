@@ -60,10 +60,11 @@ public class ListingController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PatchMapping("/patch/{userId}")
-    public ResponseEntity<Listing> patchListing(@PathVariable String userId, @RequestBody Listing listing) {
-        Optional<Listing> existingListing = Optional.of(listingRepository.findById(userId))
+    @PatchMapping("/patch/{id}")
+    public ResponseEntity<Listing> patchListing(@PathVariable String id, @RequestBody Listing listing) {
+        Optional<Listing> existingListing = Optional.of(listingRepository.findById(id))
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Listing not found"));
+
 
         if (listing.getListingPricePerNight() != 0){
             existingListing.get().setListingPricePerNight(listing.getListingPricePerNight());
@@ -96,10 +97,14 @@ public class ListingController {
 
         Listing savedListing = listingRepository.save(existingListing.get());
         return ResponseEntity.ok(savedListing);
-
     }
 
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteListing(@PathVariable String id) {
+        listingService.deleteProduct(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 
 
