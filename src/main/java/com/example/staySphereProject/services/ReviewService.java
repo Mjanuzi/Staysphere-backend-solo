@@ -1,6 +1,7 @@
 package com.example.staySphereProject.services;
 
 import com.example.staySphereProject.dto.ReviewRequest;
+import com.example.staySphereProject.dto.ReviewResponse;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.models.User;
@@ -48,6 +49,16 @@ public class ReviewService {
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
     }
+
+    public Review getReviewById(String id) {
+        return reviewRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
+    }
+
+
+
+
+
 
 
 }

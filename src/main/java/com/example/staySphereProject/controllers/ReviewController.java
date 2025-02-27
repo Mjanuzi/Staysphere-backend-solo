@@ -1,6 +1,7 @@
 package com.example.staySphereProject.controllers;
 
 import com.example.staySphereProject.dto.ReviewRequest;
+import com.example.staySphereProject.dto.ReviewResponse;
 import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ReviewRepository;
@@ -41,4 +42,11 @@ public class ReviewController {
         List<Review> allReviews = reviewService.getAllReviews();
         return ResponseEntity.ok(allReviews);
     }
+    @GetMapping("/all/{id}")
+    public ResponseEntity<Review> getReviewById(@PathVariable String id) {
+        Review review = reviewService.getReviewById(id);
+        return ResponseEntity.ok(review);
+
+    }
+
 }
