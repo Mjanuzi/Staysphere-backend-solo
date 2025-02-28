@@ -51,8 +51,10 @@ public class Listing {
     @NotNull
     private boolean listingActive;
 
+
     @NotNull
     private boolean isBooked;
+
 
 
     public Listing() {

@@ -1,31 +1,69 @@
 package com.example.staySphereProject.services;
 
+import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.Review;
+import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
-import org.springframework.http.ResponseEntity;
+import com.example.staySphereProject.repository.ReviewRepository;
+import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
+
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
 public class ListingService {
     private final ListingRepository listingRepository;
+    private final UserRepository userRepository;
+    //private final ReviewRepository reviewRepository;
 
-    public ListingService(ListingRepository listingRepository) {
+
+    public ListingService(ListingRepository listingRepository, UserRepository userRepository) {
         this.listingRepository = listingRepository;
+        this.userRepository = userRepository;
     }
 
-    public Listing registerListing(Listing listing) {
 
-       return listingRepository.save(listing);
+
+    //Register listing
+    public Listing createListing(ListingDTO listingDTO, String userID) {
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+
+
+        //Creating new listing
+        Listing listing = new Listing();
+
+        listing.setHost(user);
+        listing.setListingTitle(listingDTO.getListingTitle());
+        listing.setListingDescription(listingDTO.getListingDescription());
+        listing.setListingPricePerNight(listingDTO.getPricePerNight());
+        listing.setListingGuestLimit(listingDTO.getGuestLimit());
+        //listing.getListingImages().addAll(listingDTO.getListingImages());
+
+
+        //standard values when creating an object
+        listing.setListingActive(true);
+        //listing.setBooked(false);
+        listing.setAvailable(new ArrayList<>());
+
+
+        return listingRepository.save(listing);
     }
+
+
+
+    //get listing by id
     public Optional<Listing> getListingById(String id) {
         return listingRepository.findById(id);
     }
+
+
+
+
 
   /*  public Listing patchListing(String id, Listing listing) {
         Listing existingListing = listingRepository.findById(id)

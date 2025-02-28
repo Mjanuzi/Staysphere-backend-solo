@@ -1,29 +1,37 @@
 package com.example.staySphereProject.dto;
 
+import com.example.staySphereProject.models.Listing;
+
 import java.util.ArrayList;
 
-public class ListingReponse {
-    private String listingOwner;
-    private double pricePerNight;
+public class ListingResponse {
+
+    private String listingId;
+    private Double pricePerNight;
     private String listingTitle;
     private String listingDescription;
     private Integer guestLimit;
     private ArrayList<String> listingImages;
 
-
-    public String getListingOwner() {
-        return listingOwner;
+    public ListingResponse() {
     }
 
-    public void setListingOwner(String listingOwner) {
-        this.listingOwner = listingOwner;
+
+
+    public String getListingId() {
+        return listingId;
     }
 
-    public double getPricePerNight() {
+    public void setListingId(String listingId) {
+        this.listingId = listingId;
+    }
+
+
+    public Double getPricePerNight() {
         return pricePerNight;
     }
 
-    public void setPricePerNight(double pricePerNight) {
+    public void setPricePerNight(Double pricePerNight) {
         this.pricePerNight = pricePerNight;
     }
 
@@ -58,4 +66,6 @@ public class ListingReponse {
     public void setListingImages(ArrayList<String> listingImages) {
         this.listingImages = listingImages;
     }
+
+
 }

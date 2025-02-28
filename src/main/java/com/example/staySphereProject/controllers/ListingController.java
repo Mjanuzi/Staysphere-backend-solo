@@ -1,5 +1,6 @@
 package com.example.staySphereProject.controllers;
 
+import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
@@ -7,6 +8,7 @@ import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.services.ListingService;
 import com.example.staySphereProject.services.UserService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +36,7 @@ public class ListingController {
     }
 
 
-    @PostMapping("/register/{userId}")
+   /*@PostMapping("/register/{userId}")
     public ResponseEntity<Listing> registerListing(@Valid @RequestBody Listing listing, @PathVariable String userId) {
         Listing registerListing = listingService.registerListing(listing);
         Optional<User> userOptional = userRepository.findById(userId);
@@ -43,7 +45,27 @@ public class ListingController {
         }
 
         return new ResponseEntity<>(registerListing, HttpStatus.CREATED);
+    }*/
+
+    @PostMapping("/register/{userId}")
+    public ResponseEntity<Listing> createListing (@Valid @RequestBody ListingDTO listingDTO, @PathVariable String userId) {
+        Listing newListing = listingService.createListing(listingDTO, userId);
+        return new ResponseEntity<>(newListing, HttpStatus.CREATED);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @GetMapping("/getall")
     public ResponseEntity<List<Listing>> getAllListings() {
@@ -75,9 +97,9 @@ public class ListingController {
         if (listing.getListingDescription() != null){
             existingListing.get().setListingDescription(listing.getListingDescription());
         }
-        if (listing.isBooked() != false){
+        /*if (listing.isBooked() != false){
             existingListing.get().setBooked(listing.isBooked());
-        }
+        }*/
         if (listing.getAvailable() != null) {
             existingListing.get().setAvailable(listing.getAvailable());
         }
