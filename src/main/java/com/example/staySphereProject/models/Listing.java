@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -16,14 +17,14 @@ import java.util.ArrayList;
 @Document(collection = "listings")
 public class Listing {
 
+
     @Id
     private String listingId;
 
-    @DBRef
-    private Review review;
+    //@DBRef
+   // private Review review;
 
     @DBRef
-    @NotBlank
     private User host;
 
     @NotBlank(message = "You need to give a title")
@@ -36,7 +37,8 @@ public class Listing {
     @Min(value = 1)
     private Integer listingGuestLimit;
 
-    @Max(value = 2500, message = "The limit is 2500 characters")
+    //@Max(value = 2500, message = "The limit is 2500 characters")
+
     @NotBlank(message = "You cant leave this emppty")
     private String listingDescription;
 
@@ -44,7 +46,7 @@ public class Listing {
     private ArrayList<String> listingImages;
 
     @NotNull
-    private ArrayList<LocalDateTime> unavailableDates;
+    private ArrayList<LocalDate> available ;
 
     @NotNull
     private boolean listingActive;
@@ -64,7 +66,7 @@ public class Listing {
 
     public Listing(String listingId, User host, String listingTitle, double listingPricePerNight,
                    String listingDescription, Integer listingGuestLimit,
-                   ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review, ArrayList<LocalDateTime> unavailableDates) {
+                   ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review, ArrayList<LocalDate> available) {
         this.listingId = listingId;
         this.host = host;
         this.listingTitle = listingTitle;
@@ -74,34 +76,34 @@ public class Listing {
         this.listingImages = listingImages;
         this.isBooked = isBooked;
         this.listingActive = listingActive;
-        this.review = review;
-        this.unavailableDates = unavailableDates;
+        //this.review = review;
+        this.available = available;
     }
     public String getListingId() {
         return listingId;
     }
-    public Review getReview() {
+    /*public Review getReview() {
         return review;
-    }
-    public ArrayList<LocalDateTime> getUnavailableDates() {
-        return unavailableDates;
+    }*/
+    public ArrayList<LocalDate> getAvailable() {
+        return available;
     }
 
-    public void setUnavailableDates(ArrayList<LocalDateTime> unavailableDates) {
-        this.unavailableDates = unavailableDates;
+    public void setAvailable(ArrayList<LocalDate> available) {
+        this.available = available;
     }
-    public void setReview(Review review) {
+    /*public void setReview(Review review) {
         this.review = review;
-    }
+    }*/
     public void setListingId(String listingId) {
         this.listingId = listingId;
     }
 
-    public @NotBlank User getHost() {
+    public User getHost() {
         return host;
     }
 
-    public void setHost(@NotBlank User host) {
+    public void setHost( User host) {
         this.host = host;
     }
 
@@ -130,11 +132,11 @@ public class Listing {
         this.listingGuestLimit = listingGuestLimit;
     }
 
-    public @Max(value = 2500, message = "The limit is 2500 characters") @NotBlank(message = "You cant leave this emppty") String getListingDescription() {
+    public /*@Max(value = 2500, message = "The limit is 2500 characters")*/ @NotBlank(message = "You cant leave this emppty") String getListingDescription() {
         return listingDescription;
     }
 
-    public void setListingDescription(@Max(value = 2500, message = "The limit is 2500 characters") @NotBlank(message = "You cant leave this emppty") String listingDescription) {
+    public void setListingDescription(/*@Max(value = 2500, message = "The limit is 2500 characters")*/ @NotBlank(message = "You cant leave this emppty") String listingDescription) {
         this.listingDescription = listingDescription;
     }
 
