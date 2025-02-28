@@ -13,8 +13,6 @@ public class ListingResponse {
     private Integer guestLimit;
     private ArrayList<String> listingImages;
 
-    public ListingResponse() {
-    }
 
 
     public String getListingId() {
@@ -65,6 +63,7 @@ public class ListingResponse {
     public void setListingImages(ArrayList<String> listingImages) {
         this.listingImages = listingImages;
     }
+
 
 
 }

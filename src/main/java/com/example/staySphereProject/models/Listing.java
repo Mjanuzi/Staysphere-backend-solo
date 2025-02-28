@@ -56,13 +56,13 @@ public class Listing {
     private boolean isBooked;
 
 
-
+    /**
     public Listing() {
 
 
 
     }
-
+    **/
 
 
 
@@ -81,6 +81,10 @@ public class Listing {
         //this.review = review;
         this.available = available;
     }
+
+    public Listing() {
+    }
+
     public String getListingId() {
         return listingId;
     }

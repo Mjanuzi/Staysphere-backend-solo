@@ -10,7 +10,7 @@ public class ListingDTO {
 
 
 
-    private String hostId;
+    private String userId;
 
     @NotNull
     private Double pricePerNight;
@@ -28,17 +28,17 @@ public class ListingDTO {
     private ArrayList<String> listingImages;
 
 
-    public ListingDTO() {
+    /*public ListingDTO() {
+    }*/
+
+
+
+    public String getUserId() {
+        return userId;
     }
 
-
-
-    public String getHostId() {
-        return hostId;
-    }
-
-    public void setHostId(String hostId) {
-        this.hostId = hostId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Double getPricePerNight() {
