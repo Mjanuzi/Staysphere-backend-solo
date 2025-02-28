@@ -1,6 +1,7 @@
 package com.example.staySphereProject.controllers;
 
 import com.example.staySphereProject.dto.ListingDTO;
+import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
@@ -48,8 +49,8 @@ public class ListingController {
     }*/
 
     @PostMapping("/register/{userId}")
-    public ResponseEntity<Listing> createListing (@Valid @RequestBody ListingDTO listingDTO, @PathVariable String userId) {
-        Listing newListing = listingService.createListing(listingDTO, userId);
+    public ResponseEntity<ListingResponse> createListing (@Valid @RequestBody ListingDTO listingDTO, @PathVariable String userId) {
+        ListingResponse newListing = listingService.createListing(listingDTO, userId);
         return new ResponseEntity<>(newListing, HttpStatus.CREATED);
     }
 

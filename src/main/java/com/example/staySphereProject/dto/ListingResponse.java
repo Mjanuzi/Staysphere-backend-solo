@@ -17,7 +17,6 @@ public class ListingResponse {
     }
 
 
-
     public String getListingId() {
         return listingId;
     }

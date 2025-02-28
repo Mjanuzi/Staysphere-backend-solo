@@ -1,6 +1,7 @@
 package com.example.staySphereProject.services;
 
 import com.example.staySphereProject.dto.ListingDTO;
+import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Review;
@@ -29,7 +30,7 @@ public class ListingService {
 
 
     //Register listing
-    public Listing createListing(ListingDTO listingDTO, String userID) {
+    public ListingResponse createListing(ListingDTO listingDTO, String userID) {
         User user = userRepository.findById(userID)
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
@@ -51,7 +52,7 @@ public class ListingService {
         listing.setAvailable(new ArrayList<>());
 
 
-        return listingRepository.save(listing);
+        return new ListingResponse();
     }
 
 
