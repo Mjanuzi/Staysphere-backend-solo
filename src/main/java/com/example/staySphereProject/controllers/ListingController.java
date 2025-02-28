@@ -41,10 +41,7 @@ public class ListingController {
         if (userOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        User user = userOptional.get();
 
-        // Koppla listing till user
-        listing.setHost(user);
         return new ResponseEntity<>(registerListing, HttpStatus.CREATED);
     }
 
@@ -54,7 +51,7 @@ public class ListingController {
         return ResponseEntity.ok(existingListings);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Listing> getProductById(@PathVariable String id) {
+    public ResponseEntity<Listing> getListingById(@PathVariable String id) {
         Optional<Listing> listing = listingService.getListingById(id);
         return listing.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
