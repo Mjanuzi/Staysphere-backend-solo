@@ -2,6 +2,7 @@ package com.example.staySphereProject.controllers;
 
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
+import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
@@ -36,18 +37,6 @@ public class ListingController {
         this.listingRepository = listingRepository;
     }
 
-
-   /*@PostMapping("/register/{userId}")
-    public ResponseEntity<Listing> registerListing(@Valid @RequestBody Listing listing, @PathVariable String userId) {
-        Listing registerListing = listingService.registerListing(listing);
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        return new ResponseEntity<>(registerListing, HttpStatus.CREATED);
-    }*/
-
     @PostMapping("/register/{userId}")
     public ResponseEntity<ListingResponse> createListing (@Valid @RequestBody ListingDTO listingDTO, @PathVariable String userId) {
         ListingResponse newListing = listingService.createListing(listingDTO);
@@ -81,45 +70,44 @@ public class ListingController {
     }
 
     @PatchMapping("/patch/{id}")
-    public ResponseEntity<Listing> patchListing(@PathVariable String id, @RequestBody Listing listing) {
-        Optional<Listing> existingListing = Optional.of(listingRepository.findById(id))
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Listing not found"));
+    public Listing patchListing(@PathVariable String id, @RequestBody Listing listing) {
+        Listing existingListing = listingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + id));
 
 
-        if (listing.getListingPricePerNight() != 0){
-            existingListing.get().setListingPricePerNight(listing.getListingPricePerNight());
+        if (listing.getListingPricePerNight() != null) {
+            existingListing.setListingPricePerNight(listing.getListingPricePerNight());
         }
-        if (listing.isListingActive() != false ){
-            existingListing.get().setListingActive(listing.isListingActive());
+        if (listing.isListingActive()) {
+            existingListing.setListingActive(listing.isListingActive());
         }
-        if (listing.getListingTitle() != null){
-            existingListing.get().setListingTitle(listing.getListingTitle());
+        if (listing.getListingTitle() != null) {
+            existingListing.setListingTitle(listing.getListingTitle());
         }
-        if (listing.getListingDescription() != null){
-            existingListing.get().setListingDescription(listing.getListingDescription());
+        if (listing.getListingDescription() != null) {
+            existingListing.setListingDescription(listing.getListingDescription());
         }
-        /*if (listing.isBooked() != false){
-            existingListing.get().setBooked(listing.isBooked());
-        }*/
+        if (listing.isBooked()){
+            existingListing.setBooked(listing.isBooked());
+        }
         if (listing.getAvailable() != null) {
-            existingListing.get().setAvailable(listing.getAvailable());
+            existingListing.setAvailable(listing.getAvailable());
         }
 
         if (listing.getListingImages() != null) {
-            existingListing.get().setListingImages(listing.getListingImages());
+            existingListing.setListingImages(listing.getListingImages());
         }
-        if (listing.getListingGuestLimit() != null){
-            existingListing.get().setListingGuestLimit(listing.getListingGuestLimit());
-        }
-        if (listing.getHost() != null){
-            existingListing.get().setHost(listing.getHost());
-        }
+        if (listing.getListingGuestLimit() != null) {
+            existingListing.setListingGuestLimit(listing.getListingGuestLimit());
 
-        Listing savedListing = listingRepository.save(existingListing.get());
-        return ResponseEntity.ok(savedListing);
+            if (listing.getHost() != null) {
+                existingListing.setHost(listing.getHost());
+            }
+
+
+        } return listingRepository.save(existingListing);
+
     }
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteListing(@PathVariable String id) {
         listingService.deleteProduct(id);

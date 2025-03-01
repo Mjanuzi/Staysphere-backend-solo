@@ -86,19 +86,7 @@ public class ListingService {
 
 
 
-    //-------Hälp Mäthodz---------
-    private ListingResponse convertToDTO(Listing listing) {
-        ListingResponse listingResponse = new ListingResponse();
 
-        listingResponse.setListingId(listing.getListingId());
-        listingResponse.setListingTitle(listing.getListingTitle());
-        listingResponse.setListingDescription(listing.getListingDescription());
-        listingResponse.setGuestLimit(listing.getListingGuestLimit());
-        listingResponse.setPricePerNight(listing.getListingPricePerNight());
-        listingResponse.setListingDescription(listing.getListingDescription());
-
-        return listingResponse;
-    }
 
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
@@ -128,4 +116,24 @@ public class ListingService {
     }
 
 
+
+    //-------Hälp Mäthoder---------
+
+
+
+
+
+
+    private ListingResponse convertToDTO(Listing listing) {
+        ListingResponse listingResponse = new ListingResponse();
+
+        listingResponse.setListingId(listing.getListingId());
+        listingResponse.setListingTitle(listing.getListingTitle());
+        listingResponse.setListingDescription(listing.getListingDescription());
+        listingResponse.setGuestLimit(listing.getListingGuestLimit());
+        listingResponse.setPricePerNight(listing.getListingPricePerNight());
+        listingResponse.setListingDescription(listing.getListingDescription());
+
+        return listingResponse;
+    }
 }
