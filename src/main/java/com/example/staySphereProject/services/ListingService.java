@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,79 +26,6 @@ public class ListingService {
     public ListingService(ListingRepository listingRepository, UserRepository userRepository) {
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
-    }
-
-
-
-
-
-    //get listing by id
-    public Optional<Listing> getListingById(String id) {
-        return listingRepository.findById(id);
-    }
-
-
-
-
-
-  /*  public Listing patchListing(String id, Listing listing) {
-        Listing existingListing = listingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + id));
-
-        if (listing.getListingPricePerNight() != 0){
-            existingListing.getListingPricePerNight(listing.setListingPricePerNight());
-        }
-        if (listing.isListingActive() != false ){
-            existingListing.get().setListingActive(listing.isListingActive());
-        }
-        if (listing.getListingTitle() != null){
-            existingListing.get().setListingTitle(listing.getListingTitle());
-        }
-        if (listing.getListingDescription() != null){
-            existingListing.get().setListingDescription(listing.getListingDescription());
-        }
-        if (listing.isBooked() != false){
-            existingListing.get().setBooked(listing.isBooked());
-        }
-        if (listing.getAvailable() != null) {
-            existingListing.get().setAvailable(listing.getAvailable());
-        }
-
-        if (listing.getListingImages() != null) {
-            existingListing.get().setListingImages(listing.getListingImages());
-        }
-        if (listing.getListingGuestLimit() != null){
-            existingListing.get().setListingGuestLimit(listing.getListingGuestLimit());
-        }
-        if (listing.getHost() != null){
-            existingListing.get().setHost(listing.getHost());
-        }
-
-        Listing savedListing = listingRepository.save(existingListing.get());
-        return ResponseEntity.ok(savedListing);
-
-}*/
-    public void deleteProduct(String id) {
-        Listing listing = listingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-
-        listingRepository.delete(listing);
-    }
-
-
-
-    //-------Hälp Mäthodz---------
-    private ListingResponse convertToDTO(Listing listing) {
-        ListingResponse listingResponse = new ListingResponse();
-
-        listingResponse.setListingId(listing.getListingId());
-        listingResponse.setListingTitle(listing.getListingTitle());
-        listingResponse.setListingDescription(listing.getListingDescription());
-        listingResponse.setGuestLimit(listing.getListingGuestLimit());
-        listingResponse.setPricePerNight(listing.getListingPricePerNight());
-        listingResponse.setListingDescription(listing.getListingDescription());
-
-        return listingResponse;
     }
 
     //Register listing
@@ -123,9 +51,74 @@ public class ListingService {
         listing.setAvailable(new ArrayList<>());
 
         Listing savedListing = listingRepository.save(listing);
-        //return convertToDTO(listingRepository.save(listing));
+
         return convertToDTO(savedListing);
     }
+
+
+    public List<Listing> getAllListings(){
+        return listingRepository.findAll();
+    }
+
+
+    //get listing by id
+    public Optional<Listing> getListingById(String id) {
+        return listingRepository.findById(id);
+    }
+
+    public Listing patchListing(Listing listing, String id) {
+        Listing existingListing = listingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        if (listing.getListingPricePerNight() > 0) {
+            existingListing.setListingPricePerNight(listing.getListingPricePerNight());
+        }
+        if (listing.getListingTitle() != null) {
+            existingListing.setListingTitle(listing.getListingTitle());
+        }
+        if (listing.getListingDescription() != null) {
+            existingListing.setListingDescription(listing.getListingDescription());
+        }
+        if (listing.getAvailable() != null) {
+            existingListing.setAvailable(listing.getAvailable());
+        }
+        if (listing.getListingImages() != null) {
+            existingListing.setListingImages(listing.getListingImages());
+        }
+        if (listing.getListingGuestLimit() != null) {
+            existingListing.setListingGuestLimit(listing.getListingGuestLimit());
+        }
+        if (listing.getHost() != null) {
+            existingListing.setHost(listing.getHost());
+        }
+
+        return listingRepository.save(existingListing);
+    }
+
+    public void deleteListing(String id) {
+        Listing existingListing = listingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        listingRepository.delete(existingListing);
+    }
+
+
+
+    //-------Hälp Mäthodz---------
+    private ListingResponse convertToDTO(Listing listing) {
+        ListingResponse listingResponse = new ListingResponse();
+
+        listingResponse.setListingId(listing.getListingId());
+        listingResponse.setListingTitle(listing.getListingTitle());
+        listingResponse.setListingDescription(listing.getListingDescription());
+        listingResponse.setGuestLimit(listing.getListingGuestLimit());
+        listingResponse.setPricePerNight(listing.getListingPricePerNight());
+        listingResponse.setListingDescription(listing.getListingDescription());
+
+        return listingResponse;
+    }
+
+
 
 
 }
