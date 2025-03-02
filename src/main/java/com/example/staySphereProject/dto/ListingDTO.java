@@ -28,8 +28,8 @@ public class ListingDTO {
     private ArrayList<String> listingImages;
 
 
-    /*public ListingDTO() {
-    }*/
+    public ListingDTO() {
+    }
 
 
 

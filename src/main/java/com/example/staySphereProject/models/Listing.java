@@ -31,7 +31,7 @@ public class Listing {
     private String listingTitle;
 
     @NotNull
-    private double listingPricePerNight;
+    private Double listingPricePerNight;
 
     @NotNull(message = "You Need to add atleast one guest")
     @Min(value = 1)
@@ -56,17 +56,7 @@ public class Listing {
     private boolean isBooked;
 
 
-    /**
-    public Listing() {
-
-
-
-    }
-    **/
-
-
-
-    public Listing(String listingId, User host, String listingTitle, double listingPricePerNight,
+    public Listing(String listingId, User host, String listingTitle, Double listingPricePerNight,
                    String listingDescription, Integer listingGuestLimit,
                    ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review, ArrayList<LocalDate> available) {
         this.listingId = listingId;
@@ -84,6 +74,10 @@ public class Listing {
 
     public Listing() {
     }
+
+
+
+
 
     public String getListingId() {
         return listingId;
@@ -122,11 +116,11 @@ public class Listing {
     }
 
     @NotNull
-    public double getListingPricePerNight() {
+    public Double getListingPricePerNight() {
         return listingPricePerNight;
     }
 
-    public void setListingPricePerNight(@NotNull double listingPricePerNight) {
+    public void setListingPricePerNight(@NotNull Double listingPricePerNight) {
         this.listingPricePerNight = listingPricePerNight;
     }
 
