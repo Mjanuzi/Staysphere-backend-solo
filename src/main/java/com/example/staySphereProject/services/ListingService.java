@@ -4,10 +4,8 @@ import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
-import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
-import com.example.staySphereProject.repository.ReviewRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -40,9 +38,9 @@ public class ListingService {
         listing.setHost(user);
         listing.setListingTitle(listingDTO.getListingTitle());
         listing.setListingDescription(listingDTO.getListingDescription());
-        listing.setListingPricePerNight(listingDTO.getPricePerNight());
+        listing.setListingPricePerNight(listingDTO.getListingPricePerNight());
         listing.setListingGuestLimit(listingDTO.getGuestLimit());
-        //listing.getListingImages().addAll(listingDTO.getListingImages());
+        listing.setListingImages(listingDTO.getListingImages());
 
 
         //standard values when creating an object
@@ -114,6 +112,7 @@ public class ListingService {
         listingResponse.setGuestLimit(listing.getListingGuestLimit());
         listingResponse.setPricePerNight(listing.getListingPricePerNight());
         listingResponse.setListingDescription(listing.getListingDescription());
+        listingResponse.setListingImages(listing.getListingImages());
 
         return listingResponse;
     }

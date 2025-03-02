@@ -13,7 +13,7 @@ public class ListingDTO {
     private String userId;
 
     @NotNull
-    private Double pricePerNight;
+    private Double listingPricePerNight;
 
     @NotBlank
     private String listingTitle;
@@ -41,12 +41,12 @@ public class ListingDTO {
         this.userId = userId;
     }
 
-    public Double getPricePerNight() {
-        return pricePerNight;
+    public Double getListingPricePerNight() {
+        return listingPricePerNight;
     }
 
-    public void setPricePerNight(Double pricePerNight) {
-        this.pricePerNight = pricePerNight;
+    public void setListingPricePerNight(Double listingPricePerNight) {
+        this.listingPricePerNight = listingPricePerNight;
     }
 
     public String getListingTitle() {
