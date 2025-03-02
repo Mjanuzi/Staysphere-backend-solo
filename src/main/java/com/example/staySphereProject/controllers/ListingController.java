@@ -50,9 +50,10 @@ public class ListingController {
 
     @PostMapping("/register/{userId}")
     public ResponseEntity<ListingResponse> createListing (@Valid @RequestBody ListingDTO listingDTO, @PathVariable String userId) {
-        ListingResponse newListing = listingService.createListing(listingDTO);
+        ListingResponse newListing = listingService.createListing(listingDTO, userId);
         return new ResponseEntity<>(newListing, HttpStatus.CREATED);
     }
+
 
 
 

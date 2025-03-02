@@ -101,8 +101,8 @@ public class ListingService {
     }
 
     //Register listing
-    public ListingResponse createListing(ListingDTO listingDTO) {
-        User user = userRepository.findById(listingDTO.getUserId())
+    public ListingResponse createListing(ListingDTO listingDTO, String userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
 
