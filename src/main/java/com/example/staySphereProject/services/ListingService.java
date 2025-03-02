@@ -1,73 +1,123 @@
 package com.example.staySphereProject.services;
 
+import com.example.staySphereProject.dto.ListingDTO;
+import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
-import org.springframework.http.ResponseEntity;
+import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ListingService {
     private final ListingRepository listingRepository;
+    private final UserRepository userRepository;
+    //private final ReviewRepository reviewRepository;
 
-    public ListingService(ListingRepository listingRepository) {
+
+    public ListingService(ListingRepository listingRepository, UserRepository userRepository) {
         this.listingRepository = listingRepository;
+        this.userRepository = userRepository;
     }
 
-    public Listing registerListing(Listing listing) {
+    //Register listing
+    public ListingResponse createListing(ListingDTO listingDTO, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
 
-       return listingRepository.save(listing);
+
+        //Creating new listing
+        Listing listing = new Listing();
+
+        listing.setHost(user);
+        listing.setListingTitle(listingDTO.getListingTitle());
+        listing.setListingDescription(listingDTO.getListingDescription());
+        listing.setListingPricePerNight(listingDTO.getListingPricePerNight());
+        listing.setListingGuestLimit(listingDTO.getGuestLimit());
+        listing.setListingImages(listingDTO.getListingImages());
+
+
+        //standard values when creating an object
+        listing.setListingActive(true);
+        listing.setBooked(false);
+        listing.setAvailable(new ArrayList<>());
+
+        Listing savedListing = listingRepository.save(listing);
+
+        return convertToDTO(savedListing);
     }
+
+
+    public List<Listing> getAllListings(){
+        return listingRepository.findAll();
+    }
+
+
+    //get listing by id
     public Optional<Listing> getListingById(String id) {
         return listingRepository.findById(id);
     }
 
-  /*  public Listing patchListing(String id, Listing listing) {
+    public Listing patchListing(Listing listing, String id) {
         Listing existingListing = listingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        if (listing.getListingPricePerNight() != 0){
-            existingListing.getListingPricePerNight(listing.setListingPricePerNight());
+        if (listing.getListingPricePerNight() > 0) {
+            existingListing.setListingPricePerNight(listing.getListingPricePerNight());
         }
-        if (listing.isListingActive() != false ){
-            existingListing.get().setListingActive(listing.isListingActive());
+        if (listing.getListingTitle() != null) {
+            existingListing.setListingTitle(listing.getListingTitle());
         }
-        if (listing.getListingTitle() != null){
-            existingListing.get().setListingTitle(listing.getListingTitle());
-        }
-        if (listing.getListingDescription() != null){
-            existingListing.get().setListingDescription(listing.getListingDescription());
-        }
-        if (listing.isBooked() != false){
-            existingListing.get().setBooked(listing.isBooked());
+        if (listing.getListingDescription() != null) {
+            existingListing.setListingDescription(listing.getListingDescription());
         }
         if (listing.getAvailable() != null) {
-            existingListing.get().setAvailable(listing.getAvailable());
+            existingListing.setAvailable(listing.getAvailable());
         }
-
         if (listing.getListingImages() != null) {
-            existingListing.get().setListingImages(listing.getListingImages());
+            existingListing.setListingImages(listing.getListingImages());
         }
-        if (listing.getListingGuestLimit() != null){
-            existingListing.get().setListingGuestLimit(listing.getListingGuestLimit());
+        if (listing.getListingGuestLimit() != null) {
+            existingListing.setListingGuestLimit(listing.getListingGuestLimit());
         }
-        if (listing.getHost() != null){
-            existingListing.get().setHost(listing.getHost());
+        if (listing.getHost() != null) {
+            existingListing.setHost(listing.getHost());
         }
 
-        Listing savedListing = listingRepository.save(existingListing.get());
-        return ResponseEntity.ok(savedListing);
-
-}*/
-    public void deleteProduct(String id) {
-        Listing listing = listingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-
-        listingRepository.delete(listing);
+        return listingRepository.save(existingListing);
     }
+
+    public void deleteListing(String id) {
+        Listing existingListing = listingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        listingRepository.delete(existingListing);
+    }
+
+
+
+    //-------Hälp Mäthodz---------
+    private ListingResponse convertToDTO(Listing listing) {
+        ListingResponse listingResponse = new ListingResponse();
+
+        listingResponse.setListingId(listing.getListingId());
+        listingResponse.setListingTitle(listing.getListingTitle());
+        listingResponse.setListingDescription(listing.getListingDescription());
+        listingResponse.setGuestLimit(listing.getListingGuestLimit());
+        listingResponse.setPricePerNight(listing.getListingPricePerNight());
+        listingResponse.setListingDescription(listing.getListingDescription());
+        listingResponse.setListingImages(listing.getListingImages());
+
+        return listingResponse;
+    }
+
+
+
+
 }

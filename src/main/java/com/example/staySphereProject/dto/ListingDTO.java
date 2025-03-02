@@ -7,58 +7,69 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 
 public class ListingDTO {
-    @NotBlank
-    private String listingOwner;
+
+
+
+    private String userId;
+
     @NotNull
-    private double pricePerNight;
+    private Double listingPricePerNight;
+
     @NotBlank
     private String listingTitle;
+
     @NotBlank
     private String listingDescription;
+
     @Min(value = 1)
     private Integer guestLimit;
+
     //@NotBlank
     private ArrayList<String> listingImages;
 
 
-    public @NotBlank String getListingOwner() {
-        return listingOwner;
+    public ListingDTO() {
     }
 
-    public void setListingOwner(@NotBlank String listingOwner) {
-        this.listingOwner = listingOwner;
+
+
+    public String getUserId() {
+        return userId;
     }
 
-    @NotNull
-    public double getPricePerNight() {
-        return pricePerNight;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setPricePerNight(@NotNull double pricePerNight) {
-        this.pricePerNight = pricePerNight;
+    public Double getListingPricePerNight() {
+        return listingPricePerNight;
     }
 
-    public @NotBlank String getListingTitle() {
+    public void setListingPricePerNight(Double listingPricePerNight) {
+        this.listingPricePerNight = listingPricePerNight;
+    }
+
+    public String getListingTitle() {
         return listingTitle;
     }
 
-    public void setListingTitle(@NotBlank String listingTitle) {
+    public void setListingTitle(String listingTitle) {
         this.listingTitle = listingTitle;
     }
 
-    public @NotBlank String getListingDescription() {
+    public String getListingDescription() {
         return listingDescription;
     }
 
-    public void setListingDescription(@NotBlank String listingDescription) {
+    public void setListingDescription(String listingDescription) {
         this.listingDescription = listingDescription;
     }
 
-    public @Min(value = 1) Integer getGuestLimit() {
+    public Integer getGuestLimit() {
         return guestLimit;
     }
 
-    public void setGuestLimit(@Min(value = 1) Integer guestLimit) {
+    public void setGuestLimit(Integer guestLimit) {
         this.guestLimit = guestLimit;
     }
 
