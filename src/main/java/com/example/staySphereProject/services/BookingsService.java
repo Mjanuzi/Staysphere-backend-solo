@@ -112,6 +112,11 @@ public class BookingsService {
         BookingsResponse response = new BookingsResponse();
         response.setBookingID(booking.getBookingID());
         response.setUserId(booking.getUserId());
+
+        User user = userRepository.findById(booking.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        response.setUsername(user.getUsername());
+
         response.setListingId(booking.getListingId());
         response.setBookingName(booking.getBookingName());
         response.setBookingDate(booking.getBookingDate());

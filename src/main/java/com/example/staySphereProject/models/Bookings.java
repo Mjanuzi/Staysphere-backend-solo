@@ -58,7 +58,7 @@ public class Bookings {
 
 
 
-
+/**
 public Bookings(String bookingID, String userId, String listingId, String bookingName,
                 LocalDateTime bookingDate, Date startDate, Date endDate,
                 double totalCost, boolean status, boolean isPending) {
@@ -73,6 +73,7 @@ public Bookings(String bookingID, String userId, String listingId, String bookin
     this.status = status;
     this.isPending = isPending;
 }
+ **/
 
 
 
