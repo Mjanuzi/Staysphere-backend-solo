@@ -36,7 +36,6 @@ public class BookingsService {
         Bookings existingBooking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        //existingBooking.setBookingName(bookingsDTO.getBookingName());
         existingBooking.setBookingDate(bookingsDTO.getBookingDate());
         existingBooking.setStartDate(bookingsDTO.getStartDate());
         existingBooking.setEndDate(bookingsDTO.getEndDate());
@@ -114,7 +113,6 @@ public class BookingsService {
         Bookings booking = new Bookings();
         booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
         booking.setListingId(bookingsDTO.getListingId());
-        //booking.setBookingName(bookingsDTO.getBookingName());
         booking.setBookingDate(bookingsDTO.getBookingDate());
         booking.setStartDate(bookingsDTO.getStartDate());
         booking.setEndDate(bookingsDTO.getEndDate());
