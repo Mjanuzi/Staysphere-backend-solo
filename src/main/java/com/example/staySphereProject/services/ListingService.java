@@ -110,7 +110,7 @@ public class ListingService {
         listingResponse.setListingTitle(listing.getListingTitle());
         listingResponse.setListingDescription(listing.getListingDescription());
         listingResponse.setGuestLimit(listing.getListingGuestLimit());
-        listingResponse.setPricePerNight(listing.getListingPricePerNight());
+        listingResponse.setListingPricePerNight(listing.getListingPricePerNight());
         listingResponse.setListingDescription(listing.getListingDescription());
         listingResponse.setListingImages(listing.getListingImages());
 

@@ -1,13 +1,11 @@
 package com.example.staySphereProject.dto;
 
-import com.example.staySphereProject.models.Listing;
-
 import java.util.ArrayList;
 
 public class ListingResponse {
 
     private String listingId;
-    private Double pricePerNight;
+    private Double listingPricePerNight;
     private String listingTitle;
     private String listingDescription;
     private Integer guestLimit;
@@ -24,12 +22,12 @@ public class ListingResponse {
     }
 
 
-    public Double getPricePerNight() {
-        return pricePerNight;
+    public Double getListingPricePerNight() {
+        return listingPricePerNight;
     }
 
-    public void setPricePerNight(Double pricePerNight) {
-        this.pricePerNight = pricePerNight;
+    public void setListingPricePerNight(Double listingPricePerNight) {
+        this.listingPricePerNight = listingPricePerNight;
     }
 
     public String getListingTitle() {
