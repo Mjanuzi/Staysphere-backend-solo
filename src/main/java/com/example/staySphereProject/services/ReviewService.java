@@ -56,11 +56,36 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
     }
 
+    public Review patchReview(String id, Review review) {
+        Review existingReview = reviewRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
 
+        if(review.getUserReviewer() != null){
+            existingReview.setUserReviewer(review.getUserReviewer());
+        }
+        if(review.getListingReviewed() != null){
+            existingReview.setListingReviewed(review.getListingReviewed());
+        }
+        if(review.getComment() != null){
+            existingReview.setComment(review.getComment());
+        }
+        if (review.getReviewRating() != null){
+            existingReview.setReviewRating(review.getReviewRating());
+        }
+        if(review.getReviewDateSet() != null){
+            existingReview.setReviewDateSet(review.getReviewDateSet());
+        }
+        if (review.getId() != null){
+            existingReview.setId(id);
+        }
+        return reviewRepository.save(existingReview);
+    }
 
-
-
-
+    public void deleteReview(String id) {
+        Review existingReview = reviewRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
+        reviewRepository.deleteById(existingReview.getId());
+    }
 
 
     private ReviewResponse convertToReviewResponse(Review review) {
@@ -70,7 +95,10 @@ public class ReviewService {
         reviewResponse.setReviewerUsername(review.getId());
         //reviewResponse.setReviewedRating(review.getReviewRating());
         reviewResponse.setReviewedListing(reviewResponse.getReviewedListing());
+
+        return reviewResponse;
     }
+
 
 
 
