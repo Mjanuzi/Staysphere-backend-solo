@@ -89,10 +89,12 @@ public class BookingsService {
 
         User user = userRepository.findById(booking.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        response.setUsername(user.getUsername());
 
         response.setListingId(booking.getListingId());
-        response.setBookingName(booking.getBookingName());
+        Listing listing = listingRepository.findById(booking.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        response.setBookingName("For " + user.getUsername() + " at " + listing.getListingTitle());
         response.setBookingDate(booking.getBookingDate());
         response.setStartDate(booking.getStartDate());
         response.setEndDate(booking.getEndDate());
