@@ -26,9 +26,9 @@ public class ReviewService {
         this.listingRepository = listingRepository;
     }
 
-    public Review createReview(ReviewRequest reviewRequest) {
+    public ReviewResponse createReview(ReviewRequest reviewRequest, String id) {
         // Hämta user från databasen
-        User existingUser = userRepository.findById(reviewRequest.getUserReviewer())
+        User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
 
         //hämta listing från databasen
@@ -43,7 +43,8 @@ public class ReviewService {
         review.setReviewDateSet(LocalDateTime.now());
 
         //spara review
-        return reviewRepository.save(review);
+        Review savedReview = reviewRepository.save(review);
+        return convertToReviewResponse(savedReview);
 
     }
     public List<Review> getAllReviews() {
@@ -58,6 +59,18 @@ public class ReviewService {
 
 
 
+
+
+
+
+    private ReviewResponse convertToReviewResponse(Review review) {
+        ReviewResponse reviewResponse = new ReviewResponse();
+
+        reviewResponse.setReviewComment(review.getComment());
+        reviewResponse.setReviewerUsername(review.getId());
+        //reviewResponse.setReviewedRating(review.getReviewRating());
+        reviewResponse.setReviewedListing(reviewResponse.getReviewedListing());
+    }
 
 
 

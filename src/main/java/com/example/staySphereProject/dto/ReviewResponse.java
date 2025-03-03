@@ -1,10 +1,9 @@
 package com.example.staySphereProject.dto;
 
-import java.time.LocalDateTime;
-
 public class ReviewResponse {
 
-    private String reviewerName;
+    private String ReviewerId;
+    private String reviewerUsername;
     private String reviewedListing;
     private String reviewComment;
     private String reviewedRating;
@@ -12,9 +11,9 @@ public class ReviewResponse {
 
 
     //------------------GETTER & SETTER--------------------
-    public String getReviewerName() {return reviewerName;}
+    public String getReviewerUsername() {return reviewerUsername;}
 
-    public void setReviewerName(String reviewerName) {this.reviewerName = reviewerName;}
+    public void setReviewerUsername(String reviewerUsername) {this.reviewerUsername = reviewerUsername;}
 
     public String getReviewedListing() {return reviewedListing;}
 

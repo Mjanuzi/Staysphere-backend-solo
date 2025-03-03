@@ -32,8 +32,8 @@ public class ReviewController {
     }
 
     @PostMapping("/user/{id}")
-    public ResponseEntity<?> registerReview (@Valid @RequestBody ReviewRequest reviewRequest) {
-        Review newReview = reviewService.createReview(reviewRequest);
+    public ResponseEntity<?> registerReview (@Valid @RequestBody ReviewRequest reviewRequest,@PathVariable String id) {
+        ReviewResponse newReview = reviewService.createReview(reviewRequest, id );
         return ResponseEntity.status(HttpStatus.CREATED).body(newReview);
 
     }

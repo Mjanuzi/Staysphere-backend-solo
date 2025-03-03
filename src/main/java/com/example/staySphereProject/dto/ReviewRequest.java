@@ -8,17 +8,13 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class ReviewRequest {
-    //@NotNull(message = "Review needs a valid User")
+
     private String userReviewer;
 
-    //@NotNull(message = "Review needs a valid listing")
     private String reviewedListing;
 
-    //@Max(value = 500,message = "Comment can not have more than 500 characters")
     private String comment;
 
-    //@Min(value = 1, message = "Minimum rating is 1")
-    //@Max(value = 5, message = "Maximum rating is 5")
     private Integer reviewRating;
 
 
