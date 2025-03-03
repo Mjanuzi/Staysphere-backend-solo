@@ -15,11 +15,6 @@ import java.util.Date;
     @NotNull(message = "Listing ID req")
     private String listingId;
 
-    /**
-    @NotEmpty(message = "Booking name req")
-    private String bookingName;
-     **/
-
     @NotNull(message = "Booking date req")
     private LocalDateTime bookingDate;
 
@@ -28,10 +23,6 @@ import java.util.Date;
 
     @NotNull(message = "End date req")
     private Date endDate;
-
-    //@NotNull(message = "Total cost req")
-    //@PositiveOrZero(message = "Total cost can't be negative")
-    //private double totalCost;
 
     private boolean status;
     private boolean pending;
@@ -42,11 +33,6 @@ import java.util.Date;
     public String getListingId() { return listingId; }
     public void setListingId(String listingId) { this.listingId = listingId; }
 
-        /**
-    public String getBookingName() { return bookingName; }
-    public void setBookingName(String bookingName) { this.bookingName = bookingName; }
-         **/
-
     public LocalDateTime getBookingDate() { return bookingDate; }
     public void setBookingDate(LocalDateTime bookingDate) { this.bookingDate = bookingDate; }
 
@@ -55,9 +41,6 @@ import java.util.Date;
 
     public Date getEndDate() { return endDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
-
-    //public double getTotalCost() { return totalCost; }
-    //public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
 
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }

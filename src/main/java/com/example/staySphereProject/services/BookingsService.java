@@ -43,7 +43,6 @@ public class BookingsService {
         existingBooking.setBookingDate(bookingsDTO.getBookingDate());
         existingBooking.setStartDate(bookingsDTO.getStartDate());
         existingBooking.setEndDate(bookingsDTO.getEndDate());
-        //existingBooking.setTotalCost(bookingsDTO.getTotalCost());
         existingBooking.setStatus(bookingsDTO.isStatus());
         existingBooking.setPending(bookingsDTO.isPending());
 
