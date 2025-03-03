@@ -105,11 +105,6 @@ public class BookingsService {
 
 
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
-        User user = userRepository.findById(bookingsDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        Listing listing = listingRepository.findById(bookingsDTO.getListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         Bookings booking = new Bookings();
         booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
