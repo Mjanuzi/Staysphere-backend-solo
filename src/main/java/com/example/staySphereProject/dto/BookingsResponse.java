@@ -18,7 +18,7 @@ public class BookingsResponse {
     private boolean status;
     private boolean pending;
 
-    // Getters and Setters
+
     public String getBookingID() { return bookingID; }
     public void setBookingID( String bookingID) { this.bookingID = bookingID; }
 
