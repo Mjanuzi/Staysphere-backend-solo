@@ -25,32 +25,7 @@ public class BookingsService {
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
     }
-    // Create a new booking
-    /**
-    public Bookings createBooking(BookingsDTO bookingsDTO) {
-        // Fetch the user
-        User user = userRepository.findById(bookingsDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Fetch the listing
-        Listing listing = listingRepository.findById(bookingsDTO.getListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found with id " + bookingsDTO.getListingId()));
-
-        // Create a new booking
-        Bookings newBooking = new Bookings();
-        newBooking.setUserId(user.getId());
-        newBooking.setListingId(listing.getId());
-        newBooking.setBookingName(bookingsDTO.getBookingName());
-        newBooking.setBookingDate(bookingsDTO.getBookingDate());
-        newBooking.setStartDate(bookingsDTO.getStartDate());
-        newBooking.setEndDate(bookingsDTO.getEndDate());
-        newBooking.setTotalCost(bookingsDTO.getTotalCost());
-        newBooking.setStatus(bookingsDTO.isStatus());
-        newBooking.setPending(bookingsDTO.isPending());
-
-        return convertToDTO.save(booking);
-    }
-     **/
     public BookingsResponse getBookingById(String bookingId) {
         Bookings booking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
@@ -80,7 +55,7 @@ public class BookingsService {
         bookingsRepository.deleteById(bookingId);
     }
 
-    // Get all bookings
+
     public List<BookingsResponse> getAllBookings() {
         List<Bookings> bookings = bookingsRepository.findAll();
 
@@ -89,14 +64,13 @@ public class BookingsService {
                 .collect(Collectors.toList());
     }
 
-    // Get bookings for a specific user
+
     public List<BookingsResponse> getUserBookings(String userId) {
-        // Check if the user exists
+
         if (!userRepository.existsById(userId)) {
             throw new IllegalArgumentException("User not found");
         }
 
-        // Fetch bookings for the user
         List<Bookings> bookings = bookingsRepository.findByUserId(userId);
 
         return bookings.stream()
@@ -112,8 +86,15 @@ public class BookingsService {
         BookingsResponse response = new BookingsResponse();
         response.setBookingID(booking.getBookingID());
         response.setUserId(booking.getUserId());
+
+        User user = userRepository.findById(booking.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         response.setListingId(booking.getListingId());
-        response.setBookingName(booking.getBookingName());
+        Listing listing = listingRepository.findById(booking.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        response.setBookingName("For " + user.getUsername() + " at " + listing.getListingTitle());
         response.setBookingDate(booking.getBookingDate());
         response.setStartDate(booking.getStartDate());
         response.setEndDate(booking.getEndDate());
@@ -126,11 +107,6 @@ public class BookingsService {
 
 
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
-        User user = userRepository.findById(bookingsDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        Listing listing = listingRepository.findById(bookingsDTO.getListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         Bookings booking = new Bookings();
         booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
@@ -145,6 +121,6 @@ public class BookingsService {
 
         // Save and convert to response
         Bookings savedBooking = bookingsRepository.save(booking);
-        return convertToDTO(bookingsRepository.save(booking));
+        return convertToDTO(savedBooking);
     }
 }
