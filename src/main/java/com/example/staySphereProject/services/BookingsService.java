@@ -36,7 +36,7 @@ public class BookingsService {
         Bookings existingBooking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        existingBooking.setBookingName(bookingsDTO.getBookingName());
+        //existingBooking.setBookingName(bookingsDTO.getBookingName());
         existingBooking.setBookingDate(bookingsDTO.getBookingDate());
         existingBooking.setStartDate(bookingsDTO.getStartDate());
         existingBooking.setEndDate(bookingsDTO.getEndDate());
@@ -49,9 +49,6 @@ public class BookingsService {
     }
 
     public void deleteBooking(String bookingId) {
-        if (!bookingsRepository.existsById(bookingId)) {
-            throw new ResourceNotFoundException("Booking not found");
-        }
         bookingsRepository.deleteById(bookingId);
     }
 
@@ -108,10 +105,16 @@ public class BookingsService {
 
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
 
+        if (!userRepository.existsById(bookingsDTO.getUserId())) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        if (!listingRepository.existsById(bookingsDTO.getListingId())) {
+            throw new ResourceNotFoundException("Listing not found");
+        }
         Bookings booking = new Bookings();
         booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
         booking.setListingId(bookingsDTO.getListingId());
-        booking.setBookingName(bookingsDTO.getBookingName());
+        //booking.setBookingName(bookingsDTO.getBookingName());
         booking.setBookingDate(bookingsDTO.getBookingDate());
         booking.setStartDate(bookingsDTO.getStartDate());
         booking.setEndDate(bookingsDTO.getEndDate());

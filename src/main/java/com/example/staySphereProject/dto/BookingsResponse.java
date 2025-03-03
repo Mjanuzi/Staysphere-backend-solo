@@ -8,7 +8,7 @@ import java.util.Date;
 public class BookingsResponse {
     private String bookingID;
     private String userId;
-    private String username;
+    //private String username;
     private String listingId;
     private String bookingName;
     private LocalDateTime bookingDate;
@@ -25,8 +25,8 @@ public class BookingsResponse {
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    //public String getUsername() { return username; }
+    //public void setUsername(String username) { this.username = username; }
 
     public String getListingId() { return listingId; }
     public void setListingId(String listingId) { this.listingId = listingId; }
