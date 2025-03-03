@@ -11,6 +11,10 @@ import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +43,30 @@ public class BookingsService {
         existingBooking.setBookingDate(bookingsDTO.getBookingDate());
         existingBooking.setStartDate(bookingsDTO.getStartDate());
         existingBooking.setEndDate(bookingsDTO.getEndDate());
-        existingBooking.setTotalCost(bookingsDTO.getTotalCost());
         existingBooking.setStatus(bookingsDTO.isStatus());
         existingBooking.setPending(bookingsDTO.isPending());
 
+        Listing listing = listingRepository.findById(existingBooking.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        long days = calculateNumberOfDays(existingBooking.getStartDate(), existingBooking.getEndDate());
+
+        double totalCost = days * listing.getListingPricePerNight();
+        existingBooking.setTotalCost(totalCost);
+
         Bookings updatedBooking = bookingsRepository.save(existingBooking);
         return convertToDTO(updatedBooking);
+    }
+
+    private long calculateNumberOfDays(Date startDate, Date endDate) {
+        LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        if (end.isBefore(start) || end.isEqual(start)) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
+
+        return ChronoUnit.DAYS.between(start, end);
     }
 
     public void deleteBooking(String bookingId) {
@@ -110,13 +132,21 @@ public class BookingsService {
         if (!listingRepository.existsById(bookingsDTO.getListingId())) {
             throw new ResourceNotFoundException("Listing not found");
         }
+
+        Listing listing = listingRepository.findById(bookingsDTO.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        long days = calculateNumberOfDays(bookingsDTO.getStartDate(), bookingsDTO.getEndDate());
+
+        double totalCost = days * listing.getListingPricePerNight();
+
         Bookings booking = new Bookings();
         booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
         booking.setListingId(bookingsDTO.getListingId());
         booking.setBookingDate(bookingsDTO.getBookingDate());
         booking.setStartDate(bookingsDTO.getStartDate());
         booking.setEndDate(bookingsDTO.getEndDate());
-        booking.setTotalCost(bookingsDTO.getTotalCost());
+        booking.setTotalCost(totalCost);
         booking.setStatus(bookingsDTO.isStatus());
         booking.setPending(bookingsDTO.isPending());
 
