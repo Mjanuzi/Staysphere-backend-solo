@@ -29,9 +29,9 @@ import java.util.Date;
     @NotNull(message = "End date req")
     private Date endDate;
 
-    @NotNull(message = "Total cost req")
-    @PositiveOrZero(message = "Total cost can't be negative")
-    private double totalCost;
+    //@NotNull(message = "Total cost req")
+    //@PositiveOrZero(message = "Total cost can't be negative")
+    //private double totalCost;
 
     private boolean status;
     private boolean pending;
@@ -56,8 +56,8 @@ import java.util.Date;
     public Date getEndDate() { return endDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
 
-    public double getTotalCost() { return totalCost; }
-    public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
+    //public double getTotalCost() { return totalCost; }
+    //public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
 
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
