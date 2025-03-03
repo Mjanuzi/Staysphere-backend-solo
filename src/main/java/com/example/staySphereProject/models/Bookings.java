@@ -15,15 +15,19 @@ public class Bookings {
     @Id
     private String bookingID;
 
-    @DBRef
-    @NotNull(message = "Booking can't have null")
-    @NotBlank(message = "Need to connect user to booking")
-    private User bookingUser;
+    @NotNull
+    private String userId;
 
-    @DBRef
-    @NotNull(message = "Booking can't have null")
-    @NotBlank(message = "Need to connect listing to booking")
-    private Listing bookingListing;
+    @NotNull
+    private String listingId;
+
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getListingId() { return listingId; }
+    public void setListingId(String listingId) { this.listingId = listingId; }
+
 
     @NotEmpty
     private String bookingName;
@@ -41,44 +45,15 @@ public class Bookings {
     private boolean isPending;
 
 
-    public Bookings(String bookingID, User bookingUser, Listing bookingListing, String bookingName, LocalDateTime bookingDate, Date startDate, Date endDate, double totalCost, boolean status, boolean isPending) {
-        this.bookingID = bookingID;
-        this.bookingUser = bookingUser;
-        this.bookingListing = bookingListing;
-        this.bookingName = bookingName;
-        this.bookingDate = bookingDate;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.totalCost = totalCost;
-        this.status = status;
-        this.isPending = isPending;
-    }
-
     public Bookings() {
     }
 
-    public String getBookingID() {
+    public @NotEmpty String getBookingID() {
         return bookingID;
     }
 
-    public void setBookingID(String bookingID) {
+    public void setBookingID(@NotEmpty String bookingID) {
         this.bookingID = bookingID;
-    }
-
-    public @NotNull(message = "Booking can't have null") @NotBlank(message = "Need to connect user to booking") User getBookingUser() {
-        return bookingUser;
-    }
-
-    public void setBookingUser(@NotNull(message = "Booking can't have null") @NotBlank(message = "Need to connect user to booking") User bookingUser) {
-        this.bookingUser = bookingUser;
-    }
-
-    public Listing getBookingListing() {
-        return bookingListing;
-    }
-
-    public void setBookingListing(Listing bookingListing) {
-        this.bookingListing = bookingListing;
     }
 
     public @NotEmpty String getBookingName() {
