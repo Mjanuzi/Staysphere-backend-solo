@@ -15,21 +15,21 @@ public class Review {
     private String id;
 
     @DBRef
-    @NotNull(message = "User can not be null in a review")
-    @NotBlank(message = "User can not be empty in a review")
+    //@NotNull(message = "User can not be null in a review")
+    //@NotBlank(message = "User can not be empty in a review")
     private User userReviewer;
 
     @DBRef
-    @NotNull(message = "Listing can not be null in a review")
-    @NotBlank(message = "Listing can not be empty in a review ")
+    //@NotNull(message = "Listing can not be null in a review")
+    //@NotBlank(message = "Listing can not be empty in a review ")
     private Listing listingReviewed;
 
-    @Max(value = 500, message = "Review can not have more than 500 characters")
-    @NotBlank(message = "Comment can not be blank")
+    //@Max(value = 500, message = "Review can not have more than 500 characters")
+    //@NotBlank(message = "Comment can not be blank")
     private String comment;
 
-    @Min(value = 1)
-    @Max(value = 5)
+    //@Min(value = 1)
+    //@Max(value = 5)
     private Integer reviewRating;
 
     private boolean likeComment;
@@ -61,11 +61,11 @@ public class Review {
         this.id = id;
     }
 
-    public @NotNull(message = "User can not be null in a review") @NotBlank(message = "User can not be empty in a review") User getUserReviewer() {
+    public User getUserReviewer() {
         return userReviewer;
     }
 
-    public void setUserReviewer(@NotNull(message = "User can not be null in a review") @NotBlank(message = "User can not be empty in a review") User userReviewer) {
+    public void setUserReviewer(User userReviewer) {
         this.userReviewer = userReviewer;
     }
 
@@ -77,19 +77,19 @@ public class Review {
         this.listingReviewed = listingReviewed;
     }
 
-    public @Max(value = 500, message = "Review can not have more than 500 characters") @NotBlank(message = "Comment can not be blank") String getComment() {
+    public String getComment() {
         return comment;
     }
 
-    public void setComment(@Max(value = 500, message = "Review can not have more than 500 characters") @NotBlank(message = "Comment can not be blank") String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
-    public @Min(value = 1) @Max(value = 5) Integer getReviewRating() {
+    public Integer getReviewRating() {
         return reviewRating;
     }
 
-    public void setReviewRating(@Min(value = 1) @Max(value = 5) Integer reviewRating) {
+    public void setReviewRating(Integer reviewRating) {
         this.reviewRating = reviewRating;
     }
 
@@ -116,6 +116,7 @@ public class Review {
     public void setReviewDateSet(LocalDateTime reviewDateSet) {
         this.reviewDateSet = reviewDateSet;
     }
+
 
 
 
