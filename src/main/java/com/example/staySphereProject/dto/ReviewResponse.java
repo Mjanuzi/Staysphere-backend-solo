@@ -6,7 +6,7 @@ public class ReviewResponse {
     private String reviewerUsername;
     private String reviewedListing;
     private String reviewComment;
-    private String reviewedRating;
+    private Integer reviewedRating;
 
 
 
@@ -23,9 +23,9 @@ public class ReviewResponse {
 
     public void setReviewComment(String reviewComment) {this.reviewComment = reviewComment;}
 
-    public String getReviewedRating() {return reviewedRating;}
+    public Integer getReviewedRating() {return reviewedRating;}
 
-    public void setReviewedRating(String reviewedRating) {this.reviewedRating = reviewedRating;}
+    public void setReviewedRating(Integer reviewedRating) {this.reviewedRating = reviewedRating;}
 
 
 

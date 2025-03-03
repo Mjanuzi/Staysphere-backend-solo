@@ -2,6 +2,7 @@ package com.example.staySphereProject.controllers;
 
 import com.example.staySphereProject.dto.ReviewRequest;
 import com.example.staySphereProject.dto.ReviewResponse;
+import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ReviewRepository;
@@ -47,6 +48,18 @@ public class ReviewController {
         Review review = reviewService.getReviewById(id);
         return ResponseEntity.ok(review);
 
+    }
+
+    @PatchMapping("/patch/{id}")
+    public ResponseEntity<Review> patchReview(@PathVariable String id, @RequestBody Review review) {
+        Review updatedReview = reviewService.patchReview(id, review);
+        return new ResponseEntity<>(updatedReview, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteReview(@PathVariable String id) {
+        reviewService.deleteReview(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

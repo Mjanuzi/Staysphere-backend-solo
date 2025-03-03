@@ -92,9 +92,9 @@ public class ReviewService {
         ReviewResponse reviewResponse = new ReviewResponse();
 
         reviewResponse.setReviewComment(review.getComment());
-        reviewResponse.setReviewerUsername(review.getId());
-        //reviewResponse.setReviewedRating(review.getReviewRating());
-        reviewResponse.setReviewedListing(reviewResponse.getReviewedListing());
+        reviewResponse.setReviewerUsername(review.getUserReviewer().getUsername());
+        reviewResponse.setReviewedRating(review.getReviewRating());
+        reviewResponse.setReviewedListing(review.getListingReviewed().getListingTitle());
 
         return reviewResponse;
     }
