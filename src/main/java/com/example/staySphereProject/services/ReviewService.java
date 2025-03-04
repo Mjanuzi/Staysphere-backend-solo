@@ -44,7 +44,7 @@ public class ReviewService {
 
         //spara review
         Review savedReview = reviewRepository.save(review);
-        return convertToReviewResponse(savedReview);
+        return convertToReviewDTO(savedReview);
 
     }
     public List<Review> getAllReviews() {
@@ -88,7 +88,7 @@ public class ReviewService {
     }
 
 
-    private ReviewResponse convertToReviewResponse(Review review) {
+    private ReviewResponse convertToReviewDTO(Review review) {
         ReviewResponse reviewResponse = new ReviewResponse();
 
         reviewResponse.setReviewComment(review.getComment());
