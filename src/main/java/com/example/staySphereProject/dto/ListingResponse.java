@@ -1,9 +1,15 @@
 package com.example.staySphereProject.dto;
 
+import com.example.staySphereProject.models.User;
+
 import java.util.ArrayList;
 
 public class ListingResponse {
 
+
+    private String hostId;
+    private String hostName;
+    //private User host;
     private String listingId;
     private Double listingPricePerNight;
     private String listingTitle;
@@ -12,6 +18,13 @@ public class ListingResponse {
     private ArrayList<String> listingImages;
 
 
+    /**public User getHost() {
+        return host;
+    }
+
+    public void setHost(User host) {
+        this.host = host;
+    }**/
 
     public String getListingId() {
         return listingId;
@@ -20,7 +33,6 @@ public class ListingResponse {
     public void setListingId(String listingId) {
         this.listingId = listingId;
     }
-
 
     public Double getListingPricePerNight() {
         return listingPricePerNight;
@@ -62,6 +74,19 @@ public class ListingResponse {
         this.listingImages = listingImages;
     }
 
+    public String getHostId() {
+        return hostId;
+    }
 
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
+    }
 
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 }
