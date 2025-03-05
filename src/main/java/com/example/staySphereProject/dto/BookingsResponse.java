@@ -10,6 +10,7 @@ public class BookingsResponse {
     private String userId;
     private String listingId;
     private String bookingName;
+    private String hostName;
     private LocalDateTime bookingDate;
     private Date startDate;
     private Date endDate;
@@ -48,4 +49,11 @@ public class BookingsResponse {
     public boolean isPending() { return pending; }
     public void setPending(boolean pending) { pending = pending; }
 
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 }

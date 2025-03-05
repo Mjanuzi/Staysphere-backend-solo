@@ -112,7 +112,8 @@ public class BookingsService {
         Listing listing = listingRepository.findById(booking.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        response.setBookingName("For " + user.getUsername() + " at " + listing.getListingTitle());
+        response.setBookingName(user.getUsername() + ", I would like to wish you a pleasant stay at " + listing.getListingTitle() + "!");
+        response.setHostName("Kind regards, " + listing.getHost().getUsername());
         response.setBookingDate(booking.getBookingDate());
         response.setStartDate(booking.getStartDate());
         response.setEndDate(booking.getEndDate());
