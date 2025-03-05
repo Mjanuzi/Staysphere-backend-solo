@@ -7,6 +7,7 @@ import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
+import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Service;
 
 
@@ -18,18 +19,20 @@ import java.util.Optional;
 public class ListingService {
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
+    private final CheckAuthentication checkAuthentication;
     //private final ReviewRepository reviewRepository;
 
 
-    public ListingService(ListingRepository listingRepository, UserRepository userRepository) {
+    public ListingService(ListingRepository listingRepository, UserRepository userRepository, CheckAuthentication checkAuthentication) {
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
+        this.checkAuthentication = checkAuthentication;
     }
 
     //Register listing
-    public ListingResponse createListing(ListingDTO listingDTO, String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+    public ListingResponse createListing(ListingDTO listingDTO ) {
+        // Gets authentication method to check user before adding a new listing
+        User user = checkAuthentication.validateAuthenticatedUser(listingDTO.getUserId());
 
 
         //Creating new listing
