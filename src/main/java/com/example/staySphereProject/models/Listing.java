@@ -1,9 +1,6 @@
 package com.example.staySphereProject.models;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -56,7 +53,7 @@ public class Listing {
     private boolean isBooked;
 
 
-    public Listing(String listingId, User host, String listingTitle, Double listingPricePerNight,
+    /*public Listing(String listingId, User host, String listingTitle, Double listingPricePerNight,
                    String listingDescription, Integer listingGuestLimit,
                    ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review, ArrayList<LocalDate> available) {
         this.listingId = listingId;
@@ -70,7 +67,7 @@ public class Listing {
         this.listingActive = listingActive;
         //this.review = review;
         this.available = available;
-    }
+    }*/
 
     public Listing() {
     }
@@ -79,9 +76,6 @@ public class Listing {
 
 
 
-    public String getListingId() {
-        return listingId;
-    }
     /*public Review getReview() {
         return review;
     }*/
@@ -95,17 +89,17 @@ public class Listing {
     /*public void setReview(Review review) {
         this.review = review;
     }*/
-    public void setListingId(String listingId) {
+    public @NotEmpty String getListingId() {
+        return listingId;
+    }
+
+    public void setListingId(@NotEmpty String listingId) {
         this.listingId = listingId;
     }
 
-    public User getHost() {
-        return host;
-    }
+    public User getHost() { return host; }
 
-    public void setHost( User host) {
-        this.host = host;
-    }
+    public void setHost( User host) { this.host = host; }
 
     public @NotBlank(message = "You need to give a title") String getListingTitle() {
         return listingTitle;
