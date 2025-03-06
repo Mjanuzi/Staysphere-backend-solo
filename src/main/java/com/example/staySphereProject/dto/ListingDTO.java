@@ -1,5 +1,6 @@
 package com.example.staySphereProject.dto;
 
+import com.example.staySphereProject.models.User;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,7 @@ public class ListingDTO {
 
 
 
-    private String userId;
+    private String hostId;
 
     @NotNull
     private Double listingPricePerNight;
@@ -28,18 +29,17 @@ public class ListingDTO {
     private ArrayList<String> listingImages;
 
 
-    public ListingDTO() {
-    }
+    public String getHostId() { return hostId; }
+    public void setHostId(String hostId) { this.hostId = hostId; }
 
 
-
-    public String getUserId() {
+    /*public User getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
-    }
+    }*/
 
     public Double getListingPricePerNight() {
         return listingPricePerNight;
