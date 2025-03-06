@@ -18,14 +18,12 @@ import java.util.stream.Collectors;
 public class ListingService {
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
-    //private final ListingController listingController;
     //private final ReviewRepository reviewRepository;
 
 
-    public ListingService(ListingRepository listingRepository, UserRepository userRepository/*ListingController listingController*/) {
+    public ListingService(ListingRepository listingRepository, UserRepository userRepository) {
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
-        //this.listingController = listingController;
     }
 
     /*@Transactional
