@@ -58,6 +58,7 @@ public class ListingService {
 
 
     public List<Listing> getAllListings(){
+
         return listingRepository.findAll();
     }
 
@@ -70,6 +71,8 @@ public class ListingService {
     public Listing patchListing(Listing listing, String id) {
         Listing existingListing = listingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+        User user = checkAuthentication.validateAuthenticatedUser(listingexistingListing.getHost());
+
 
         if (listing.getListingPricePerNight() > 0) {
             existingListing.setListingPricePerNight(listing.getListingPricePerNight());
@@ -119,8 +122,6 @@ public class ListingService {
 
         return listingResponse;
     }
-
-
 
 
 }
