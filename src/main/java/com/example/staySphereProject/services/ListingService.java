@@ -7,9 +7,12 @@ import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
+//import com.example.staySphereProject.util.CheckAuthentication;
+import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,12 +21,15 @@ import java.util.stream.Collectors;
 public class ListingService {
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
+    private final CheckAuthentication checkAuthentication;
     //private final ReviewRepository reviewRepository;
 
 
-    public ListingService(ListingRepository listingRepository, UserRepository userRepository) {
+    public ListingService(ListingRepository listingRepository, UserRepository userRepository, CheckAuthentication checkAuthentication) {
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
+
+        this.checkAuthentication = checkAuthentication;
     }
 
     /*@Transactional
@@ -44,11 +50,14 @@ public class ListingService {
 
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
-            User host = userRepository.findById(listingDTO.getHostId())
-                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));
+            /*User host = userRepository.findById(listingDTO.getHostId())
+                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));*/
+
+        User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
 
 
-            //Creating new listing
+
+        //Creating new listing
             Listing listing = new Listing();
             listing.setHost(host);
             listing.setListingTitle(listingDTO.getListingTitle());
@@ -74,6 +83,10 @@ public class ListingService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    /*public List<Listing> getAllListings() {
+        return listingRepository.findAll();
+    }*/
 
 
     //get listing by id
