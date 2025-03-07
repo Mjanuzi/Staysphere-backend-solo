@@ -131,10 +131,18 @@ public class ListingService {
     }
 
     public void deleteListing (String listingId){
-        if (!listingRepository.existsById(listingId)) {
+        /*if (!listingRepository.existsById(listingId)) {
             throw new ResourceNotFoundException("Listing not found");
         }
-        listingRepository.deleteById(listingId);
+
+        listingRepository.deleteById(listingId);*/
+
+        Listing existingListing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        checkAuthentication.validateAuthenticatedUser(existingListing.getHost().getId());
+
+       listingRepository.delete(existingListing);
     }
 
 
