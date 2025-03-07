@@ -98,8 +98,12 @@ public class ListingService {
     }
 
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
+        //Check if the listing exists
         Listing existingListing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        //checks if the logged in user is the host of existingListing
+        checkAuthentication.validateAuthenticatedUser(existingListing.getHost().getId());
 
         if (listingDTO.getHostId() != null) {
             User newHost = userRepository.findById(listingDTO.getHostId())
