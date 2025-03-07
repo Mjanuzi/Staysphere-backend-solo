@@ -6,11 +6,15 @@ import java.util.ArrayList;
 
 public class ListingResponse {
 
+    private String listingId;
 
     private String listingId;
     private String hostId;
     private String hostName;
     //private User host;
+
+
+
     private Double listingPricePerNight;
     private String listingTitle;
     private String listingDescription;

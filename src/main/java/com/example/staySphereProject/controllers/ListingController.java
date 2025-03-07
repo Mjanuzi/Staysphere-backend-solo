@@ -3,6 +3,9 @@ package com.example.staySphereProject.controllers;
 import com.example.staySphereProject.dto.AvailabilityRequest;
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
+
+import com.example.staySphereProject.dto.ListingResponseGetAll;
+
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.services.ListingService;
 import jakarta.validation.Valid;
@@ -17,7 +20,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/listing")
 public class ListingController {
 
 
@@ -29,12 +32,12 @@ public class ListingController {
     }
 
 
-
-    @PostMapping("/listings")
+    @PostMapping("/create")
     public ResponseEntity<ListingResponse> createListing (@Valid @RequestBody ListingDTO listingDTO) {
         ListingResponse newListing = listingService.createListing(listingDTO);
         return new ResponseEntity<>(newListing, HttpStatus.CREATED);
     }
+
 
 
 
@@ -55,23 +58,28 @@ public class ListingController {
     @GetMapping("/listings/all")
     public ResponseEntity<List<ListingResponse>> getAllListings() {
         List<ListingResponse> listings = listingService.getAllListings();
+      
+    @GetMapping("/getall")
+    public ResponseEntity<List<ListingResponseGetAll>> getAllListings() {
+        List<ListingResponseGetAll> listings = listingService.getAllListings();
+
         return ResponseEntity.ok(listings);
     }
 
-    @GetMapping("/listings/{listingId}")
+    @GetMapping("/getbyid/{listingId}")
     public ResponseEntity<ListingResponse> getListingById(@PathVariable String listingId) {
         ListingResponse listing = listingService.getListingById(listingId);
         return ResponseEntity.ok(listing);
     }
 
-    @PatchMapping("/listings/patch/{listingId}")
+    @PatchMapping("/patch/{listingId}")
     public ResponseEntity<ListingResponse> patchListing(@PathVariable String listingId, @RequestBody ListingDTO listingDTO) {
         ListingResponse updatedListing = listingService.patchListing(listingId, listingDTO);
         return new ResponseEntity<>(updatedListing, HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/listings/{listingId}")
+    @DeleteMapping("/delete/{listingId}")
     public ResponseEntity<Void> deleteListing(@PathVariable String listingId) {
         listingService.deleteListing(listingId);
         return ResponseEntity.noContent().build();
