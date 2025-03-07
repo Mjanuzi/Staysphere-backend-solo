@@ -2,6 +2,7 @@ package com.example.staySphereProject.services;
 
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
+import com.example.staySphereProject.dto.ListingResponseGetAll;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
@@ -77,10 +78,10 @@ public class ListingService {
     }
 
 
-    public List<ListingResponse> getAllListings () {
+    public List<ListingResponseGetAll> getAllListings () {
 
         return listingRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(this::convertToDTOGetAll)
                 .collect(Collectors.toList());
     }
 
@@ -143,6 +144,17 @@ public class ListingService {
         response.setListingTitle(listing.getListingTitle());
         response.setListingDescription(listing.getListingDescription());
         response.setGuestLimit(listing.getListingGuestLimit());
+        response.setListingPricePerNight(listing.getListingPricePerNight());
+        response.setListingImages(listing.getListingImages());
+
+        return response;
+    }
+
+    private ListingResponseGetAll convertToDTOGetAll(Listing listing){
+        ListingResponseGetAll response = new ListingResponseGetAll();
+        response.setListingId(listing.getListingId());
+        response.setHostName(listing.getHost().getUsername());
+        response.setListingTitle(listing.getListingTitle());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
 

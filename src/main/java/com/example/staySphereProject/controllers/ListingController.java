@@ -2,6 +2,7 @@ package com.example.staySphereProject.controllers;
 
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
+import com.example.staySphereProject.dto.ListingResponseGetAll;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.services.ListingService;
 import jakarta.validation.Valid;
@@ -34,8 +35,8 @@ public class ListingController {
 
 
     @GetMapping("/getall")
-    public ResponseEntity<List<ListingResponse>> getAllListings() {
-        List<ListingResponse> listings = listingService.getAllListings();
+    public ResponseEntity<List<ListingResponseGetAll>> getAllListings() {
+        List<ListingResponseGetAll> listings = listingService.getAllListings();
         return ResponseEntity.ok(listings);
     }
 
