@@ -55,9 +55,6 @@ public class ListingController {
         return new ResponseEntity<>(updatedListing, HttpStatus.OK);
     }
 
-    @GetMapping("/listings/all")
-    public ResponseEntity<List<ListingResponse>> getAllListings() {
-        List<ListingResponse> listings = listingService.getAllListings();
       
     @GetMapping("/getall")
     public ResponseEntity<List<ListingResponseGetAll>> getAllListings() {
