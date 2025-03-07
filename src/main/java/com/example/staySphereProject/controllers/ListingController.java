@@ -1,11 +1,16 @@
 package com.example.staySphereProject.controllers;
 
+import com.example.staySphereProject.dto.AvailabilityRequest;
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
+import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.services.ListingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +37,20 @@ public class ListingController {
     }
 
 
+
+    @PostMapping("/{listingId}/availability")
+    //@PreAuthorize("hasRole('HOST')")
+    public ResponseEntity<Listing> addAvailability(
+            @PathVariable String listingId,
+            @RequestBody AvailabilityRequest request) {
+            //@AuthenticationPrincipal UserDetails userDetail) {
+        Listing updatedListing = listingService.addAvailability(
+                listingId,
+                request
+        );
+
+        return new ResponseEntity<>(updatedListing, HttpStatus.OK);
+    }
 
     @GetMapping("/listings/all")
     public ResponseEntity<List<ListingResponse>> getAllListings() {
