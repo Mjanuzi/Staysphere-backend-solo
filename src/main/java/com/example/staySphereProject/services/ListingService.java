@@ -1,5 +1,6 @@
 package com.example.staySphereProject.services;
 
+import com.example.staySphereProject.dto.AvailabilityRequest;
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
@@ -8,10 +9,15 @@ import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,21 +32,50 @@ public class ListingService {
         this.userRepository = userRepository;
     }
 
-    /*@Transactional
-    public Listing addAvailability(String listingId, AvailabilityRequest request, String hostId) {
+    @Transactional
+    public Listing addAvailability(String listingId, AvailabilityRequest request) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         // Verify host ownership
-        if (!listing.getHostId().equals(hostId)) {
-            throw new AccessDeniedException("You don't own this listing");
-        }
+        /**if (!listing.getHost().equals()) {
+            .orElseThrow(() -> ResourceNotFoundException("You don't own this listing"));
+        }**/
+
 
         // Validate date range
         validateDateRange(request.getStartDate(), request.getEndDate());
 
         // Generate dates
-        List<LocalDate> datesToAdd = generateDateRange(request.getStartDate(), request.getEndDate());*/
+        List<LocalDate> datesToAdd = generateDateRange(request.getStartDate(), request.getEndDate());
+
+        Set<LocalDate> uniqueDates = new HashSet<>(listing.getAvailable());
+        uniqueDates.addAll(datesToAdd);
+        listing.setAvailable(new ArrayList<>(uniqueDates));
+
+        return listingRepository.save(listing);
+    }
+
+    private void validateDateRange(LocalDate startDate, LocalDate endDate) {
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date cannot be after end date");
+        }
+
+        if (ChronoUnit.DAYS.between(startDate, endDate) >= 90) {
+            throw new IllegalArgumentException("Date rangfe cannot exceed 90 days");
+        }
+
+    }
+
+    private List<LocalDate> generateDateRange(LocalDate startDate, LocalDate endDate) {
+        List<LocalDate> dates = new ArrayList<>();
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            dates.add(currentDate);
+            currentDate = currentDate.plusDays(1);
+        }
+        return dates;
+    }
 
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
@@ -69,6 +104,8 @@ public class ListingService {
 
 
     public List<ListingResponse> getAllListings () {
+
+
 
         return listingRepository.findAll().stream()
                 .map(this::convertToDTO)

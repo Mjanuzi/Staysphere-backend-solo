@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public class AvailabilityDTO {
+public class AvailabilityRequest {
     @NotNull
     private LocalDate startDate;
 
