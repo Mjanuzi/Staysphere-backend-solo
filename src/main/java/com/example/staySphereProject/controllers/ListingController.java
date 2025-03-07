@@ -38,7 +38,7 @@ public class ListingController {
 
 
 
-    @PostMapping("/{listingId}/availability")
+    @PostMapping("/listings/{listingId}/availability")
     //@PreAuthorize("hasRole('HOST')")
     public ResponseEntity<Listing> addAvailability(
             @PathVariable String listingId,
