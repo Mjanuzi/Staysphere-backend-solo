@@ -117,8 +117,6 @@ public class ListingService {
 
     public List<ListingResponseGetAll> getAllListings () {
 
-
-
         return listingRepository.findAll().stream()
                 .map(this::convertToDTOGetAll)
                 .collect(Collectors.toList());
@@ -197,6 +195,7 @@ public class ListingService {
         response.setGuestLimit(listing.getListingGuestLimit());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
+        response.setReviews(listing.getReview(ge));
 
         return response;
     }

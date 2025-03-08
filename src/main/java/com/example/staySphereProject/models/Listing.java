@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -18,8 +17,8 @@ public class Listing {
     @Id
     private String listingId;
 
-    //@DBRef
-   // private Review review;
+    @DBRef
+    private ArrayList<Review> review;
 
     @DBRef
     private User host;
@@ -93,13 +92,26 @@ public class Listing {
         return listingId;
     }
 
+    public ArrayList<Review> getReview() {
+        return review;
+    }
+
+    public void setReview(ArrayList<Review> review) {
+        this.review = review;
+    }
+
     public void setListingId(@NotEmpty String listingId) {
+
         this.listingId = listingId;
     }
 
-    public User getHost() { return host; }
+    public User getHost() {
+        return host;
+    }
 
-    public void setHost( User host) { this.host = host; }
+    public void setHost( User host) {
+        this.host = host;
+    }
 
     public @NotBlank(message = "You need to give a title") String getListingTitle() {
         return listingTitle;

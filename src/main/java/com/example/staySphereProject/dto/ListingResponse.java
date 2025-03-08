@@ -17,6 +17,10 @@ public class ListingResponse {
     private ArrayList<String> listingImages;
 
 
+
+    private ArrayList<String> reviews;
+
+
     /**public User getHost() {
         return host;
     }
@@ -87,5 +91,13 @@ public class ListingResponse {
 
     public void setHostName(String hostName) {
         this.hostName = hostName;
+    }
+
+    public ArrayList<String> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<String> reviews) {
+        this.reviews = reviews;
     }
 }
