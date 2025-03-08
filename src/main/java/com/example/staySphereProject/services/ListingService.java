@@ -1,11 +1,9 @@
 package com.example.staySphereProject.services;
 
-import com.example.staySphereProject.dto.AvailabilityRequest;
-import com.example.staySphereProject.dto.ListingDTO;
-import com.example.staySphereProject.dto.ListingResponse;
-import com.example.staySphereProject.dto.ListingResponseGetAll;
+import com.example.staySphereProject.dto.*;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
@@ -129,7 +127,7 @@ public class ListingService {
 
     //get listing by id
     public ListingResponse getListingById (String listingId){
-        Listing listing = listingRepository.findById(listingId)
+        Listing listing = listingRepository.findListingWithReviewsById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
         return convertToDTO(listing);
     }
@@ -195,10 +193,31 @@ public class ListingService {
         response.setGuestLimit(listing.getListingGuestLimit());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
-        response.setReviews(listing.getReview(ge));
+
+        if (listing.getReview() != null) {
+            List<ReviewResponse> reviewResponses = listing.getReview().stream()
+                    .map(this::convertReviewToDTO)
+                    .collect(Collectors.toList());
+            response.setReviews(reviewResponses);
+        } else {
+            response.setReviews(new ArrayList<>());
+        }
+
 
         return response;
     }
+
+    private ReviewResponse convertReviewToDTO(Review review) {
+        ReviewResponse reviewResponse = new ReviewResponse();
+
+        reviewResponse.setReviewerUsername(review.getUserReviewer().getUsername());
+        reviewResponse.setReviewedListing(review.getListingReviewed().getListingId());
+        reviewResponse.setReviewComment(review.getComment());
+        reviewResponse.setReviewedRating(review.getReviewRating());
+
+        return reviewResponse;
+    }
+
 
     private ListingResponseGetAll convertToDTOGetAll(Listing listing){
         ListingResponseGetAll response = new ListingResponseGetAll();

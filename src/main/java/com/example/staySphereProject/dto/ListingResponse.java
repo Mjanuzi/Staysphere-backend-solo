@@ -3,6 +3,7 @@ package com.example.staySphereProject.dto;
 import com.example.staySphereProject.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListingResponse {
 
@@ -18,7 +19,7 @@ public class ListingResponse {
 
 
 
-    private ArrayList<String> reviews;
+    private List<ReviewResponse> reviews;
 
 
     /**public User getHost() {
@@ -93,11 +94,11 @@ public class ListingResponse {
         this.hostName = hostName;
     }
 
-    public ArrayList<String> getReviews() {
+    public List<ReviewResponse> getReviews() {
         return reviews;
     }
 
-    public void setReviews(ArrayList<String> reviews) {
+    public void setReviews(List<ReviewResponse> reviews) {
         this.reviews = reviews;
     }
 }
