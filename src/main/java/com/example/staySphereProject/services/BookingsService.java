@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,9 +38,29 @@ public class BookingsService {
         return convertToDTO(booking);
     }
 
+    @Transactional
     public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
         Bookings existingBooking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        Listing listing = listingRepository.findById(existingBooking.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        List<LocalDate> originalDates = generateDateRange(
+                existingBooking.getStartDate().toLocalDate(),
+                existingBooking.getEndDate().toLocalDate()
+        );
+
+        List<LocalDate> newDates = generateDateRange(
+                bookingsDTO.getStartDate().toLocalDate(),
+                bookingsDTO.getEndDate().toLocalDate()
+        );
+
+        listing.getAvailable().addAll(originalDates);
+
+        if (!listing.getAvailable().containsAll(newDates)) {
+            throw new ResourceNotFoundException("New dates are not available");
+        }
 
         existingBooking.setBookingDate(bookingsDTO.getBookingDate());
         existingBooking.setStartDate(bookingsDTO.getStartDate());
@@ -47,8 +68,6 @@ public class BookingsService {
         existingBooking.setStatus(bookingsDTO.isStatus());
         existingBooking.setPending(bookingsDTO.isPending());
 
-        Listing listing = listingRepository.findById(existingBooking.getListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         long days = calculateNumberOfDays(existingBooking.getStartDate(), existingBooking.getEndDate());
 
@@ -59,12 +78,24 @@ public class BookingsService {
         return convertToDTO(updatedBooking);
     }
 
+    private List<LocalDate> generateDateRange(LocalDate startDate, LocalDate endDate) {
+        List<LocalDate> dates = new ArrayList<>();
+        while (!startDate.isAfter(endDate)) {
+            dates.add(startDate);
+            startDate = startDate.plusDays(1);
+        }
+        return dates;
+    }
+
     private long calculateNumberOfDays(Date startDate, Date endDate) {
         LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         if (end.isBefore(start) || end.isEqual(start)) {
             throw new IllegalArgumentException("End date cannot be before start date");
+        }
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Start/End date cannot be null");
         }
 
         return ChronoUnit.DAYS.between(start, end);
@@ -137,8 +168,8 @@ public class BookingsService {
 
         Listing listing = listingRepository.findById(bookingsDTO.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-
-        List<LocalDate> requestedDates = generateDataRange(
+        //Check Available start end
+        List<LocalDate> requestedDates = generateDateRange(
                 bookingsDTO.getStartDate().toLocalDate(),
                 bookingsDTO.getEndDate().toLocalDate()
         );
@@ -146,7 +177,7 @@ public class BookingsService {
         if (!listing.getAvailable().containsAll(requestedDates)) {
             throw new ResourceNotFoundException("Requested dates are not available");
         }
-
+        //Remove from Available
         listing.getAvailable().removeAll(requestedDates);
         listingRepository.save(listing);
 
