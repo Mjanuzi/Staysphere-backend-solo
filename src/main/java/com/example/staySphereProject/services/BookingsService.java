@@ -2,6 +2,7 @@ package com.example.staySphereProject.services;
 
 import com.example.staySphereProject.dto.BookingsDTO;
 import com.example.staySphereProject.dto.BookingsResponse;
+import com.example.staySphereProject.exeptions.ConflictException;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.models.Listing;
@@ -46,21 +47,26 @@ public class BookingsService {
         Listing listing = listingRepository.findById(existingBooking.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        List<LocalDate> originalDates = generateDateRange(
-                existingBooking.getStartDate().toLocalDate(),
-                existingBooking.getEndDate().toLocalDate()
-        );
+        LocalDate existingStart = existingBooking.getStartDate().toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate existingEnd = existingBooking.getEndDate().toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate();
 
-        List<LocalDate> newDates = generateDateRange(
-                bookingsDTO.getStartDate().toLocalDate(),
-                bookingsDTO.getEndDate().toLocalDate()
-        );
+        List<LocalDate> originalDates = generateDateRange(existingStart, existingEnd);
+
+        LocalDate newStart = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate newEnd = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        List<LocalDate> newDates = generateDateRange(newStart, newEnd);
 
         listing.getAvailable().addAll(originalDates);
 
         if (!listing.getAvailable().containsAll(newDates)) {
-            throw new ResourceNotFoundException("New dates are not available");
+            throw new ConflictException("New dates are not available");
         }
+
+        listing.getAvailable().removeAll(newDates);
+        listingRepository.save(listing); //Updating availability
 
         existingBooking.setBookingDate(bookingsDTO.getBookingDate());
         existingBooking.setStartDate(bookingsDTO.getStartDate());
@@ -69,7 +75,7 @@ public class BookingsService {
         existingBooking.setPending(bookingsDTO.isPending());
 
 
-        long days = calculateNumberOfDays(existingBooking.getStartDate(), existingBooking.getEndDate());
+        long days = ChronoUnit.DAYS.between(newStart, newEnd);
 
         double totalCost = days * listing.getListingPricePerNight();
         existingBooking.setTotalCost(totalCost);
@@ -169,13 +175,14 @@ public class BookingsService {
         Listing listing = listingRepository.findById(bookingsDTO.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
         //Check Available start end
-        List<LocalDate> requestedDates = generateDateRange(
-                bookingsDTO.getStartDate().toLocalDate(),
-                bookingsDTO.getEndDate().toLocalDate()
-        );
+
+        LocalDate startDate = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        List<LocalDate> requestedDates = generateDateRange(startDate, endDate);
 
         if (!listing.getAvailable().containsAll(requestedDates)) {
-            throw new ResourceNotFoundException("Requested dates are not available");
+            throw new ConflictException("Requested dates are not available"); // ✅
         }
         //Remove from Available
         listing.getAvailable().removeAll(requestedDates);
