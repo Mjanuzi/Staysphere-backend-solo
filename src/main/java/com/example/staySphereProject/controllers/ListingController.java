@@ -82,12 +82,4 @@ public class ListingController {
         return ResponseEntity.noContent().build();
     }
 
-
-
-
-
-
-
-
-
 }

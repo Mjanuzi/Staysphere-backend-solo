@@ -10,6 +10,7 @@ import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -124,7 +125,7 @@ public class BookingsService {
         return response;
     }
 
-
+    @Transactional
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
 
         if (!userRepository.existsById(bookingsDTO.getUserId())) {
@@ -136,6 +137,18 @@ public class BookingsService {
 
         Listing listing = listingRepository.findById(bookingsDTO.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        List<LocalDate> requestedDates = generateDataRange(
+                bookingsDTO.getStartDate().toLocalDate(),
+                bookingsDTO.getEndDate().toLocalDate()
+        );
+
+        if (!listing.getAvailable().containsAll(requestedDates)) {
+            throw new ResourceNotFoundException("Requested dates are not available");
+        }
+
+        listing.getAvailable().removeAll(requestedDates);
+        listingRepository.save(listing);
 
         long days = calculateNumberOfDays(bookingsDTO.getStartDate(), bookingsDTO.getEndDate());
 
