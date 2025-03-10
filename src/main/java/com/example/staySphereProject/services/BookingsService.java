@@ -135,10 +135,10 @@ public class BookingsService {
 
         LocalDate startDate = bookingsDTO.getStartDate().toInstant()
                 .atZone(ZoneId.of("UTC"))
-                .toLocalDate();
+                .toLocalDate().plusDays(1);
         LocalDate endDate = bookingsDTO.getEndDate().toInstant()
                 .atZone(ZoneId.of("UTC"))
-                .toLocalDate();
+                .toLocalDate().plusDays(1);
 
         List<LocalDate> requestedDates = generateDateRange(startDate, endDate);
 
