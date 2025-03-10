@@ -17,7 +17,7 @@ public class ListingResponse {
 
 
 
-    private ArrayList<String> reviews;
+    private List<ReviewResponse> reviews;
 
 
     /**public User getHost() {
@@ -92,7 +92,7 @@ public class ListingResponse {
         this.hostName = hostName;
     }
 
-    public ArrayList<String> getReviews() {
+    public List<ReviewResponse> getReviews() {
         return reviews;
     }
 

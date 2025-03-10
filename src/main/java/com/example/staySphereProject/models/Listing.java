@@ -15,7 +15,7 @@ public class Listing {
 
 
     @Id
-    private String listingId;
+    private String id;
 
     @DBRef
     private ArrayList<Review> review;
@@ -89,7 +89,7 @@ public class Listing {
         this.review = review;
     }*/
     public @NotEmpty String getListingId() {
-        return listingId;
+        return id;
     }
 
     public ArrayList<Review> getReview() {
@@ -102,7 +102,7 @@ public class Listing {
 
     public void setListingId(@NotEmpty String listingId) {
 
-        this.listingId = listingId;
+        this.id = listingId;
     }
 
     public User getHost() {
