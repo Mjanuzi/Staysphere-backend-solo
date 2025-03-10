@@ -43,8 +43,6 @@ public class BookingsDTO {
     public LocalDateTime getBookingDate() { return bookingDate; }
     public void setBookingDate(LocalDateTime bookingDate) { this.bookingDate = bookingDate; }
 
-    public List<LocalDate> getBookedDates() { return bookedDates; }
-    public void setBookedDates(List<LocalDate> bookedDates) { this.bookedDates = bookedDates; }
 
     public Date getStartDate() { return startDate; }
     public void setStartDate(Date startDate) { this.startDate = startDate; }

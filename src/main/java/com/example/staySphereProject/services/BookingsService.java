@@ -50,20 +50,6 @@ public class BookingsService {
         return dates;
     }
 
-    private long calculateNumberOfDays(LocalDate startDate, LocalDate endDate) {
-        /**LocalDate start = startDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
-        LocalDate end = endDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
-
-        if (end.isBefore(start) || end.isEqual(start)) {
-            throw new IllegalArgumentException("End date cannot be before start date");
-        }
-        if (startDate == null || endDate == null) {
-            throw new IllegalArgumentException("Start/End date cannot be null");
-        }
-        **/
-        return ChronoUnit.DAYS.between(startDate, endDate);
-    }
-
     public void deleteBooking(String bookingId) {
         bookingsRepository.deleteById(bookingId);
     }
@@ -93,7 +79,7 @@ public class BookingsService {
 
 
 
-    // Convert Bookings entity to BookingsResponse DTO
+    // Convert Bookings to BookingsResponse DTO
 
     private BookingsResponse convertToDTO(Bookings booking) {
         BookingsResponse response = new BookingsResponse();
@@ -143,12 +129,8 @@ public class BookingsService {
         List<LocalDate> requestedDates = generateDateRange(startDate, endDate);
 
         if (!listing.getAvailable().containsAll(requestedDates)) {
-            throw new ConflictException("Requested dates are not available"); //
+            throw new ConflictException("Requested dates are not available");
         }
-
-
-        //long days = calculateNumberOfDays(bookingsDTO.getStartDate(), bookingsDTO.getEndDate());
-
 
         Bookings booking = new Bookings();
         booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
@@ -183,10 +165,10 @@ public class BookingsService {
 
         LocalDate newStart = bookingsDTO.getStartDate().toInstant()
                 .atZone(ZoneId.of("UTC"))
-                .toLocalDate();
+                .toLocalDate().plusDays(1);
         LocalDate newEnd = bookingsDTO.getEndDate().toInstant()
                 .atZone(ZoneId.of("UTC"))
-                .toLocalDate();
+                .toLocalDate().plusDays(1);
 
         List<LocalDate> newDates = generateDateRange(newStart, newEnd);
 
