@@ -25,21 +25,12 @@ public class ListingDTO {
     @Min(value = 1)
     private Integer guestLimit;
 
-    //@NotBlank
     private ArrayList<String> listingImages;
 
 
     public String getHostId() { return hostId; }
     public void setHostId(String hostId) { this.hostId = hostId; }
 
-
-    /*public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }*/
 
     public Double getListingPricePerNight() {
         return listingPricePerNight;

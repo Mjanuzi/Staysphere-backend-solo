@@ -17,6 +17,7 @@ public class ListingResponse {
 
 
 
+
     private List<ReviewResponse> reviews;
 
 
@@ -27,6 +28,7 @@ public class ListingResponse {
     public void setHost(User host) {
         this.host = host;
     }**/
+
 
     public String getListingId() {
         return listingId;
