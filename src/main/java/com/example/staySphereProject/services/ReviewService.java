@@ -60,9 +60,10 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public List<ReviewResponse> getReviewById(String Id) {
-
-        return getReviewsByListingId(Id);
+    public ReviewResponse getReviewById(String Id) {
+        Review review = reviewRepository.findById(Id)
+                .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
+        return convertToReviewDTO(review);
     }
 
 
@@ -103,6 +104,7 @@ public class ReviewService {
         ReviewResponse reviewResponse = new ReviewResponse();
 
         reviewResponse.setReviewComment(review.getComment());
+        reviewResponse.setReviewerId(review.getUserReviewer().getId());
         reviewResponse.setReviewerUsername(review.getUserReviewer().getUsername());
         reviewResponse.setReviewedRating(review.getReviewRating());
         reviewResponse.setReviewedListing(review.getListingReviewed().getListingTitle());
