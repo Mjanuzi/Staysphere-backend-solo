@@ -108,6 +108,7 @@ public class ListingService {
             //standard values when creating an object
             listing.setListingActive(true);
             listing.setAvailable(new ArrayList<>());
+            listing.setReview(new ArrayList<>());
 
             Listing savedListing = listingRepository.save(listing);
             return convertToDTO(savedListing);
