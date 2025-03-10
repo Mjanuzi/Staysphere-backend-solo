@@ -48,14 +48,14 @@ public class BookingsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         LocalDate existingStart = existingBooking.getStartDate().toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+                .atZone(ZoneId.of("UTC")).toLocalDate();
         LocalDate existingEnd = existingBooking.getEndDate().toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate();
+                .atZone(ZoneId.of("UTC")).toLocalDate();
 
         List<LocalDate> originalDates = generateDateRange(existingStart, existingEnd);
 
-        LocalDate newStart = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate newEnd = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate newStart = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
+        LocalDate newEnd = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
 
         List<LocalDate> newDates = generateDateRange(newStart, newEnd);
 
@@ -94,8 +94,8 @@ public class BookingsService {
     }
 
     private long calculateNumberOfDays(Date startDate, Date endDate) {
-        LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate start = startDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
+        LocalDate end = endDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
 
         if (end.isBefore(start) || end.isEqual(start)) {
             throw new IllegalArgumentException("End date cannot be before start date");
@@ -176,8 +176,8 @@ public class BookingsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
         //Check Available start end
 
-        LocalDate startDate = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endDate = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate startDate = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
+        LocalDate endDate = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
 
         List<LocalDate> requestedDates = generateDateRange(startDate, endDate);
 
