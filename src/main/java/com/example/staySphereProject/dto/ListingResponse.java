@@ -1,8 +1,7 @@
 package com.example.staySphereProject.dto;
 
-import com.example.staySphereProject.models.User;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListingResponse {
 
@@ -97,7 +96,7 @@ public class ListingResponse {
         return reviews;
     }
 
-    public void setReviews(ArrayList<String> reviews) {
+    public void setReviews(List<ReviewResponse> reviews) {
         this.reviews = reviews;
     }
 }
