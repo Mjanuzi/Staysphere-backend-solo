@@ -2,8 +2,10 @@ package com.example.staySphereProject.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public class BookingsResponse {
     private String bookingID;
