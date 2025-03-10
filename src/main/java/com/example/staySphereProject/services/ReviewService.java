@@ -36,9 +36,10 @@ public class ReviewService {
 
     public ReviewResponse createReview(ReviewRequest reviewRequest, String id) {
         // Hämta user från databasen
+
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
-
+        checkAuthentication.validateAuthenticatedUser(existingUser.getId());
         //hämta listing från databasen
         Listing existingListing = listingRepository.findById(reviewRequest.getReviewedListing())
                 .orElseThrow(() -> new IllegalArgumentException("Listing Not Found"));
