@@ -60,9 +60,9 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public Review getReviewById(String id) {
-        return reviewRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
+    public List<ReviewResponse> getReviewById(String Id) {
+
+        return getReviewsByListingId(Id);
     }
 
 
@@ -148,14 +148,15 @@ public class ReviewService {
 
 
 
-    public List<ReviewResponse> getReviewsByListingId(String listingId) {
-        Listing listing = listingRepository.findById(listingId)
+    public List<ReviewResponse> getReviewsByListingId(String Id) {
+        Listing listing = listingRepository.findById(Id)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         List<Review> reviews = reviewRepository.findByListingReviewed(listing);
 
         return reviews.stream()
                 .map(this::convertToReviewDTO)
+
                 .collect(Collectors.toList());
     }
 
