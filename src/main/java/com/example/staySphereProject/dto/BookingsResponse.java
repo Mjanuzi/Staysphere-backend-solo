@@ -2,8 +2,10 @@ package com.example.staySphereProject.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public class BookingsResponse {
     private String bookingID;
@@ -12,6 +14,7 @@ public class BookingsResponse {
     private String bookingName;
     private String hostName;
     private LocalDateTime bookingDate;
+    //private List<LocalDate> bookedDates;
     private Date startDate;
     private Date endDate;
     private double totalCost;
@@ -33,6 +36,9 @@ public class BookingsResponse {
 
     public LocalDateTime getBookingDate() { return bookingDate; }
     public void setBookingDate(LocalDateTime bookingDate) { this.bookingDate = bookingDate; }
+
+    //public List<LocalDate> getBookedDates() { return bookedDates; }
+    //public void setBookedDates(List<LocalDate> bookedDates) { this.bookedDates = bookedDates; }
 
     public Date getStartDate() { return startDate; }
     public void setStartDate(Date startDate) { this.startDate = startDate; }

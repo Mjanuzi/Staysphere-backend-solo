@@ -6,8 +6,10 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "bookings")
 public class Bookings {
@@ -34,6 +36,10 @@ public class Bookings {
 
     @NotNull
     private LocalDateTime bookingDate;
+
+    @NotNull
+    private List<LocalDate> bookedDates;
+
     @NotNull
     private Date startDate;
     @NotNull
@@ -112,5 +118,11 @@ public class Bookings {
 
     public void setPending(boolean pending) {
         isPending = pending;
+    }
+
+    public List<LocalDate> getBookedDates() { return bookedDates;
+    }
+
+    public void setBookedDates(List<LocalDate> bookedDates) { this.bookedDates = bookedDates;
     }
 }

@@ -39,50 +39,6 @@ public class BookingsService {
         return convertToDTO(booking);
     }
 
-    @Transactional
-    public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
-        Bookings existingBooking = bookingsRepository.findById(bookingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
-
-        Listing listing = listingRepository.findById(existingBooking.getListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-
-        LocalDate existingStart = existingBooking.getStartDate().toInstant()
-                .atZone(ZoneId.of("UTC")).toLocalDate();
-        LocalDate existingEnd = existingBooking.getEndDate().toInstant()
-                .atZone(ZoneId.of("UTC")).toLocalDate();
-
-        List<LocalDate> originalDates = generateDateRange(existingStart, existingEnd);
-
-        LocalDate newStart = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
-        LocalDate newEnd = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
-
-        List<LocalDate> newDates = generateDateRange(newStart, newEnd);
-
-        listing.getAvailable().addAll(originalDates);
-
-        if (!listing.getAvailable().containsAll(newDates)) {
-            throw new ConflictException("New dates are not available");
-        }
-
-        listing.getAvailable().removeAll(newDates);
-        listingRepository.save(listing); //Updating availability
-
-        existingBooking.setBookingDate(bookingsDTO.getBookingDate());
-        existingBooking.setStartDate(bookingsDTO.getStartDate());
-        existingBooking.setEndDate(bookingsDTO.getEndDate());
-        existingBooking.setStatus(bookingsDTO.isStatus());
-        existingBooking.setPending(bookingsDTO.isPending());
-
-
-        long days = ChronoUnit.DAYS.between(newStart, newEnd);
-
-        double totalCost = days * listing.getListingPricePerNight();
-        existingBooking.setTotalCost(totalCost);
-
-        Bookings updatedBooking = bookingsRepository.save(existingBooking);
-        return convertToDTO(updatedBooking);
-    }
 
     private List<LocalDate> generateDateRange(LocalDate startDate, LocalDate endDate) {
         List<LocalDate> dates = new ArrayList<>();
@@ -177,22 +133,22 @@ public class BookingsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
         //Check Available start end
 
-        LocalDate startDate = bookingsDTO.getStartDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
-        LocalDate endDate = bookingsDTO.getEndDate().toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
+        LocalDate startDate = bookingsDTO.getStartDate().toInstant()
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate();
+        LocalDate endDate = bookingsDTO.getEndDate().toInstant()
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate();
 
         List<LocalDate> requestedDates = generateDateRange(startDate, endDate);
 
         if (!listing.getAvailable().containsAll(requestedDates)) {
             throw new ConflictException("Requested dates are not available"); //
         }
-        //Remove from Available
-        listing.getAvailable().removeAll(requestedDates);
-        listingRepository.save(listing);
+
 
         //long days = calculateNumberOfDays(bookingsDTO.getStartDate(), bookingsDTO.getEndDate());
-        long days = ChronoUnit.DAYS.between(startDate, endDate);
 
-        double totalCost = days * listing.getListingPricePerNight();
 
         Bookings booking = new Bookings();
         booking.setUserId(bookingsDTO.getUserId()); // Use DTO getter
@@ -200,12 +156,60 @@ public class BookingsService {
         booking.setBookingDate(bookingsDTO.getBookingDate());
         booking.setStartDate(bookingsDTO.getStartDate());
         booking.setEndDate(bookingsDTO.getEndDate());
-        booking.setTotalCost(totalCost);
+        booking.setBookedDates(requestedDates);
         booking.setStatus(bookingsDTO.isStatus());
         booking.setPending(bookingsDTO.isPending());
+
+        long days = ChronoUnit.DAYS.between(startDate, endDate);
+        booking.setTotalCost(days * listing.getListingPricePerNight());
+
+        listing.getAvailable().removeAll(requestedDates);
+        listingRepository.save(listing);
 
         // Save and convert to response
         Bookings savedBooking = bookingsRepository.save(booking);
         return convertToDTO(savedBooking);
+    }
+
+    @Transactional
+    public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
+        Bookings existingBooking = bookingsRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        Listing listing = listingRepository.findById(existingBooking.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        List<LocalDate> originalDates = existingBooking.getBookedDates();
+
+        LocalDate newStart = bookingsDTO.getStartDate().toInstant()
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate();
+        LocalDate newEnd = bookingsDTO.getEndDate().toInstant()
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate();
+
+        List<LocalDate> newDates = generateDateRange(newStart, newEnd);
+
+        listing.getAvailable().addAll(originalDates);
+
+        if (!listing.getAvailable().containsAll(newDates)) {
+            throw new ConflictException("New dates are not available");
+        }
+
+
+        listing.getAvailable().removeAll(newDates);
+        listingRepository.save(listing);
+
+        existingBooking.setBookedDates(newDates); // Update tracked dates
+        existingBooking.setBookingDate(bookingsDTO.getBookingDate());
+        existingBooking.setStartDate(bookingsDTO.getStartDate());
+        existingBooking.setEndDate(bookingsDTO.getEndDate());
+        existingBooking.setStatus(bookingsDTO.isStatus());
+        existingBooking.setPending(bookingsDTO.isPending());
+        existingBooking.setTotalCost(
+                ChronoUnit.DAYS.between(newStart, newEnd) * listing.getListingPricePerNight()
+        );
+
+        return convertToDTO(bookingsRepository.save(existingBooking));
     }
 }

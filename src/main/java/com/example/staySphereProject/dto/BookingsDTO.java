@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
-    public class BookingsDTO {
+public class BookingsDTO {
 
     @NotNull(message = "User ID req")
     private String userId;
@@ -18,6 +20,8 @@ import java.util.Date;
 
     @NotNull(message = "Booking date req")
     private LocalDateTime bookingDate;
+
+    private List<LocalDate> bookedDates;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @NotNull(message = "Start date req")
@@ -38,6 +42,9 @@ import java.util.Date;
 
     public LocalDateTime getBookingDate() { return bookingDate; }
     public void setBookingDate(LocalDateTime bookingDate) { this.bookingDate = bookingDate; }
+
+    public List<LocalDate> getBookedDates() { return bookedDates; }
+    public void setBookedDates(List<LocalDate> bookedDates) { this.bookedDates = bookedDates; }
 
     public Date getStartDate() { return startDate; }
     public void setStartDate(Date startDate) { this.startDate = startDate; }
