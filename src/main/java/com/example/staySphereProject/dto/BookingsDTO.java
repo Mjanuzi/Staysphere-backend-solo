@@ -1,5 +1,6 @@
 package com.example.staySphereProject.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -18,9 +19,11 @@ import java.util.Date;
     @NotNull(message = "Booking date req")
     private LocalDateTime bookingDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @NotNull(message = "Start date req")
     private Date startDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @NotNull(message = "End date req")
     private Date endDate;
 

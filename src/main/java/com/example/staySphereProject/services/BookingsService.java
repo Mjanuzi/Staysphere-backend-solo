@@ -86,15 +86,16 @@ public class BookingsService {
 
     private List<LocalDate> generateDateRange(LocalDate startDate, LocalDate endDate) {
         List<LocalDate> dates = new ArrayList<>();
-        while (!startDate.isAfter(endDate)) {
-            dates.add(startDate);
-            startDate = startDate.plusDays(1);
+        LocalDate currentDate = startDate;
+        while (currentDate.isBefore(endDate)) {
+            dates.add(currentDate);
+            currentDate = currentDate.plusDays(1);
         }
         return dates;
     }
 
-    private long calculateNumberOfDays(Date startDate, Date endDate) {
-        LocalDate start = startDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
+    private long calculateNumberOfDays(LocalDate startDate, LocalDate endDate) {
+        /**LocalDate start = startDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
         LocalDate end = endDate.toInstant().atZone(ZoneId.of("UTC")).toLocalDate();
 
         if (end.isBefore(start) || end.isEqual(start)) {
@@ -103,8 +104,8 @@ public class BookingsService {
         if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Start/End date cannot be null");
         }
-
-        return ChronoUnit.DAYS.between(start, end);
+        **/
+        return ChronoUnit.DAYS.between(startDate, endDate);
     }
 
     public void deleteBooking(String bookingId) {
@@ -182,13 +183,14 @@ public class BookingsService {
         List<LocalDate> requestedDates = generateDateRange(startDate, endDate);
 
         if (!listing.getAvailable().containsAll(requestedDates)) {
-            throw new ConflictException("Requested dates are not available"); // ✅
+            throw new ConflictException("Requested dates are not available"); //
         }
         //Remove from Available
         listing.getAvailable().removeAll(requestedDates);
         listingRepository.save(listing);
 
-        long days = calculateNumberOfDays(bookingsDTO.getStartDate(), bookingsDTO.getEndDate());
+        //long days = calculateNumberOfDays(bookingsDTO.getStartDate(), bookingsDTO.getEndDate());
+        long days = ChronoUnit.DAYS.between(startDate, endDate);
 
         double totalCost = days * listing.getListingPricePerNight();
 
