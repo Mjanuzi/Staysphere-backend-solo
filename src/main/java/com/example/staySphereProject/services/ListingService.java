@@ -108,6 +108,7 @@ public class ListingService {
             //standard values when creating an object
             listing.setListingActive(true);
             listing.setAvailable(new ArrayList<>());
+            listing.setReview(new ArrayList<>());
 
             Listing savedListing = listingRepository.save(listing);
             return convertToDTO(savedListing);
@@ -116,8 +117,6 @@ public class ListingService {
 
 
     public List<ListingResponseGetAll> getAllListings () {
-
-
 
         return listingRepository.findAll().stream()
                 .map(this::convertToDTOGetAll)
@@ -197,6 +196,7 @@ public class ListingService {
         response.setGuestLimit(listing.getListingGuestLimit());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
+
 
         return response;
     }

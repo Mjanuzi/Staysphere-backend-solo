@@ -43,10 +43,10 @@ public class ReviewController {
         List<Review> allReviews = reviewService.getAllReviews();
         return ResponseEntity.ok(allReviews);
     }
-    @GetMapping("/all/{id}")
-    public ResponseEntity<Review> getReviewById(@PathVariable String id) {
-        Review review = reviewService.getReviewById(id);
-        return ResponseEntity.ok(review);
+    @GetMapping("/all/{Id}")
+    public ResponseEntity<List<ReviewResponse>> getReviewById(@PathVariable String Id) {
+        List<ReviewResponse> reviews = reviewService.getReviewsByListingId(Id);
+        return ResponseEntity.ok(reviews);
 
     }
 
