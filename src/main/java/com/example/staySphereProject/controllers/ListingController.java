@@ -60,13 +60,12 @@ public class ListingController {
         return ResponseEntity.ok(listings);
     }
 
-    @GetMapping("/gethostbyid/{userId}")
+   @GetMapping("/gethostbyid/{userId}")
     public ResponseEntity<List<ListingResponse>> getListingByHostId(@PathVariable String userId) {
         List<ListingResponse> listings = listingService.getListingByHostId(userId);
         return ResponseEntity.ok(listings);
 
     }
-
     @GetMapping("/getbyid/{listingId}")
     public ResponseEntity<ListingResponse> getListingById(@PathVariable String listingId) {
         ListingResponse listing = listingService.getListingById(listingId);

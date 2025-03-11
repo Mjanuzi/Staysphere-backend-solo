@@ -229,5 +229,31 @@ public class ListingService {
         }
         return listings;
     }
+
+    /*public List<ListingResponseGetAll> getListingByHostId(String userId) {
+        List<Listing> listing = listingRepository.findByHostId(userId);
+        if (listing.isEmpty()) {
+            throw new ResourceNotFoundException("Did not find any listings by hostId " + userId);
+
+        }
+        /*return listingRepository.findAll().stream()
+                .map(this::convertToDTOGetAll)
+                .collect(Collectors.toList());*/
+
+
+
+
+    public List<ListingResponse> getListingByHostId(String hostId) {
+        User host = userRepository.findById(hostId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return listingRepository.findByHostId(hostId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
 }
+
 
