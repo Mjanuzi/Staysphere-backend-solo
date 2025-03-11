@@ -51,8 +51,8 @@ public class ReviewController {
     }
 
     @PatchMapping("/patch/{id}")
-    public ResponseEntity<Review> patchReview(@PathVariable String id, @RequestBody Review review) {
-        Review updatedReview = reviewService.patchReview(id, review);
+    public ResponseEntity<ReviewResponse> patchReview(@PathVariable String id, @RequestBody Review review) {
+        ReviewResponse updatedReview = reviewService.patchReview(id, review);
         return new ResponseEntity<>(updatedReview, HttpStatus.OK);
     }
 

@@ -14,12 +14,11 @@ public interface ListingRepository extends MongoRepository<Listing, String> {
 
     List<Listing> findByHost(User host);
 
-    List<Listing> findByHostId(String userId);
-
     List<Listing> findByHostId(String hostId);
 
 
     Optional<Listing> findListingWithReviewsById(String listingId);
+
 
     @Query("{'listingPricePerNight': {$gte: ?0, $lte: ?1}}")
     List<Listing> findListingByListingPricePerNight(double min, double max);

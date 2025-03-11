@@ -69,9 +69,11 @@ public class ReviewService {
 
 
 
-    public Review patchReview(String id, Review review) {
+    public ReviewResponse patchReview(String id, Review review) {
         Review existingReview = reviewRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
+
+        checkAuthentication.validateAuthenticatedUser(existingReview.getUserReviewer().getId());
 
         if (review.getUserReviewer() != null) {
             existingReview.setUserReviewer(review.getUserReviewer());
@@ -91,7 +93,8 @@ public class ReviewService {
         if (review.getId() != null) {
             existingReview.setId(id);
         }
-        return reviewRepository.save(existingReview);
+        //return reviewRepository.save(existingReview);
+        return convertToReviewDTO(existingReview);
     }
 
     public void deleteReview(String id) {
@@ -112,44 +115,6 @@ public class ReviewService {
 
         return reviewResponse;
     }
-
-
-    private ListingResponse convertToDTO(Listing listing) {
-        // Säkerställ att authentication är korrekt
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new IllegalArgumentException("User is not authenticated");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        ListingResponse response = new ListingResponse();
-        response.setListingId(listing.getListingId());
-        response.setHostId(listing.getHost() != null ? listing.getHost().getId() : "Unknown Host");
-        response.setHostName(listing.getHost() != null ? listing.getHost().getUsername() : "Unknown Host");
-        response.setListingTitle(listing.getListingTitle());
-        response.setListingDescription(listing.getListingDescription());
-        response.setGuestLimit(listing.getListingGuestLimit());
-        response.setListingPricePerNight(listing.getListingPricePerNight());
-        response.setListingImages(listing.getListingImages() != null ? listing.getListingImages() : new ArrayList<>());
-
-        // Hämta alla reviews för listing
-        List<Review> reviews = reviewRepository.findByListingReviewed(listing);
-        List<ReviewResponse> reviewResponses = new ArrayList<>();
-
-        for (Review review : reviews) {
-            ReviewResponse reviewResponse = convertToReviewDTO(review);
-            reviewResponses.add(reviewResponse);
-        }
-
-        response.setReviews(reviewResponses);
-
-        return response;
-    }
-
-
 
     public List<ReviewResponse> getReviewsByListingId(String Id) {
         Listing listing = listingRepository.findById(Id)
