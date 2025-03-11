@@ -11,8 +11,12 @@ import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 //import com.example.staySphereProject.util.CheckAuthentication;
 import com.example.staySphereProject.util.CheckAuthentication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import java.time.LocalDate;
@@ -88,8 +92,6 @@ public class ListingService {
 
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
-            /*User host = userRepository.findById(listingDTO.getHostId())
-                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));*/
 
         User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
 
@@ -122,11 +124,6 @@ public class ListingService {
                 .map(this::convertToDTOGetAll)
                 .collect(Collectors.toList());
     }
-
-    /*public List<Listing> getAllListings() {
-        return listingRepository.findAll();
-    }*/
-
 
     //get listing by id
     public ListingResponse getListingById (String listingId){
@@ -169,11 +166,6 @@ public class ListingService {
     }
 
     public void deleteListing (String listingId){
-        /*if (!listingRepository.existsById(listingId)) {
-            throw new ResourceNotFoundException("Listing not found");
-        }
-
-        listingRepository.deleteById(listingId);*/
 
         Listing existingListing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
@@ -211,5 +203,35 @@ public class ListingService {
 
         return response;
     }
+
+    public List<ListingResponse> getListingByPriceBetween(Double minPrice, Double maxPrice){
+        if (minPrice < 0 || maxPrice < 0) {
+            throw new ResourceNotFoundException("Listing Price cannot be negative");
+        }
+        if (minPrice > maxPrice) {
+            throw new ResourceNotFoundException("Listing Price cannot be greater than maxPrice");
+        }
+        List<Listing> listings = listingRepository.findListingByListingPricePerNight(minPrice, maxPrice);
+        if (listings.isEmpty()) {
+            throw new ResourceNotFoundException("Did not find any listings between " + minPrice + " and " + maxPrice);
+        }
+        return listingRepository.findListingByListingPricePerNight(minPrice,maxPrice).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ListingResponse> getListingByHostId(String hostId) {
+        User host = userRepository.findById(hostId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return listingRepository.findByHostId(hostId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
 }
+
 
