@@ -71,6 +71,8 @@ public class ListingController {
         ListingResponse listing = listingService.getListingById(listingId);
         return ResponseEntity.ok(listing);
     }
+    
+
 
     @PatchMapping("/patch/{listingId}")
     public ResponseEntity<ListingResponse> patchListing(@PathVariable String listingId, @RequestBody ListingDTO listingDTO) {

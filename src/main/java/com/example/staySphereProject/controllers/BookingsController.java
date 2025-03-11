@@ -32,17 +32,34 @@ public class BookingsController {
         return ResponseEntity.ok(bookings);
     }
 
-    @GetMapping("/user/{userId}")
+    /*@GetMapping("/user/{userId}")
     public ResponseEntity<List<BookingsResponse>> getBookings(@PathVariable String userId) {
         List<BookingsResponse> bookings = bookingsService.getUserBookings(userId);
         return ResponseEntity.ok(bookings);
-    }
+    }*/
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingsResponse> getBookingById(@PathVariable String bookingId) {
         BookingsResponse booking = bookingsService.getBookingById(bookingId);
         return ResponseEntity.ok(booking);
     }
+
+    @GetMapping("/host/{hostId}")
+    public ResponseEntity<List<BookingsResponse>> getHostBookings(
+            @PathVariable String hostId,
+            @RequestParam(required = false, defaultValue = "asc") String sortOrder) {
+        List<BookingsResponse> bookings = bookingsService.getHostBookings(hostId, sortOrder);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<BookingsResponse>> getUserBookings(
+            @PathVariable String userId,
+            @RequestParam(required = false, defaultValue = "asc") String sortOrder) {
+        List<BookingsResponse> bookings = bookingsService.getUserBookings(userId, sortOrder);
+        return ResponseEntity.ok(bookings);
+    }
+
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingsResponse> updateBooking(@PathVariable String bookingId, @RequestBody BookingsDTO bookingsDTO) {
