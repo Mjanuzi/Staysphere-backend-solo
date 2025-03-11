@@ -92,8 +92,6 @@ public class ListingService {
 
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
-            /*User host = userRepository.findById(listingDTO.getHostId())
-                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));*/
 
         User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
 
@@ -126,11 +124,6 @@ public class ListingService {
                 .map(this::convertToDTOGetAll)
                 .collect(Collectors.toList());
     }
-
-    /*public List<Listing> getAllListings() {
-        return listingRepository.findAll();
-    }*/
-
 
     //get listing by id
     public ListingResponse getListingById (String listingId){
@@ -173,11 +166,6 @@ public class ListingService {
     }
 
     public void deleteListing (String listingId){
-        /*if (!listingRepository.existsById(listingId)) {
-            throw new ResourceNotFoundException("Listing not found");
-        }
-
-        listingRepository.deleteById(listingId);*/
 
         Listing existingListing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
@@ -231,18 +219,6 @@ public class ListingService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
-    /*public List<ListingResponseGetAll> getListingByHostId(String userId) {
-        List<Listing> listing = listingRepository.findByHostId(userId);
-        if (listing.isEmpty()) {
-            throw new ResourceNotFoundException("Did not find any listings by hostId " + userId);
-
-        }
-        /*return listingRepository.findAll().stream()
-                .map(this::convertToDTOGetAll)
-                .collect(Collectors.toList());*/
-
-
 
 
     public List<ListingResponse> getListingByHostId(String hostId) {
