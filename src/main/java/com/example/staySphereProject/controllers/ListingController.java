@@ -82,4 +82,15 @@ public class ListingController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/all/pricebetween")
+    public ResponseEntity<List<Listing>> getListingsByPrice(
+            @RequestParam("minPrice") Double minPrice,
+            @RequestParam("maxPrice") Double maxPrice){
+        List<Listing> listings = listingService.getListingByPriceBetween(minPrice,maxPrice);
+
+        return ResponseEntity.ok(listings);
+    }
+
+
+
 }

@@ -11,8 +11,12 @@ import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 //import com.example.staySphereProject.util.CheckAuthentication;
 import com.example.staySphereProject.util.CheckAuthentication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import java.time.LocalDate;
@@ -210,6 +214,20 @@ public class ListingService {
         response.setListingImages(listing.getListingImages());
 
         return response;
+    }
+
+    public List<Listing> getListingByPriceBetween(Double minPrice, Double maxPrice){
+        if (minPrice < 0 || maxPrice < 0) {
+            throw new ResourceNotFoundException("Listing Price cannot be negative");
+        }
+        if (minPrice > maxPrice) {
+            throw new ResourceNotFoundException("Listing Price cannot be greater than maxPrice");
+        }
+        List<Listing> listings = listingRepository.findListingByListingPricePerNight(minPrice, maxPrice);
+        if (listings.isEmpty()) {
+            throw new ResourceNotFoundException("Did not find any listings between " + minPrice + " and " + maxPrice);
+        }
+        return listings;
     }
 }
 
