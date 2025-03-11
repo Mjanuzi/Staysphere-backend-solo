@@ -42,7 +42,7 @@ public class BookingsResponse {
     public Date getEndDate() { return endDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
 
-    public double getTotalCost() { return totalCost; }
+    public double getTotalCost() { return Math.round(totalCost * 100.0) / 100.0 ; }
     public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
 
     public boolean isStatus() { return status; }
