@@ -11,6 +11,8 @@ import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 //import com.example.staySphereProject.util.CheckAuthentication;
 import com.example.staySphereProject.util.CheckAuthentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ListingService {
+    private static final Logger log = LoggerFactory.getLogger(ListingService.class);
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
@@ -183,6 +186,13 @@ public class ListingService {
        listingRepository.delete(existingListing);
     }
 
+    public List<ListingResponse> getListingByHostId(String hostId) {
+       User host = userRepository.findById(hostId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return listingRepository.findByHostId(hostId);
+    }
+
 
     //-------Hälp Mäthodz---------
     private ListingResponse convertToDTO (Listing listing){
@@ -211,5 +221,8 @@ public class ListingService {
 
         return response;
     }
+
+
+
 }
 

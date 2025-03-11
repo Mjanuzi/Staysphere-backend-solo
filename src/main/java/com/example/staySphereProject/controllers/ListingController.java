@@ -11,9 +11,6 @@ import com.example.staySphereProject.services.ListingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,12 +52,19 @@ public class ListingController {
         return new ResponseEntity<>(updatedListing, HttpStatus.OK);
     }
 
-      
+
     @GetMapping("/getall")
     public ResponseEntity<List<ListingResponseGetAll>> getAllListings() {
         List<ListingResponseGetAll> listings = listingService.getAllListings();
 
         return ResponseEntity.ok(listings);
+    }
+
+    @GetMapping("/gethostbyid/{userId}")
+    public ResponseEntity<List<ListingResponse>> getListingByHostId(@PathVariable String userId) {
+        List<ListingResponse> listings = listingService.getListingByHostId(userId);
+        return ResponseEntity.ok(listings);
+
     }
 
     @GetMapping("/getbyid/{listingId}")
@@ -81,5 +85,7 @@ public class ListingController {
         listingService.deleteListing(listingId);
         return ResponseEntity.noContent().build();
     }
+    
+    
 
 }
