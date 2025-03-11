@@ -135,6 +135,12 @@ public class ListingService {
         return convertToDTO(listing);
     }
 
+    public List<Listing> getListingByHostId(String hostId) {
+        User host = userRepository.findById(hostId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return listingRepository.findByHost(host);
+    }
+
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
         //Check if the listing exists
         Listing existingListing = listingRepository.findById(listingId)

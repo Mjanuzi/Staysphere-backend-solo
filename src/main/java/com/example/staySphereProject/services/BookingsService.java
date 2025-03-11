@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +38,43 @@ public class BookingsService {
         Bookings booking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
         return convertToDTO(booking);
+    }
+
+    public List<BookingsResponse> getHostBookings(String hostId, String sortOrder) {
+        List<Listing> hostListings = listingService.getListingByHostId(hostId);
+        List<String> listingIds = hostListings.stream()
+                .map(Listing::getListingId)
+                .collect(Collectors.toList());
+        List<Bookings> bookings = bookingsRepository.findByListingIdIn(listingIds);
+
+        // Sort bookings
+        Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            comparator = comparator.reversed();
+        }
+        bookings.sort(comparator);
+
+        return bookings.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<BookingsResponse> getUserBookings(String userId, String sortOrder) {
+        if (!userRepository.existsById(userId)) {
+            throw new IllegalArgumentException("User not found");
+        }
+        List<Bookings> bookings = bookingsRepository.findByUserId(userId);
+
+        // Sort bookings
+        Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            comparator = comparator.reversed();
+        }
+        bookings.sort(comparator);
+
+        return bookings.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
 
