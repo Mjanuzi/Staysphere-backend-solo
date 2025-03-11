@@ -32,11 +32,11 @@ public class BookingsController {
         return ResponseEntity.ok(bookings);
     }
 
-    @GetMapping("/user/{userId}")
+    /*@GetMapping("/user/{userId}")
     public ResponseEntity<List<BookingsResponse>> getBookings(@PathVariable String userId) {
         List<BookingsResponse> bookings = bookingsService.getUserBookings(userId);
         return ResponseEntity.ok(bookings);
-    }
+    }*/
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingsResponse> getBookingById(@PathVariable String bookingId) {

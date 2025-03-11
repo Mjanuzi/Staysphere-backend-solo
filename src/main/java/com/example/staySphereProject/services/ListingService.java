@@ -8,6 +8,7 @@ import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
+import com.example.staySphereProject.repository.ReviewRepository;
 import com.example.staySphereProject.repository.UserRepository;
 //import com.example.staySphereProject.util.CheckAuthentication;
 import com.example.staySphereProject.util.CheckAuthentication;
@@ -135,11 +136,11 @@ public class ListingService {
         return convertToDTO(listing);
     }
 
-    public List<Listing> getListingByHostId(String hostId) {
-        User host = userRepository.findById(hostId)
+    /*public ListingResponse getListingByHostId(String hostId) {
+        Listing listing = listingRepository.findById(hostId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return listingRepository.findByHost(host);
-    }
+        return convertToDTO(listing);
+    }*/
 
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
         //Check if the listing exists
