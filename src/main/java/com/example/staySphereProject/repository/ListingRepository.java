@@ -15,4 +15,5 @@ public interface ListingRepository extends MongoRepository<Listing, String> {
 
     @Query("{'listingPricePerNight': {$gte: ?0, $lte: ?1}}")
     List<Listing> findListingByListingPricePerNight(double min, double max);
+
 }

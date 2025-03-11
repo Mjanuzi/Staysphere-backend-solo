@@ -88,10 +88,10 @@ public class ListingController {
     
 
     @GetMapping("/all/pricebetween")
-    public ResponseEntity<List<Listing>> getListingsByPrice(
+    public ResponseEntity<List<ListingResponse>> getListingsByPrice(
             @RequestParam("minPrice") Double minPrice,
             @RequestParam("maxPrice") Double maxPrice){
-        List<Listing> listings = listingService.getListingByPriceBetween(minPrice,maxPrice);
+        List<ListingResponse> listings = listingService.getListingByPriceBetween(minPrice,maxPrice);
 
         return ResponseEntity.ok(listings);
     }

@@ -216,7 +216,7 @@ public class ListingService {
         return response;
     }
 
-    public List<Listing> getListingByPriceBetween(Double minPrice, Double maxPrice){
+    public List<ListingResponse> getListingByPriceBetween(Double minPrice, Double maxPrice){
         if (minPrice < 0 || maxPrice < 0) {
             throw new ResourceNotFoundException("Listing Price cannot be negative");
         }
@@ -227,7 +227,9 @@ public class ListingService {
         if (listings.isEmpty()) {
             throw new ResourceNotFoundException("Did not find any listings between " + minPrice + " and " + maxPrice);
         }
-        return listings;
+        return listingRepository.findListingByListingPricePerNight(minPrice,maxPrice).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /*public List<ListingResponseGetAll> getListingByHostId(String userId) {
