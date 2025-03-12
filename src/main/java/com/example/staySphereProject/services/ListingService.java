@@ -1,5 +1,4 @@
 package com.example.staySphereProject.services;
-
 import com.example.staySphereProject.dto.AvailabilityRequest;
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
@@ -8,23 +7,12 @@ import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
-import com.example.staySphereProject.repository.ReviewRepository;
 import com.example.staySphereProject.repository.UserRepository;
-//import com.example.staySphereProject.util.CheckAuthentication;
 import com.example.staySphereProject.util.CheckAuthentication;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-
 import java.time.LocalDate;
-
 import java.time.temporal.ChronoUnit;
-
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,11 +26,11 @@ public class ListingService {
     private final CheckAuthentication checkAuthentication;
     //private final ReviewRepository reviewRepository;
 
-
-    public ListingService(ListingRepository listingRepository, UserRepository userRepository, CheckAuthentication checkAuthentication) {
+    public ListingService(ListingRepository listingRepository,
+                          UserRepository userRepository,
+                          CheckAuthentication checkAuthentication) {
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
-
         this.checkAuthentication = checkAuthentication;
     }
 
@@ -91,9 +79,7 @@ public class ListingService {
 
         User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
 
-
-
-        //Creating new listing
+            //Creating new listing
             Listing listing = new Listing();
             listing.setHost(host);
             listing.setListingTitle(listingDTO.getListingTitle());
@@ -102,7 +88,6 @@ public class ListingService {
             listing.setListingGuestLimit(listingDTO.getGuestLimit());
             listing.setListingImages(listingDTO.getListingImages());
 
-
             //standard values when creating an object
             listing.setListingActive(true);
             listing.setAvailable(new ArrayList<>());
@@ -110,12 +95,9 @@ public class ListingService {
 
             Listing savedListing = listingRepository.save(listing);
             return convertToDTO(savedListing);
-
     }
 
-
     public List<ListingResponseGetAll> getAllListings () {
-
         return listingRepository.findAll().stream()
                 .map(this::convertToDTOGetAll)
                 .collect(Collectors.toList());
@@ -128,18 +110,12 @@ public class ListingService {
         return convertToDTO(listing);
     }
 
-    /*public ListingResponse getListingByHostId(String hostId) {
-        Listing listing = listingRepository.findById(hostId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return convertToDTO(listing);
-    }*/
-
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
         //Check if the listing exists
         Listing existingListing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        //checks if the logged in user is the host of existingListing
+        //checks if the logged-in user is the host of existingListing
         checkAuthentication.validateAuthenticatedUser(existingListing.getHost().getId());
 
         if (listingDTO.getHostId() != null) {
@@ -168,7 +144,6 @@ public class ListingService {
     }
 
     public void deleteListing (String listingId){
-
         Listing existingListing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
@@ -176,7 +151,6 @@ public class ListingService {
 
        listingRepository.delete(existingListing);
     }
-
 
     //-------Hälp Mäthodz---------
     private ListingResponse convertToDTO (Listing listing){
@@ -190,7 +164,6 @@ public class ListingService {
         response.setGuestLimit(listing.getListingGuestLimit());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
-
 
         return response;
     }
@@ -231,9 +204,4 @@ public class ListingService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
-
-
 }
-
-
