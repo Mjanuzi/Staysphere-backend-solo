@@ -57,11 +57,9 @@ public class ListingService {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
-
         if (ChronoUnit.DAYS.between(startDate, endDate) >= 90) {
             throw new IllegalArgumentException("Date rangfe cannot exceed 90 days");
         }
-
     }
 
     private List<LocalDate> generateDateRange(LocalDate startDate, LocalDate endDate) {

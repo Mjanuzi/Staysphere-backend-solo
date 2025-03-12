@@ -1,12 +1,9 @@
 package com.example.staySphereProject.dto;
-
-import com.example.staySphereProject.models.User;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
-
 public class ListingDTO {
 
     @NotNull
