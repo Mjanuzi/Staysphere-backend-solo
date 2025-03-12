@@ -15,10 +15,6 @@ public class ListingResponseGetAll {
     private ArrayList<String> listingImages;
 
 
-
-
-
-
     public String getListingId() {
         return listingId;
     }
