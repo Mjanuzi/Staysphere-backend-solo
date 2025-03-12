@@ -9,8 +9,7 @@ import java.util.ArrayList;
 
 public class ListingDTO {
 
-
-
+    @NotNull
     private String hostId;
 
     @NotNull
@@ -29,8 +28,8 @@ public class ListingDTO {
 
 
     public String getHostId() { return hostId; }
-    public void setHostId(String hostId) { this.hostId = hostId; }
 
+    public void setHostId(String hostId) { this.hostId = hostId; }
 
     public Double getListingPricePerNight() {
         return listingPricePerNight;

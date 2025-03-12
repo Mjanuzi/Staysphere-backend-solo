@@ -20,9 +20,7 @@ import java.util.List;
 @RequestMapping("/api/listing")
 public class ListingController {
 
-
     private final ListingService listingService;
-
 
     public ListingController(ListingService listingService) {
         this.listingService = listingService;
@@ -35,23 +33,15 @@ public class ListingController {
         return new ResponseEntity<>(newListing, HttpStatus.CREATED);
     }
 
-
-
-
     @PostMapping("/listings/{listingId}/availability")
     //@PreAuthorize("hasRole('HOST')")
-    public ResponseEntity<Listing> addAvailability(
-            @PathVariable String listingId,
-            @RequestBody AvailabilityRequest request) {
+    public ResponseEntity<Listing> addAvailability(@PathVariable String listingId,
+                                                   @RequestBody AvailabilityRequest request)
+    {
             //@AuthenticationPrincipal UserDetails userDetail) {
-        Listing updatedListing = listingService.addAvailability(
-                listingId,
-                request
-        );
-
+        Listing updatedListing = listingService.addAvailability(listingId, request);
         return new ResponseEntity<>(updatedListing, HttpStatus.OK);
     }
-
 
     @GetMapping("/getall")
     public ResponseEntity<List<ListingResponseGetAll>> getAllListings() {
@@ -66,13 +56,12 @@ public class ListingController {
         return ResponseEntity.ok(listings);
 
     }
+
     @GetMapping("/getbyid/{listingId}")
     public ResponseEntity<ListingResponse> getListingById(@PathVariable String listingId) {
         ListingResponse listing = listingService.getListingById(listingId);
         return ResponseEntity.ok(listing);
     }
-    
-
 
     @PatchMapping("/patch/{listingId}")
     public ResponseEntity<ListingResponse> patchListing(@PathVariable String listingId, @RequestBody ListingDTO listingDTO) {
@@ -80,14 +69,11 @@ public class ListingController {
         return new ResponseEntity<>(updatedListing, HttpStatus.OK);
     }
 
-
     @DeleteMapping("/delete/{listingId}")
     public ResponseEntity<Void> deleteListing(@PathVariable String listingId) {
         listingService.deleteListing(listingId);
         return ResponseEntity.noContent().build();
     }
-    
-    
 
     @GetMapping("/all/pricebetween")
     public ResponseEntity<List<ListingResponse>> getListingsByPrice(
@@ -97,7 +83,4 @@ public class ListingController {
 
         return ResponseEntity.ok(listings);
     }
-
-
-
 }

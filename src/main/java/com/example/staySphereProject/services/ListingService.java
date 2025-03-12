@@ -51,12 +51,7 @@ public class ListingService {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        // Verify host ownership
-        /**if (!listing.getHost().equals()) {
-            .orElseThrow(() -> ResourceNotFoundException("You don't own this listing"));
-        }**/
-
-
+        checkAuthentication.validateAuthenticatedUser(listing.getHost().getId());
         // Validate date range
         validateDateRange(request.getStartDate(), request.getEndDate());
 
