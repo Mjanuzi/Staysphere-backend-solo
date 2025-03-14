@@ -14,20 +14,7 @@ public class ListingResponse {
     private String listingDescription;
     private Integer guestLimit;
     private ArrayList<String> listingImages;
-
-
-
-
     private List<ReviewResponse> reviews;
-
-
-    /**public User getHost() {
-        return host;
-    }
-
-    public void setHost(User host) {
-        this.host = host;
-    }**/
 
 
     public String getListingId() {

@@ -1,18 +1,13 @@
 package com.example.staySphereProject.models;
-
 import jakarta.validation.constraints.*;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
 @Document(collection = "listings")
 public class Listing {
-
 
     @Id
     private String id;
@@ -33,12 +28,9 @@ public class Listing {
     @Min(value = 1)
     private Integer listingGuestLimit;
 
-    //@Max(value = 2500, message = "The limit is 2500 characters")
-
     @NotBlank(message = "You cant leave this emppty")
     private String listingDescription;
 
-    //@NotNull
     private ArrayList<String> listingImages;
 
     @NotNull
@@ -47,37 +39,12 @@ public class Listing {
     @NotNull
     private boolean listingActive;
 
-
     @NotNull
     private boolean isBooked;
-
-
-    /*public Listing(String listingId, User host, String listingTitle, Double listingPricePerNight,
-                   String listingDescription, Integer listingGuestLimit,
-                   ArrayList<String> listingImages, boolean isBooked, boolean listingActive, Review review, ArrayList<LocalDate> available) {
-        this.listingId = listingId;
-        this.host = host;
-        this.listingTitle = listingTitle;
-        this.listingPricePerNight = listingPricePerNight;
-        this.listingDescription = listingDescription;
-        this.listingGuestLimit = listingGuestLimit;
-        this.listingImages = listingImages;
-        this.isBooked = isBooked;
-        this.listingActive = listingActive;
-        //this.review = review;
-        this.available = available;
-    }*/
 
     public Listing() {
     }
 
-
-
-
-
-    /*public Review getReview() {
-        return review;
-    }*/
     public ArrayList<LocalDate> getAvailable() {
         return available;
     }
@@ -85,9 +52,7 @@ public class Listing {
     public void setAvailable(ArrayList<LocalDate> available) {
         this.available = available;
     }
-    /*public void setReview(Review review) {
-        this.review = review;
-    }*/
+
     public @NotEmpty String getListingId() {
         return id;
     }
@@ -138,7 +103,7 @@ public class Listing {
         this.listingGuestLimit = listingGuestLimit;
     }
 
-    public /*@Max(value = 2500, message = "The limit is 2500 characters")*/ @NotBlank(message = "You cant leave this emppty") String getListingDescription() {
+    public @NotBlank(message = "You cant leave this emppty") String getListingDescription() {
         return listingDescription;
     }
 
@@ -169,6 +134,4 @@ public class Listing {
     public void setListingActive(boolean listingActive) {
         this.listingActive = listingActive;
     }
-
-
 }
