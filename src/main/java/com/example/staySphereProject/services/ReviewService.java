@@ -9,10 +9,6 @@ import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.ReviewRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,7 +52,7 @@ public class ReviewService {
         return convertToReviewDTO(savedReview);
 
     }
-
+    // Hämta alla reviews
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
     }
@@ -67,12 +63,12 @@ public class ReviewService {
         return convertToReviewDTO(review);
     }
 
-
-
+    //Uppdatera en review med patch
     public ReviewResponse patchReview(String id, Review review) {
         Review existingReview = reviewRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
 
+        //Validera så att rätt person får uppdatera en kommentar
         checkAuthentication.validateAuthenticatedUser(existingReview.getUserReviewer().getId());
 
         if (review.getUserReviewer() != null) {
@@ -93,17 +89,22 @@ public class ReviewService {
         if (review.getId() != null) {
             existingReview.setId(id);
         }
-        //return reviewRepository.save(existingReview);
+
         return convertToReviewDTO(existingReview);
     }
 
+    // Radera en review
     public void deleteReview(String id) {
         Review existingReview = reviewRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
+
+        //Validera så att rätt person får ta bort sin kommentar
+        checkAuthentication.validateAuthenticatedUser(existingReview.getUserReviewer().getId());
+
         reviewRepository.deleteById(existingReview.getId());
     }
 
-
+    //Konvertera DTO till response
     private ReviewResponse convertToReviewDTO(Review review) {
         ReviewResponse reviewResponse = new ReviewResponse();
 
@@ -111,11 +112,12 @@ public class ReviewService {
         reviewResponse.setReviewerId(review.getUserReviewer().getId());
         reviewResponse.setReviewerUsername(review.getUserReviewer().getUsername());
         reviewResponse.setReviewedRating(review.getReviewRating());
-        reviewResponse.setReviewedListing(review.getListingReviewed().getListingTitle());
+        reviewResponse.setReviewedListing(review.getListingReviewed().toString());
 
         return reviewResponse;
     }
 
+    //Hämta alla reviews som tillhör en listing
     public List<ReviewResponse> getReviewsByListingId(String Id) {
         Listing listing = listingRepository.findById(Id)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));

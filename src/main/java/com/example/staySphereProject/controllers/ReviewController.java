@@ -21,41 +21,41 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final ReviewRepository reviewRepository;
-    private final UserService userService;
-    private final UserRepository userRepository;
 
-    public ReviewController(ReviewService reviewService, ReviewRepository reviewRepository, UserService userService, UserRepository userRepository) {
+
+    public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
-        this.reviewRepository = reviewRepository;
-        this.userService = userService;
-        this.userRepository = userRepository;
+
     }
 
+    //Posta en review
     @PostMapping("/user/{id}")
     public ResponseEntity<?> registerReview (@Valid @RequestBody ReviewRequest reviewRequest,@PathVariable String id) {
         ReviewResponse newReview = reviewService.createReview(reviewRequest, id );
         return ResponseEntity.status(HttpStatus.CREATED).body(newReview);
 
     }
+    //Hämta alla reviews
     @GetMapping("/all")
     public ResponseEntity<List<Review>> getAllReviews() {
         List<Review> allReviews = reviewService.getAllReviews();
         return ResponseEntity.ok(allReviews);
     }
+    //Hämta en review
     @GetMapping("/all/{Id}")
     public ResponseEntity<List<ReviewResponse>> getReviewById(@PathVariable String Id) {
         List<ReviewResponse> reviews = reviewService.getReviewsByListingId(Id);
         return ResponseEntity.ok(reviews);
 
     }
-
+    //Uppdatera en review
     @PatchMapping("/patch/{id}")
     public ResponseEntity<ReviewResponse> patchReview(@PathVariable String id, @RequestBody Review review) {
         ReviewResponse updatedReview = reviewService.patchReview(id, review);
         return new ResponseEntity<>(updatedReview, HttpStatus.OK);
     }
 
+    //Radera en review
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable String id) {
         reviewService.deleteReview(id);
