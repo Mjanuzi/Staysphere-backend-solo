@@ -46,9 +46,11 @@ public class ReviewService {
         Listing existingListing = listingRepository.findById(reviewRequest.getReviewedListing())
                 .orElseThrow(() -> new IllegalArgumentException("Listing Not Found"));
 
+        //hämta bokning från databasen
         Bookings existingBooking = bookingsRepository.findByUserIdAndListingId(id,existingListing.getListingId()).
                 orElseThrow(() -> new IllegalArgumentException("You can not review this listing "));
 
+        //konvertera date till LocalDate då jag vill använda isAfter för att validera reviews efter slutdatum
         if (existingBooking.getEndDate().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
@@ -71,12 +73,6 @@ public class ReviewService {
     // Hämta alla reviews
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
-    }
-
-    public ReviewResponse getReviewById(String Id) {
-        Review review = reviewRepository.findById(Id)
-                .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
-        return convertToReviewDTO(review);
     }
 
     //Uppdatera en review med patch
@@ -145,11 +141,6 @@ public class ReviewService {
 
                 .collect(Collectors.toList());
     }
-
-
-
-
-
 
 }
 
