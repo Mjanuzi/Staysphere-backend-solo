@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+// MongoDB
 @Document(collection = "bookings")
 public class Bookings {
 
-    @Id
+    @Id //ID in mongoDB
     private String bookingID;
 
     @NotNull
@@ -38,7 +39,7 @@ public class Bookings {
     private LocalDateTime bookingDate;
 
     @NotNull
-    private List<LocalDate> bookedDates;
+    private List<LocalDate> bookedDates; //All dates between start and end
 
     @NotNull
     private Date startDate;

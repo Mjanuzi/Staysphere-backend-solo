@@ -32,11 +32,6 @@ public class BookingsController {
         return ResponseEntity.ok(bookings);
     }
 
-    /*@GetMapping("/user/{userId}")
-    public ResponseEntity<List<BookingsResponse>> getBookings(@PathVariable String userId) {
-        List<BookingsResponse> bookings = bookingsService.getUserBookings(userId);
-        return ResponseEntity.ok(bookings);
-    }*/
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingsResponse> getBookingById(@PathVariable String bookingId) {
@@ -44,10 +39,12 @@ public class BookingsController {
         return ResponseEntity.ok(booking);
     }
 
+    // Sorting parameter handling for host/user bookings
     @GetMapping("/host/{hostId}")
     public ResponseEntity<List<BookingsResponse>> getHostBookings(
             @PathVariable String hostId,
             @RequestParam(required = false, defaultValue = "asc") String sortOrder) {
+        // SortOrder parameter allow us to sort dynamticly with asc/desc based on start date
         List<BookingsResponse> bookings = bookingsService.getHostBookings(hostId, sortOrder);
         return ResponseEntity.ok(bookings);
     }
@@ -60,7 +57,7 @@ public class BookingsController {
         return ResponseEntity.ok(bookings);
     }
 
-
+    //Partial update using patch with available included for recalculation
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingsResponse> updateBooking(@PathVariable String bookingId, @RequestBody BookingsDTO bookingsDTO) {
         BookingsResponse updatedBooking = bookingsService.updateBooking(bookingId, bookingsDTO);
