@@ -10,6 +10,7 @@ import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
+import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,16 +28,21 @@ public class BookingsService {
     private final BookingsRepository bookingsRepository;
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
+    private final CheckAuthentication checkAuthentication;
 
-    public BookingsService(BookingsRepository bookingsRepository, ListingRepository listingRepository, UserRepository userRepository) {
+    public BookingsService(BookingsRepository bookingsRepository, ListingRepository listingRepository, UserRepository userRepository, CheckAuthentication checkAuthentication) {
         this.bookingsRepository = bookingsRepository;
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
+        this.checkAuthentication = checkAuthentication;
     }
 
     public BookingsResponse getBookingById(String bookingId) {
         Bookings booking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        checkAuthentication.validateAuthenticatedUser(bookingId);
+
         return convertToDTO(booking);
     }
 
@@ -46,6 +52,8 @@ public class BookingsService {
                 .map(Listing::getListingId)
                 .collect(Collectors.toList());
         List<Bookings> bookings = bookingsRepository.findByListingIdIn(listingIds);
+
+        checkAuthentication.validateAuthenticatedUser(hostId);
 
         // Sort bookings
         Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
@@ -64,6 +72,8 @@ public class BookingsService {
             throw new IllegalArgumentException("User not found");
         }
         List<Bookings> bookings = bookingsRepository.findByUserId(userId);
+
+        checkAuthentication.validateAuthenticatedUser(userId);
 
         // Sort bookings
         Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
@@ -89,7 +99,10 @@ public class BookingsService {
     }
 
     public void deleteBooking(String bookingId) {
-        bookingsRepository.deleteById(bookingId);
+        Bookings existingBooking = bookingsRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        bookingsRepository.deleteById(existingBooking.getBookingID());
     }
 
 

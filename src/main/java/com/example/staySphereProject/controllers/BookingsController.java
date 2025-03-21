@@ -64,7 +64,7 @@ public class BookingsController {
         return ResponseEntity.ok(updatedBooking);
     }
 
-    @DeleteMapping("/{bookingId}")
+    @DeleteMapping("/admin/{bookingId}")
     public ResponseEntity<Void> deleteBooking(@PathVariable String bookingId) {
         bookingsService.deleteBooking(bookingId);
         return ResponseEntity.noContent().build();
