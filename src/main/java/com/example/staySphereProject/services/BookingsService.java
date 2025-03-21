@@ -102,23 +102,13 @@ public class BookingsService {
     }
 
 
-    /*public List<BookingsResponse> getUserBookings(String userId) {
 
-        if (!userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        List<Bookings> bookings = bookingsRepository.findByUserId(userId);
-
-        return bookings.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }*/
-
-
-
-    // Convert Bookings to BookingsResponse DTO
-
+    /**
+     Convert Bookings to BookingsResponse DTO
+     Resolve user/listing relationship
+     Friendly message to customer
+     Combining data from user and listing
+    **/
     private BookingsResponse convertToDTO(Bookings booking) {
         BookingsResponse response = new BookingsResponse();
         response.setBookingID(booking.getBookingID());
@@ -143,6 +133,15 @@ public class BookingsService {
         return response;
     }
 
+    /** Will try to explain what we do step by step in createBooking.
+        1. Validate that user/listing exist
+        2. Convert dates to UTC timezone
+        3. Generate date range for start and end
+        4. Check if listing got available date.
+        5  Calculate cost
+        6. Update listing available dates
+        7. Save Booking and convert to responseDTO
+     **/
     @Transactional
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
 
@@ -155,7 +154,6 @@ public class BookingsService {
 
         Listing listing = listingRepository.findById(bookingsDTO.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-        //Check Available start end
 
         LocalDate startDate = bookingsDTO.getStartDate().toInstant()
                 .atZone(ZoneId.of("UTC"))
@@ -191,6 +189,13 @@ public class BookingsService {
         return convertToDTO(savedBooking);
     }
 
+    /**
+     Step by step for updateBooking
+     1. Restore original dates to availability
+     2. Validate new dates against current availability
+     3. Update cost calculation
+     4. Update and save.
+    **/
     @Transactional
     public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
         Bookings existingBooking = bookingsRepository.findById(bookingId)

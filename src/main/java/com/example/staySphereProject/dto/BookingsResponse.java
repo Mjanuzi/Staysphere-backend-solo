@@ -11,12 +11,12 @@ public class BookingsResponse {
     private String bookingID;
     private String userId;
     private String listingId;
-    private String bookingName;
-    private String hostName;
+    private String bookingName; //Generate a personal messagfe
+    private String hostName; //From related listing
     private LocalDateTime bookingDate;
     private Date startDate;
     private Date endDate;
-    private double totalCost;
+    private double totalCost; //Calculate based on stay duration
     private boolean status;
     private boolean pending;
 
@@ -42,7 +42,7 @@ public class BookingsResponse {
     public Date getEndDate() { return endDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
 
-    public double getTotalCost() { return Math.round(totalCost * 100.0) / 100.0 ; }
+    public double getTotalCost() { return Math.round(totalCost * 100.0) / 100.0 ; } //Rounding up to display less decimal
     public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
 
     public boolean isStatus() { return status; }

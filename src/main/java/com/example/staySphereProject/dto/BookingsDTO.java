@@ -12,6 +12,7 @@ import java.util.List;
 
 public class BookingsDTO {
 
+    //Validating to ensure data integrity before processing
     @NotNull(message = "User ID req")
     private String userId;
 
@@ -23,6 +24,7 @@ public class BookingsDTO {
 
     private List<LocalDate> bookedDates;
 
+    //Date format for API
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @NotNull(message = "Start date req")
     private Date startDate;
