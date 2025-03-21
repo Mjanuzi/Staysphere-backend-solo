@@ -2,16 +2,20 @@ package com.example.staySphereProject.services;
 
 import com.example.staySphereProject.dto.*;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
+import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Review;
 import com.example.staySphereProject.models.User;
+import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.ReviewRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,12 +26,14 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final ListingRepository listingRepository;
     private final CheckAuthentication checkAuthentication;
+    private final BookingsRepository bookingsRepository;
 
-    public ReviewService(ReviewRepository reviewRepository, UserRepository userRepository, ListingRepository listingRepository, CheckAuthentication checkAuthentication) {
+    public ReviewService(ReviewRepository reviewRepository, UserRepository userRepository, ListingRepository listingRepository, CheckAuthentication checkAuthentication, BookingsRepository bookingsRepository) {
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
         this.listingRepository = listingRepository;
         this.checkAuthentication = checkAuthentication;
+        this.bookingsRepository = bookingsRepository;
     }
 
     public ReviewResponse createReview(ReviewRequest reviewRequest, String id) {
@@ -39,6 +45,16 @@ public class ReviewService {
         //hämta listing från databasen
         Listing existingListing = listingRepository.findById(reviewRequest.getReviewedListing())
                 .orElseThrow(() -> new IllegalArgumentException("Listing Not Found"));
+
+        Bookings existingBooking = bookingsRepository.findByUserIdAndListingId(id,existingListing.getListingId()).
+                orElseThrow(() -> new IllegalArgumentException("You can not review this listing "));
+
+        if (existingBooking.getEndDate().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("You can only review this listing after the booking has ended. ");
+        }
 
         Review review = new Review();
         review.setUserReviewer(existingUser);
