@@ -153,11 +153,21 @@ public class AuthController {
     @GetMapping("/check")
     public ResponseEntity<?> checkAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-            return ResponseEntity.ok("Authenticated");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+
+        // kontrollera om användaren är authenticated
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated!");
         }
+
+        // returnera user info om authentication
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        return ResponseEntity.ok(new AuthResponse(
+                "Authenticated",
+                user.getUsername(),
+                user.getRoles()
+        ));
     }
 
 }
