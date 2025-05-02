@@ -8,6 +8,7 @@ public class AuthResponse {
     private String jwtToken;
     private String username;
     private Set<Role> roles;
+    //Lägg till id i responsen
 
     public AuthResponse(String jwtToken, String username, Set<Role> roles) {
         this.jwtToken = jwtToken;

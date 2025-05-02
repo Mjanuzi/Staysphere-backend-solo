@@ -167,6 +167,7 @@ public class AuthController {
                 "Authenticated",
                 user.getUsername(),
                 user.getRoles()
+                //sätt en get user id här
         ));
     }
 
