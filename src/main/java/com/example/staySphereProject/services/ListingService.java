@@ -1,5 +1,6 @@
 package com.example.staySphereProject.services;
 import com.example.staySphereProject.dto.AvailabilityRequest;
+import com.example.staySphereProject.dto.AvailabilityResponse;
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.dto.ListingResponseGetAll;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -162,6 +164,7 @@ public class ListingService {
         response.setGuestLimit(listing.getListingGuestLimit());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
+        response.setAvailable(listing.getAvailable());
 
         return response;
     }
@@ -201,5 +204,51 @@ public class ListingService {
         return listingRepository.findByHostId(hostId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get availability for a listing
+     * 
+     * This method converts the individual available dates in the listing to
+     * a list of date ranges (start date and end date pairs) that can be used
+     * by the frontend calendar.
+     *
+     * @param listingId the listing ID
+     * @return List of availability periods
+     */
+    public List<AvailabilityResponse> getAvailabilityForListing(String listingId) {
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+        
+        List<LocalDate> availableDates = listing.getAvailable();
+        if (availableDates == null || availableDates.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        // Sort the dates in ascending order
+        Collections.sort(availableDates);
+        
+        // Convert individual dates to date ranges
+        List<AvailabilityResponse> dateRanges = new ArrayList<>();
+        LocalDate rangeStart = availableDates.get(0);
+        LocalDate rangeEnd = rangeStart;
+        
+        for (int i = 1; i < availableDates.size(); i++) {
+            LocalDate currentDate = availableDates.get(i);
+            // If the current date is one day after the previous end date, extend the range
+            if (currentDate.isEqual(rangeEnd.plusDays(1))) {
+                rangeEnd = currentDate;
+            } else {
+                // This date is not consecutive, so close the current range and start a new one
+                dateRanges.add(new AvailabilityResponse(rangeStart, rangeEnd));
+                rangeStart = currentDate;
+                rangeEnd = currentDate;
+            }
+        }
+        
+        // Add the last range
+        dateRanges.add(new AvailabilityResponse(rangeStart, rangeEnd));
+        
+        return dateRanges;
     }
 }

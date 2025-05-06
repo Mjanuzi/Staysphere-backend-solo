@@ -3,6 +3,7 @@ package com.example.staySphereProject.controllers;
 import com.example.staySphereProject.dto.AvailabilityRequest;
 import com.example.staySphereProject.dto.ListingDTO;
 import com.example.staySphereProject.dto.ListingResponse;
+import com.example.staySphereProject.dto.AvailabilityResponse;
 
 import com.example.staySphereProject.dto.ListingResponseGetAll;
 
@@ -12,6 +13,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -41,6 +46,12 @@ public class ListingController {
             //@AuthenticationPrincipal UserDetails userDetail) {
         Listing updatedListing = listingService.addAvailability(listingId, request);
         return new ResponseEntity<>(updatedListing, HttpStatus.OK);
+    }
+
+    @GetMapping("/listings/{listingId}/availability")
+    public ResponseEntity<List<AvailabilityResponse>> getAvailability(@PathVariable String listingId) {
+        List<AvailabilityResponse> availabilityList = listingService.getAvailabilityForListing(listingId);
+        return ResponseEntity.ok(availabilityList);
     }
 
     @GetMapping("/getall")
@@ -81,6 +92,18 @@ public class ListingController {
             @RequestParam("maxPrice") Double maxPrice){
         List<ListingResponse> listings = listingService.getListingByPriceBetween(minPrice,maxPrice);
 
+        return ResponseEntity.ok(listings);
+    }
+
+    @GetMapping("/my-listings")
+    public ResponseEntity<List<ListingResponse>> getMyListings(
+        @AuthenticationPrincipal UserDetails userDetails) {
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetailsFromAuth = (UserDetails) authentication.getPrincipal();
+        String userId = userDetailsFromAuth.getUsername();
+        
+        List<ListingResponse> listings = listingService.getListingByHostId(userId);
         return ResponseEntity.ok(listings);
     }
 }

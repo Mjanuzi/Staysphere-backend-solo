@@ -1,5 +1,6 @@
 package com.example.staySphereProject.dto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class ListingResponse {
     private Integer guestLimit;
     private ArrayList<String> listingImages;
     private List<ReviewResponse> reviews;
+    private List<LocalDate> available;
 
 
     public String getListingId() {
@@ -87,5 +89,13 @@ public class ListingResponse {
 
     public void setReviews(List<ReviewResponse> reviews) {
         this.reviews = reviews;
+    }
+    
+    public List<LocalDate> getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(List<LocalDate> available) {
+        this.available = available;
     }
 }
