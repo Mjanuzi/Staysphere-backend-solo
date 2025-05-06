@@ -5,23 +5,32 @@ import com.example.staySphereProject.models.Role;
 import java.util.Set;
 
 public class AuthResponse {
-    private String jwtToken;
+    private String message;
     private String username;
+    private String id;
     private Set<Role> roles;
-    //Lägg till id i responsen
 
-    public AuthResponse(String jwtToken, String username, Set<Role> roles) {
-        this.jwtToken = jwtToken;
+    // Constructor with ID
+    public AuthResponse(String message, String username, String id, Set<Role> roles) {
+        this.message = message;
+        this.username = username;
+        this.id = id;
+        this.roles = roles;
+    }
+    
+    // Constructor without ID for backward compatibility
+    public AuthResponse(String message, String username, Set<Role> roles) {
+        this.message = message;
         this.username = username;
         this.roles = roles;
     }
 
-    public String getJwtToken() {
-        return jwtToken;
+    public String getMessage() {
+        return message;
     }
 
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getUsername() {
@@ -30,6 +39,14 @@ public class AuthResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Set<Role> getRoles() {
