@@ -108,12 +108,14 @@ public class AuthController {
                     .sameSite("Strict") // Lax & None
                     .build();
 
-            // create response object
+            // create response object - now include JWT token in the response
+            User user = userService.findByUsername(userDetails.getUsername());
             AuthResponse authResponse = new AuthResponse(
                     "Login successful",
                     userDetails.getUsername(),
-                    userService.findByUsername(userDetails.getUsername()).getId(),
-                    userService.findByUsername(userDetails.getUsername()).getRoles()
+                    user.getId(),
+                    user.getRoles(),
+                    jwt // Include the JWT token in the response
             );
 
             return ResponseEntity.ok()
@@ -163,12 +165,16 @@ public class AuthController {
         // returnera user info om authentication
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
+        
+        // Generate JWT token
+        String jwt = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthResponse(
                 "Authenticated",
                 user.getUsername(),
                 user.getId(),
-                user.getRoles()
+                user.getRoles(),
+                jwt // JWT i respons
         ));
     }
 
