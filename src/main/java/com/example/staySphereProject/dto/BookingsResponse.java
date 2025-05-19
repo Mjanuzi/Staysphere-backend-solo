@@ -49,7 +49,7 @@ public class BookingsResponse {
     public void setStatus(boolean status) { this.status = status; }
 
     public boolean isPending() { return pending; }
-    public void setPending(boolean pending) { pending = pending; }
+    public void setPending(boolean pending) { this.pending = pending; }
 
     public String getHostName() {
         return hostName;
