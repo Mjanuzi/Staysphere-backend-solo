@@ -15,4 +15,6 @@ public interface BookingsRepository extends MongoRepository<Bookings, String> {
     // Hämta booking baserat på användare och listing
     Optional<Bookings> findByUserIdAndListingId(String userId, String listingId);
 
+    List<Bookings> findByListingId(String listingId);
+
 }

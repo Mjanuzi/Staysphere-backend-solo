@@ -11,6 +11,9 @@ import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,7 +117,37 @@ public class BookingsService {
                 .collect(Collectors.toList());
     }
 
-
+    public List<BookingsResponse> getBookingsByListingId(String listingId) {
+        // Verify listing exists
+        if (!listingRepository.existsById(listingId)) {
+            throw new ResourceNotFoundException("Listing not found");
+        }
+        
+        // Get the authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        
+        // Get the listing to check ownership
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+        
+        // Only allow listing owner or admin to see the bookings
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                boolean isOwner = listing.getHost().getUsername().equals(currentUsername);
+        
+        if (!isAdmin && !isOwner) {
+            throw new AccessDeniedException("You do not have permission to view these bookings");
+        }
+        
+        // Get bookings for this listing
+        List<Bookings> bookings = bookingsRepository.findByListingId(listingId);
+        
+        // Convert to response DTOs
+        return bookings.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
     /**
      Convert Bookings to BookingsResponse DTO
