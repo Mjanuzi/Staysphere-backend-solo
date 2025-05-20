@@ -18,8 +18,22 @@ public class ListingDTO {
     @NotBlank
     private String listingDescription;
 
+    @NotBlank
+    private String location;
+
     @Min(value = 1)
     private Integer guestLimit;
+
+
+
+
+    public @NotBlank String getLocation() {
+        return location;
+    }
+
+    public void setLocation(@NotBlank String location) {
+        this.location = location;
+    }
 
     private ArrayList<String> listingImages;
 

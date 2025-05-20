@@ -40,9 +40,27 @@ public class Listing {
     private boolean listingActive;
 
     @NotNull
+    private String location;
+
+    @NotNull
     private boolean isBooked;
 
+
+
+
+
     public Listing() {
+    }
+
+
+
+
+    public @NotNull String getLocation() {
+        return location;
+    }
+
+    public void setLocation(@NotNull String location) {
+        this.location = location;
     }
 
     public ArrayList<LocalDate> getAvailable() {

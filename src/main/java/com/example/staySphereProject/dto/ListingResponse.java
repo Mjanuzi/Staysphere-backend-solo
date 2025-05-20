@@ -13,11 +13,20 @@ public class ListingResponse {
     private Double listingPricePerNight;
     private String listingTitle;
     private String listingDescription;
+    private String location;
     private Integer guestLimit;
     private ArrayList<String> listingImages;
     private List<ReviewResponse> reviews;
     private List<LocalDate> available;
 
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getListingId() {
         return listingId;

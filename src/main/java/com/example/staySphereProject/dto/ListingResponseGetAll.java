@@ -14,6 +14,10 @@ public class ListingResponseGetAll {
 
     private ArrayList<String> listingImages;
 
+
+
+    private String location;
+
     public String getListingId() {
         return listingId;
     }
@@ -52,5 +56,13 @@ public class ListingResponseGetAll {
 
     public void setListingImages(ArrayList<String> listingImages) {
         this.listingImages = listingImages;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
