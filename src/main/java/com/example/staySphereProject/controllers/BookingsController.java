@@ -69,4 +69,11 @@ public class BookingsController {
         bookingsService.deleteBooking(bookingId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/listings/{listingId}/bookings")
+    public ResponseEntity<List<BookingsResponse>> getBookingsByListingId(
+            @PathVariable String listingId) {
+        List<BookingsResponse> bookings = bookingsService.getBookingsByListingId(listingId);
+        return ResponseEntity.ok(bookings);
+    }
 }
