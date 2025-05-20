@@ -87,6 +87,7 @@ public class ListingService {
             listing.setListingPricePerNight(listingDTO.getListingPricePerNight());
             listing.setListingGuestLimit(listingDTO.getGuestLimit());
             listing.setListingImages(listingDTO.getListingImages());
+            listing.setLocation(listingDTO.getLocation());
 
             //standard values when creating an object
             listing.setListingActive(true);
@@ -138,6 +139,9 @@ public class ListingService {
         if (listingDTO.getListingImages() != null) {
             existingListing.setListingImages(listingDTO.getListingImages());
         }
+        if (listingDTO.getLocation() != null) {
+            existingListing.setLocation(listingDTO.getLocation());
+        }
 
         Listing updatedListing = listingRepository.save(existingListing);
         return convertToDTO(updatedListing);
@@ -165,6 +169,7 @@ public class ListingService {
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
         response.setAvailable(listing.getAvailable());
+        response.setLocation(listing.getLocation());
 
         return response;
     }
@@ -176,6 +181,8 @@ public class ListingService {
         response.setListingTitle(listing.getListingTitle());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
+        response.setLocation(listing.getLocation());
+
 
         return response;
     }
