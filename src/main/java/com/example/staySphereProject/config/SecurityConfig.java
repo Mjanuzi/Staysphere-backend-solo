@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/listing/getall/**").permitAll()
-                        .requestMatchers("/bookings/all").hasRole("ADMIN")
+                        .requestMatchers("/api/bookings/all").hasRole("ADMIN")
 
                         // any other requests the user need to be logged
                         .anyRequest().authenticated()
