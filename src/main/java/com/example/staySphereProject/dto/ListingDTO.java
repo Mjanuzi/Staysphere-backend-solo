@@ -24,8 +24,17 @@ public class ListingDTO {
     @Min(value = 1)
     private Integer guestLimit;
 
+    private Boolean listingActive;
 
 
+
+    public Boolean getListingActive() {
+        return listingActive;
+    }
+
+    public void setListingActive(Boolean listingActive) {
+        this.listingActive = listingActive;
+    }
 
     public @NotBlank String getLocation() {
         return location;

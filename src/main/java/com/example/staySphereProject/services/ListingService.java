@@ -142,6 +142,9 @@ public class ListingService {
         if (listingDTO.getLocation() != null) {
             existingListing.setLocation(listingDTO.getLocation());
         }
+        if (listingDTO.getListingActive() != null) {
+            existingListing.setListingActive(listingDTO.getListingActive());
+        }
 
         Listing updatedListing = listingRepository.save(existingListing);
         return convertToDTO(updatedListing);
@@ -170,6 +173,7 @@ public class ListingService {
         response.setListingImages(listing.getListingImages());
         response.setAvailable(listing.getAvailable());
         response.setLocation(listing.getLocation());
+        response.setListingActive(listing.isListingActive());
 
         return response;
     }
@@ -182,6 +186,7 @@ public class ListingService {
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
         response.setLocation(listing.getLocation());
+        response.setListingActive(listing.isListingActive());
 
 
         return response;
