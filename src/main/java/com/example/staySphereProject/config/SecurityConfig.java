@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/listing/getall/**").permitAll()
                         .requestMatchers("/api/bookings/all").hasRole("ADMIN")
-
+                        .requestMatchers("/api/listing/getbyid/**", "/api/listing/getall").permitAll()
                         // any other requests the user need to be logged
                         .anyRequest().authenticated()
                 )
