@@ -14,7 +14,18 @@ public class ListingResponseGetAll {
 
     private ArrayList<String> listingImages;
 
+    private Boolean listingActive;
 
+
+
+
+    public Boolean getListingActive() {
+        return listingActive;
+    }
+
+    public void setListingActive(Boolean listingActive) {
+        this.listingActive = listingActive;
+    }
 
     private String location;
 

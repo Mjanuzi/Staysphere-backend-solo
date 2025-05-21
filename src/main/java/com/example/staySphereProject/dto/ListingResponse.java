@@ -18,7 +18,16 @@ public class ListingResponse {
     private ArrayList<String> listingImages;
     private List<ReviewResponse> reviews;
     private List<LocalDate> available;
+    private Boolean listingActive;
 
+
+    public Boolean getListingActive() {
+        return listingActive;
+    }
+
+    public void setListingActive(Boolean listingActive) {
+        this.listingActive = listingActive;
+    }
 
     public String getLocation() {
         return location;
