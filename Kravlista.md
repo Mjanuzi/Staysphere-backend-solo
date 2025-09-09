@@ -56,8 +56,8 @@ FK-017: Gäster ska kunna lämna recensioner och betyg på värdar/boenden.
 
 IK-001: Systemet ska ha en responstid på under 3 sekunder vid sökning efter boenden.
 
-IK-003: Användardata ska lagras säkert enligt GDPR.
+IK-002: Användardata ska lagras säkert enligt GDPR.
 
-IK-004: Applikationen ska kunna hantera minst 200 samtidiga användare utan prestandaförsämring.
+IK-003: Applikationen ska kunna hantera minst 200 samtidiga användare utan prestandaförsämring.
 
-IK-005: Språkstöd för svenska och engelska ska finnas vid lansering.
+IK-004: Språkstöd för svenska och engelska ska finnas vid lansering.
