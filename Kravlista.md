@@ -21,7 +21,9 @@ FK-005: Systemet ska skapa en bokningsbekräftelse till både gäst och värd.
 
 ### Tillgänglighet och hantering av datum
 
-FK-006: Värdar ska kunna markera tillgängliga och otillgängliga datum i en kalender.
+FK-006: Värdar ska kunna lägga till tillgängliga datum för boende.
+
+FK-006.1: Värdar ska kunna ta bort redan tillgängliga datum.
 
 FK-007: Systemet ska automatiskt förhindra dubbelbokningar.
 
