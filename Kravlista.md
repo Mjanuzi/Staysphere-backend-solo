@@ -48,7 +48,7 @@ FK-013: Gäster ska kunna se sina tidigare och kommande bokningar.
 ### Sökfunktioner och filtrering
 FK-014: Användare ska kunna filtrera mellan hotell och boende.
 
-FK-015: Gäst ska kunna filtrera mellan pris, plats, bekvämligheter, antal reviews
+FK-015: Gäst ska kunna filtrera mellan pris, plats, bekvämligheter, antal reviews, antal stjärnor, gäst limit, datum mm.
 
 ### Recensioner och betyg
 
