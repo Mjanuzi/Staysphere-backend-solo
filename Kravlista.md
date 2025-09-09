@@ -35,6 +35,8 @@ FK-009: Bokningssystemet ska beräkna totalpriset baserat på valda datum och ev
 
 FK-010: Användare ska kunna registrera konto som gäst.
 
+FK-010.1: Användare ska kunna logga in.
+
 FK-010.2: Gäst ska kunna ansöka om att bli värd.
 
 FK-011: Användare ska kunna logga in och logga ut.
