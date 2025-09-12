@@ -191,6 +191,8 @@ public class BookingsService {
     @Transactional
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
 
+        //checkAuthentication.validateAuthenticatedUser(bookingsDTO.getUserId());
+
         if (!userRepository.existsById(bookingsDTO.getUserId())) {
             throw new ResourceNotFoundException("User not found");
         }
