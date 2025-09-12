@@ -191,14 +191,14 @@ public class BookingsService {
     @Transactional
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
 
-        //checkAuthentication.validateAuthenticatedUser(bookingsDTO.getUserId());
+        checkAuthentication.validateAuthenticatedUser(bookingsDTO.getUserId());
 
-        if (!userRepository.existsById(bookingsDTO.getUserId())) {
+       /* if (!userRepository.existsById(bookingsDTO.getUserId())) {
             throw new ResourceNotFoundException("User not found");
         }
         if (!listingRepository.existsById(bookingsDTO.getListingId())) {
             throw new ResourceNotFoundException("Listing not found");
-        }
+        }*/
 
         Listing listing = listingRepository.findById(bookingsDTO.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
@@ -251,6 +251,8 @@ public class BookingsService {
 
         Listing listing = listingRepository.findById(existingBooking.getListingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        checkAuthentication.validateAuthenticatedUser(bookingsDTO.getUserId());
 
         List<LocalDate> originalDates = existingBooking.getBookedDates();
 
