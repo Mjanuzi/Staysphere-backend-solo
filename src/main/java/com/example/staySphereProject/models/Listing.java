@@ -7,43 +7,43 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Document(collection = "listings")
-public class Listing {
+public abstract class Listing {
 
     @Id
-    private String id;
+    protected String id;
 
     @DBRef
-    private ArrayList<Review> review;
+    protected ArrayList<Review> review;
 
-    @DBRef
-    private User host;
+    //@DBRef
+    //private User host;
 
     @NotBlank(message = "You need to give a title")
-    private String listingTitle;
+    protected String listingTitle;
 
     @NotNull
-    private Double listingPricePerNight;
+    protected Double listingPricePerNight;
 
     @NotNull(message = "You Need to add atleast one guest")
     @Min(value = 1)
-    private Integer listingGuestLimit;
+    protected Integer listingGuestLimit;
 
     @NotBlank(message = "You cant leave this emppty")
-    private String listingDescription;
+    protected String listingDescription;
 
-    private ArrayList<String> listingImages;
-
-    @NotNull
-    private ArrayList<LocalDate> available ;
+    protected ArrayList<String> listingImages;
 
     @NotNull
-    private boolean listingActive;
+    protected ArrayList<LocalDate> available ;
 
     @NotNull
-    private String location;
+    protected boolean listingActive;
 
     @NotNull
-    private boolean isBooked;
+    protected String location;
+
+    @NotNull
+    protected boolean isBooked;
 
 
 
