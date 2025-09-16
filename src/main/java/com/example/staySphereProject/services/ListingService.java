@@ -123,12 +123,14 @@ public class ListingService {
         //checks if the logged-in user is the host of existingListing
         checkAuthentication.validateListingOwned(existingListing);
 
+        if (existingListing instanceof Residence) {
+            Residence residence = (Residence) existingListing;
 
-
-        if (listingDTO.getHostId() != null) {
-            User newHost = userRepository.findById(listingDTO.getHostId())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            existingListing.setHost(newHost);
+            if(listingDTO.getHostId() != null){
+                User newHost = userRepository.findById(listingDTO.getHostId())
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                residence.setHost(newHost);
+            }
         }
         if (listingDTO.getListingTitle() != null) {
             existingListing.setListingTitle(listingDTO.getListingTitle());
@@ -160,7 +162,7 @@ public class ListingService {
         Listing existingListing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        checkAuthentication.validateAuthenticatedUser(existingListing.getHost().getId());
+        checkAuthentication.validateListingOwned(existingListing);
 
        listingRepository.delete(existingListing);
     }
@@ -168,10 +170,14 @@ public class ListingService {
     //-------Hälp Mäthodz---------
     private ListingResponse convertToDTO (Listing listing){
         ListingResponse response = new ListingResponse();
-
         response.setListingId(listing.getListingId());
-        response.setHostId(listing.getHost().getId());
-        response.setHostName(listing.getHost().getUsername());
+
+        if(listing instanceof Residence){
+            Residence residence = (Residence) listing;
+            response.setHostId(residence.getHost().getId());
+            response.setHostName(residence.getHost().getUsername());
+        }
+
         response.setListingTitle(listing.getListingTitle());
         response.setListingDescription(listing.getListingDescription());
         response.setGuestLimit(listing.getListingGuestLimit());
@@ -187,7 +193,11 @@ public class ListingService {
     private ListingResponseGetAll convertToDTOGetAll(Listing listing){
         ListingResponseGetAll response = new ListingResponseGetAll();
         response.setListingId(listing.getListingId());
-        response.setHostName(listing.getHost().getUsername());
+
+        if(listing instanceof Residence){
+            Residence residence = (Residence) listing;
+            response.setHostName(residence.getHost().getUsername());
+        }
         response.setListingTitle(listing.getListingTitle());
         response.setListingPricePerNight(listing.getListingPricePerNight());
         response.setListingImages(listing.getListingImages());
@@ -216,10 +226,10 @@ public class ListingService {
 
 
     public List<ListingResponse> getListingByHostId(String hostId) {
-        User host = userRepository.findById(hostId)
+                userRepository.findById(hostId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return listingRepository.findByHostId(hostId).stream()
+        return residenceRepository.findByHostId(hostId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
