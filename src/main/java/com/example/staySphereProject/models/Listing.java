@@ -10,40 +10,40 @@ import java.util.ArrayList;
 public abstract class Listing {
 
     @Id
-    protected String id;
+    private String id;
 
     @DBRef
-    protected ArrayList<Review> review;
+    private ArrayList<Review> review;
 
     //@DBRef
     //private User host;
 
     @NotBlank(message = "You need to give a title")
-    protected String listingTitle;
+    private String listingTitle;
 
     @NotNull
-    protected Double listingPricePerNight;
+    private Double listingPricePerNight;
 
     @NotNull(message = "You Need to add atleast one guest")
     @Min(value = 1)
-    protected Integer listingGuestLimit;
+    private Integer listingGuestLimit;
 
     @NotBlank(message = "You cant leave this emppty")
-    protected String listingDescription;
+    private String listingDescription;
 
-    protected ArrayList<String> listingImages;
-
-    @NotNull
-    protected ArrayList<LocalDate> available ;
+    private ArrayList<String> listingImages;
 
     @NotNull
-    protected boolean listingActive;
+    private ArrayList<LocalDate> available ;
 
     @NotNull
-    protected String location;
+    private boolean listingActive;
 
     @NotNull
-    protected boolean isBooked;
+    private String location;
+
+    @NotNull
+    private boolean isBooked;
 
 
 
@@ -88,13 +88,13 @@ public abstract class Listing {
         this.id = listingId;
     }
 
-    public User getHost() {
+    /*public User getHost() {
         return host;
     }
 
     public void setHost( User host) {
         this.host = host;
-    }
+    }*/
 
     public @NotBlank(message = "You need to give a title") String getListingTitle() {
         return listingTitle;
