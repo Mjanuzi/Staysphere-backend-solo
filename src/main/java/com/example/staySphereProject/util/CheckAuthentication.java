@@ -2,6 +2,8 @@ package com.example.staySphereProject.util;
 
 import com.example.staySphereProject.dto.AuthResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
+import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.services.UserService;
@@ -44,6 +46,14 @@ public class CheckAuthentication {
         }
 
         return loggedInUser;
+    }
+
+    //Validate that the authenticated user owns the given listing
+    public void validateListingOwned(Listing listing){
+        if (listing instanceof Residence){
+            Residence residence = (Residence) listing;
+            validateAuthenticatedUser(residence.getHost().getId());
+        }
     }
 
 }
