@@ -6,8 +6,10 @@ import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.dto.ListingResponseGetAll;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
+import com.example.staySphereProject.repository.ResidenceRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Service;
@@ -24,14 +26,16 @@ import java.util.stream.Collectors;
 @Service
 public class ListingService {
     private final ListingRepository listingRepository;
+    private final ResidenceRepository residenceRepository;
     private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
     //private final ReviewRepository reviewRepository;
 
-    public ListingService(ListingRepository listingRepository,
+    public ListingService(ListingRepository listingRepository, ResidenceRepository residenceRepository,
                           UserRepository userRepository,
                           CheckAuthentication checkAuthentication) {
         this.listingRepository = listingRepository;
+        this.residenceRepository = residenceRepository;
         this.userRepository = userRepository;
         this.checkAuthentication = checkAuthentication;
     }
@@ -41,7 +45,7 @@ public class ListingService {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        checkAuthentication.validateAuthenticatedUser(listing.getHost().getId());
+        checkAuthentication.validateListingOwned(listing);
         // Validate date range
         validateDateRange(request.getStartDate(), request.getEndDate());
 
@@ -79,23 +83,23 @@ public class ListingService {
 
         User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
 
-            //Creating new listing
-            Listing listing = new Listing();
-            listing.setHost(host);
-            listing.setListingTitle(listingDTO.getListingTitle());
-            listing.setListingDescription(listingDTO.getListingDescription());
-            listing.setListingPricePerNight(listingDTO.getListingPricePerNight());
-            listing.setListingGuestLimit(listingDTO.getGuestLimit());
-            listing.setListingImages(listingDTO.getListingImages());
-            listing.setLocation(listingDTO.getLocation());
+            //Creating new residence listing
+            Residence residence = new Residence();
+            residence.setHost(host);
+            residence.setListingTitle(listingDTO.getListingTitle());
+            residence.setListingDescription(listingDTO.getListingDescription());
+            residence.setListingPricePerNight(listingDTO.getListingPricePerNight());
+            residence.setListingGuestLimit(listingDTO.getGuestLimit());
+            residence.setListingImages(listingDTO.getListingImages());
+            residence.setLocation(listingDTO.getLocation());
 
             //standard values when creating an object
-            listing.setListingActive(true);
-            listing.setAvailable(new ArrayList<>());
-            listing.setReview(new ArrayList<>());
+            residence.setListingActive(true);
+            residence.setAvailable(new ArrayList<>());
+            residence.setReview(new ArrayList<>());
 
-            Listing savedListing = listingRepository.save(listing);
-            return convertToDTO(savedListing);
+            Listing savedResidence = listingRepository.save(residence);
+            return convertToDTO(savedResidence);
     }
 
     public List<ListingResponseGetAll> getAllListings () {
@@ -117,7 +121,9 @@ public class ListingService {
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         //checks if the logged-in user is the host of existingListing
-        checkAuthentication.validateAuthenticatedUser(existingListing.getHost().getId());
+        checkAuthentication.validateListingOwned(existingListing);
+
+
 
         if (listingDTO.getHostId() != null) {
             User newHost = userRepository.findById(listingDTO.getHostId())
