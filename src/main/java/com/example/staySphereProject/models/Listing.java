@@ -145,6 +145,7 @@ public abstract class Listing {
 
     public final void validateReadyForPublish(){
         validateCommonFields();
+        validateListingType();
     }
 
 
@@ -162,6 +163,8 @@ public abstract class Listing {
             throw new IllegalArgumentException("You must provide a proper description for the listing");
         }
     }
+
+    protected abstract void validateListingType();
 
 
 

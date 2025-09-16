@@ -21,4 +21,11 @@ public class Residence extends Listing {
     public void setHost(@NotNull(message = "Residence must have an host") User host) {
         this.host = host;
     }
+
+    @Override
+    protected void validateListingType(){
+        if (host == null) {
+            throw new IllegalArgumentException("Residence must have a host");
+        }
+    }
 }
