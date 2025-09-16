@@ -7,16 +7,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Document(collection = "listings")
-public class Listing {
+public abstract class Listing {
 
     @Id
     private String id;
 
     @DBRef
     private ArrayList<Review> review;
-
-    @DBRef
-    private User host;
 
     @NotBlank(message = "You need to give a title")
     private String listingTitle;
@@ -46,14 +43,8 @@ public class Listing {
     private boolean isBooked;
 
 
-
-
-
     public Listing() {
     }
-
-
-
 
     public @NotNull String getLocation() {
         return location;
@@ -88,13 +79,6 @@ public class Listing {
         this.id = listingId;
     }
 
-    public User getHost() {
-        return host;
-    }
-
-    public void setHost( User host) {
-        this.host = host;
-    }
 
     public @NotBlank(message = "You need to give a title") String getListingTitle() {
         return listingTitle;
@@ -152,4 +136,39 @@ public class Listing {
     public void setListingActive(boolean listingActive) {
         this.listingActive = listingActive;
     }
+
+
+
+
+    //Template Method Pattern
+
+
+    public final void validateReadyForPublish(){
+        validateCommonFields();
+        validateListingType();
+    }
+
+
+    protected void validateCommonFields(){
+        if(listingTitle == null || listingTitle.trim().isEmpty()){
+            throw new IllegalArgumentException("You must provide a title for the listing");
+        }
+        if (listingPricePerNight == null || listingPricePerNight < 0){
+            throw new IllegalArgumentException("You must provide a positive number for the listing price per night");
+        }
+        if (listingGuestLimit == null || listingGuestLimit < 1){
+            throw new IllegalArgumentException("There must be at least one guest");
+        }
+        if (listingDescription == null || listingDescription.trim().isEmpty()){
+            throw new IllegalArgumentException("You must provide a proper description for the listing");
+        }
+        if (location == null || location.trim().isEmpty()){
+            throw new IllegalArgumentException("You must provide a proper location for the listing");
+        }
+    }
+
+    protected abstract void validateListingType();
+
+
+
 }

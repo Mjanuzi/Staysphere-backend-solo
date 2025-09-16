@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 public class ListingDTO {
 
+
+
     @NotNull
     private String hostId;
 
@@ -31,6 +33,7 @@ public class ListingDTO {
     public Boolean getListingActive() {
         return listingActive;
     }
+
 
     public void setListingActive(Boolean listingActive) {
         this.listingActive = listingActive;

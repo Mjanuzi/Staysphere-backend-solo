@@ -7,7 +7,6 @@ import java.util.List;
 public class ListingResponse {
 
     private String listingId;
-
     private String hostId;
     private String hostName;
     private Double listingPricePerNight;
@@ -85,7 +84,7 @@ public class ListingResponse {
         this.listingImages = listingImages;
     }
 
-    public String getHostId() {
+   public String getHostId() {
         return hostId;
     }
 
