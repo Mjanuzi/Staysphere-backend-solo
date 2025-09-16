@@ -150,7 +150,7 @@ public abstract class Listing {
 
 
     protected void validateCommonFields(){
-        if(listingTitle == null || listingTitle == "" || listingTitle.isEmpty()){
+        if(listingTitle == null || listingTitle.trim().isEmpty()){
             throw new IllegalArgumentException("You must provide a title for the listing");
         }
         if (listingPricePerNight == null || listingPricePerNight < 0){
@@ -159,8 +159,11 @@ public abstract class Listing {
         if (listingGuestLimit == null || listingGuestLimit < 1){
             throw new IllegalArgumentException("There must be at least one guest");
         }
-        if (listingDescription == null || listingDescription == "" || listingDescription.isEmpty()){
+        if (listingDescription == null || listingDescription.trim().isEmpty()){
             throw new IllegalArgumentException("You must provide a proper description for the listing");
+        }
+        if (location == null || location.trim().isEmpty()){
+            throw new IllegalArgumentException("You must provide a proper location for the listing");
         }
     }
 
