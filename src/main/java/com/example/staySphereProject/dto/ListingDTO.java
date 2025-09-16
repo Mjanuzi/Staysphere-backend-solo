@@ -6,6 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 public class ListingDTO {
 
+
+
+    @NotNull
+    private String hostId;
+
     @NotNull
     private Double listingPricePerNight;
 
@@ -29,6 +34,7 @@ public class ListingDTO {
         return listingActive;
     }
 
+
     public void setListingActive(Boolean listingActive) {
         this.listingActive = listingActive;
     }
@@ -44,9 +50,9 @@ public class ListingDTO {
     private ArrayList<String> listingImages;
 
 
-    /*public String getHostId() { return hostId; }
+    public String getHostId() { return hostId; }
 
-    public void setHostId(String hostId) { this.hostId = hostId; }*/
+    public void setHostId(String hostId) { this.hostId = hostId; }
 
     public Double getListingPricePerNight() {
         return listingPricePerNight;

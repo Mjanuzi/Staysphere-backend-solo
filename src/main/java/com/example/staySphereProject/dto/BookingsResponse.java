@@ -8,6 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 public class BookingsResponse {
+
+
+
+
+
     private String bookingID;
     private String userId;
     private String listingId;
@@ -19,7 +24,6 @@ public class BookingsResponse {
     private double totalCost; //Calculate based on stay duration
     private boolean status;
     private boolean pending;
-
 
     public String getBookingID() { return bookingID; }
     public void setBookingID( String bookingID) { this.bookingID = bookingID; }
