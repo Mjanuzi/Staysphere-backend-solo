@@ -81,7 +81,7 @@ public class ListingService {
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
 
-        User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
+        checkAuthentication.validateListingOwned();
 
             //Creating new residence listing
             Residence residence = new Residence();

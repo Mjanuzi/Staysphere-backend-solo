@@ -8,7 +8,6 @@ public class ListingResponse {
 
     private String listingId;
 
-    private String hostId;
     private String hostName;
     private Double listingPricePerNight;
     private String listingTitle;
@@ -85,13 +84,13 @@ public class ListingResponse {
         this.listingImages = listingImages;
     }
 
-    public String getHostId() {
+   /* public String getHostId() {
         return hostId;
     }
 
     public void setHostId(String hostId) {
         this.hostId = hostId;
-    }
+    }*/
 
     public String getHostName() {
         return hostName;

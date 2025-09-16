@@ -6,9 +6,11 @@ import com.example.staySphereProject.exeptions.ConflictException;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
+import com.example.staySphereProject.repository.ResidenceRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.security.core.Authentication;
@@ -32,12 +34,14 @@ public class BookingsService {
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
+    private final ResidenceRepository residenceRepository;
 
-    public BookingsService(BookingsRepository bookingsRepository, ListingRepository listingRepository, UserRepository userRepository, CheckAuthentication checkAuthentication) {
+    public BookingsService(BookingsRepository bookingsRepository, ListingRepository listingRepository, UserRepository userRepository, CheckAuthentication checkAuthentication, ResidenceRepository residenceRepository) {
         this.bookingsRepository = bookingsRepository;
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
         this.checkAuthentication = checkAuthentication;
+        this.residenceRepository = residenceRepository;
     }
 
     public BookingsResponse getBookingById(String bookingId) {
@@ -50,7 +54,7 @@ public class BookingsService {
     }
 
     public List<BookingsResponse> getHostBookings(String hostId, String sortOrder) {
-        List<Listing> hostListings = listingRepository.findByHostId(hostId);
+        List<Residence> hostListings = residenceRepository.findByHostId(hostId);
         List<String> listingIds = hostListings.stream()
                 .map(Listing::getListingId)
                 .collect(Collectors.toList());
@@ -134,7 +138,11 @@ public class BookingsService {
         // Only allow listing owner or admin to see the bookings
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-                boolean isOwner = listing.getHost().getUsername().equals(currentUsername);
+                boolean isOwner = false;
+                if(listing instanceof Residence) {
+                    Residence residence = (Residence) listing;
+                    isOwner = residence.getHost().getUsername().equals(currentUsername);
+                }
         
         if (!isAdmin && !isOwner) {
             throw new AccessDeniedException("You do not have permission to view these bookings");
@@ -168,7 +176,10 @@ public class BookingsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
         response.setBookingName(user.getUsername() + ", I would like to wish you a pleasant stay at " + listing.getListingTitle() + "!");
-        response.setHostName("Kind regards, " + listing.getHost().getUsername());
+        if(listing instanceof Residence) {
+            Residence residence = (Residence) listing;
+            response.setHostName("Kind Regards, " + residence.getHost().getUsername());
+        }
         response.setBookingDate(booking.getBookingDate());
         response.setStartDate(booking.getStartDate());
         response.setEndDate(booking.getEndDate());
