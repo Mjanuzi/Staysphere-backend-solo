@@ -20,22 +20,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ListingService {
     private final ListingRepository listingRepository;
     private final ResidenceRepository residenceRepository;
-    private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
-    private final ListingDTOConverter listingDTOConverter;
-    //private final ReviewRepository reviewRepository;
+    private final ListingDTOConverter converter;
 
     public ListingService(ListingRepository listingRepository, ResidenceRepository residenceRepository,
-                          UserRepository userRepository,
-                          CheckAuthentication checkAuthentication, ListingDTOConverter listingDTOConverter) {
+                          CheckAuthentication checkAuthentication, ListingDTOConverter converter) {
         this.listingRepository = listingRepository;
         this.residenceRepository = residenceRepository;
-        this.userRepository = userRepository;
         this.checkAuthentication = checkAuthentication;
-        this.listingDTOConverter = listingDTOConverter;
+        this.converter = converter;
     }
 
     @Transactional
@@ -79,30 +76,14 @@ public class ListingService {
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
 
-        User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
 
-            //Creating new residence listing
-            Residence listing = new Residence();
-            listing.setHost(host);
-            listing.setListingTitle(listingDTO.getListingTitle());
-            listing.setListingDescription(listingDTO.getListingDescription());
-            listing.setListingPricePerNight(listingDTO.getListingPricePerNight());
-            listing.setListingGuestLimit(listingDTO.getGuestLimit());
-            listing.setListingImages(listingDTO.getListingImages());
-            listing.setLocation(listingDTO.getLocation());
 
-            //standard values when creating an object
-            listing.setListingActive(true);
-            listing.setAvailable(new ArrayList<>());
-            listing.setReview(new ArrayList<>());
-
-            Listing savedListing = listingRepository.save(listing);
-            return convertToDTO(savedListing);
+        return converter.toResponse(savedListing);
     }
 
     public List<ListingResponseGetAll> getAllListings () {
         return listingRepository.findAll().stream()
-                .map(this::convertToDTOGetAll)
+                .map(this::converter.toGetAllResponse)
                 .collect(Collectors.toList());
     }
 
@@ -110,7 +91,7 @@ public class ListingService {
     public ListingResponse getListingById (String listingId){
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-        return convertToDTO(listing);
+        return converter.toResponse(listing);
     }
 
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
@@ -153,7 +134,7 @@ public class ListingService {
         }
 
         Listing updatedListing = listingRepository.save(existingListing);
-        return convertToDTO(updatedListing);
+        return converter.toResponse(updatedListing);
     }
 
     public void deleteListing (String listingId){
@@ -166,7 +147,7 @@ public class ListingService {
     }
 
     //-------Hälp Mäthodz---------
-    private ListingResponse convertToDTO (Listing listing){
+    /*private ListingResponse convertToDTO (Listing listing){
         ListingResponse response = new ListingResponse();
         response.setListingId(listing.getListingId());
 
@@ -204,8 +185,8 @@ public class ListingService {
 
 
         return response;
-    }
-
+    }*/
+    /*
     public List<ListingResponse> getListingByPriceBetween(Double minPrice, Double maxPrice){
         if (minPrice < 0 || maxPrice < 0) {
             throw new ResourceNotFoundException("Listing Price cannot be negative");
@@ -218,7 +199,7 @@ public class ListingService {
             throw new ResourceNotFoundException("Did not find any listings between " + minPrice + " and " + maxPrice);
         }
         return listingRepository.findListingByListingPricePerNight(minPrice,maxPrice).stream()
-                .map(this::convertToDTO)
+                .map(this::converter.toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -228,9 +209,9 @@ public class ListingService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return residenceRepository.findByHostId(hostId).stream()
-                .map(this::convertToDTO)
+                .map(this::converter.toResponse)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     /**
      * Get availability for a listing
