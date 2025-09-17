@@ -6,8 +6,6 @@ import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
-import com.example.staySphereProject.repository.ResidenceRepository;
-import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,9 +75,7 @@ public class ListingService {
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
 
-
-
-        return converter.fromDTO(listing);
+        return residenceProcessor.processListing(listingDTO);
     }
 
     public List<ListingResponseGetAll> getAllListings () {
@@ -96,55 +92,19 @@ public class ListingService {
     }
 
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
-        //Check if the listing exists
-        Listing existingListing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        //checks if the logged-in user is the host of existingListing
-        checkAuthentication.validateListingOwned(existingListing);
+        Listing existListing = findListingOrThrow(listingId);
+        checkAuthentication.validateListingOwned(existListing);
 
-        if (existingListing instanceof Residence) {
-            Residence residence = (Residence) existingListing;
+        return residenceProcessor.updateListing(listingId, listingDTO);
 
-            if(listingDTO.getHostId() != null){
-                User newHost = userRepository.findById(listingDTO.getHostId())
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-                residence.setHost(newHost);
-            }
-        }
-        if (listingDTO.getListingTitle() != null) {
-            existingListing.setListingTitle(listingDTO.getListingTitle());
-        }
-        if (listingDTO.getListingDescription() != null) {
-            existingListing.setListingDescription(listingDTO.getListingDescription());
-        }
-        if (listingDTO.getListingPricePerNight() != null) {
-            existingListing.setListingPricePerNight(listingDTO.getListingPricePerNight());
-        }
-        if (listingDTO.getGuestLimit() != null) {
-            existingListing.setListingGuestLimit(listingDTO.getGuestLimit());
-        }
-        if (listingDTO.getListingImages() != null) {
-            existingListing.setListingImages(listingDTO.getListingImages());
-        }
-        if (listingDTO.getLocation() != null) {
-            existingListing.setLocation(listingDTO.getLocation());
-        }
-        if (listingDTO.getListingActive() != null) {
-            existingListing.setListingActive(listingDTO.getListingActive());
-        }
-
-        Listing updatedListing = listingRepository.save(existingListing);
-        return converter.toResponse(updatedListing);
     }
 
     public void deleteListing (String listingId){
-        Listing existingListing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
+        Listing existingListing = findListingOrThrow(listingId);
         checkAuthentication.validateListingOwned(existingListing);
-
-       listingRepository.delete(existingListing);
+        listingRepository.delete(existingListing);
     }
 
     //-------Hälp Mäthodz---------
@@ -213,6 +173,11 @@ public class ListingService {
                 .map(converter::toResponse)
                 .collect(Collectors.toList());
     }*/
+
+    private Listing findListingOrThrow(String listingId) {
+        return listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found with ID: " + listingId));
+    }
 
     /**
      * Get availability for a listing

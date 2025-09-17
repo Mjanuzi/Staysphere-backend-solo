@@ -65,23 +65,32 @@ public abstract class AbstractListingProcessor {
 
     // Extension pojnts - our subclasses must implement these (residence in our case for now)
 
+    //Validates the request before processing
     protected abstract void validateRequest(ListingDTO request);
 
+    //Building the listing from request
     protected abstract Listing buildListing(ListingDTO request);
 
+    //Applying business rules specific
     protected abstract Listing applyBusinessRules(Listing listing);
 
+    //Converts the saved listing to a response format
     protected abstract ListingResponse convertToResponse(Listing listing);
 
+
+    //finds the existing listing by an ID
     protected Listing findExistingListing(String listingId) {
         return listingRepository.findById(listingId)
                 .orElseThrow(()-> new RuntimeException("Listing with id " + listingId + " not found"));
     }
 
+    //applying updates from dto to existing listing
     protected Listing applyUpdates(Listing existingListing, ListingDTO request) {
         return converter.applyUpdate(existingListing, request);
     }
 
+
+    ////common validation for all types of listings
     protected void validateCommonRequest(ListingDTO request) {
         if (request == null) {
             throw new IllegalArgumentException("Listing request cannot be null");
@@ -92,6 +101,8 @@ public abstract class AbstractListingProcessor {
     }
 
     protected void applyCommonBusinessRules(Listing listing) {
+
+        //Applying common business rules for all types of listings here
 
     }
 }

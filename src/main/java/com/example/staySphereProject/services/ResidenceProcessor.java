@@ -34,7 +34,7 @@ public class ResidenceProcessor extends AbstractListingProcessor {
             throw new IllegalArgumentException("Can't have more than 20 guests");
         }
 
-        if (request.getListingPricePerNight() != null && request.getListingPricePerNight() > 10.0) {
+        if (request.getListingPricePerNight() != null && request.getListingPricePerNight() < 10) {
             throw new IllegalArgumentException("Can't charge less than 10 per night");
         }
 

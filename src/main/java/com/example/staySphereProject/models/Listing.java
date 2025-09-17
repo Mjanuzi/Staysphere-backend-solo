@@ -18,7 +18,10 @@ public abstract class Listing {
     @NotBlank(message = "You need to give a title")
     private String listingTitle;
 
+
+
     @NotNull
+    @Min(value = 10)
     private Double listingPricePerNight;
 
     @NotNull(message = "You Need to add atleast one guest")
@@ -88,14 +91,21 @@ public abstract class Listing {
         this.listingTitle = listingTitle;
     }
 
-    @NotNull
+    public @NotNull @Min(value = 10) Double getListingPricePerNight() {
+        return listingPricePerNight;
+    }
+
+    public void setListingPricePerNight(@NotNull @Min(value = 10) Double listingPricePerNight) {
+        this.listingPricePerNight = listingPricePerNight;
+    }
+   /* @NotNull
     public Double getListingPricePerNight() {
         return listingPricePerNight;
     }
 
     public void setListingPricePerNight(@NotNull Double listingPricePerNight) {
         this.listingPricePerNight = listingPricePerNight;
-    }
+    }*/
 
     public @NotNull(message = "You Need to add atleast one guest") @Min(value = 1) Integer getListingGuestLimit() {
         return listingGuestLimit;
@@ -149,6 +159,11 @@ public abstract class Listing {
         validateBusinessRules();
     }
 
+    public final void processListing(){
+        validateReadyForPublish();
+        applyDefaultValues();
+    }
+
 
     protected void validateCommonFields(){
         if(listingTitle == null || listingTitle.trim().isEmpty()){
@@ -175,6 +190,23 @@ public abstract class Listing {
         }
         if (listingGuestLimit > 50) {
             throw new IllegalArgumentException("Guest limit cannot exceed 50 people");
+        }
+
+    }
+
+    protected void applyDefaultValues(){
+        if (available == null) {
+            available = new ArrayList<>();
+        }
+        if (review == null) {
+            review = new ArrayList<>();
+        }
+        if (listingImages == null) {
+            listingImages = new ArrayList<>();
+        }
+        // Default to active if not set
+        if (!isBooked) {
+            listingActive = true;
         }
     }
 
