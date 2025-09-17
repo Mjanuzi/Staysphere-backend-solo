@@ -146,6 +146,7 @@ public abstract class Listing {
     public final void validateReadyForPublish(){
         validateCommonFields();
         validateListingType();
+        validateBusinessRules();
     }
 
 
@@ -164,6 +165,16 @@ public abstract class Listing {
         }
         if (location == null || location.trim().isEmpty()){
             throw new IllegalArgumentException("You must provide a proper location for the listing");
+        }
+    }
+
+    protected void validateBusinessRules(){
+        // Common business rules for all listing types
+        if (listingPricePerNight > 10000.0) {
+            throw new IllegalArgumentException("Listing price cannot exceed 10,000 per night");
+        }
+        if (listingGuestLimit > 50) {
+            throw new IllegalArgumentException("Guest limit cannot exceed 50 people");
         }
     }
 
