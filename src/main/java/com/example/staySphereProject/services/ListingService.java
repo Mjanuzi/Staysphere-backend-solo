@@ -1,4 +1,5 @@
 package com.example.staySphereProject.services;
+import com.example.staySphereProject.converters.ListingDTOConverter;
 import com.example.staySphereProject.dto.*;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
@@ -23,14 +24,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class ListingService {
     private final ListingRepository listingRepository;
-    private final ResidenceRepository residenceRepository;
+    private final ResidenceProcessor residenceProcessor;
     private final CheckAuthentication checkAuthentication;
     private final ListingDTOConverter converter;
 
-    public ListingService(ListingRepository listingRepository, ResidenceRepository residenceRepository,
+    public ListingService(ListingRepository listingRepository, ResidenceProcessor residenceProcessor,
                           CheckAuthentication checkAuthentication, ListingDTOConverter converter) {
         this.listingRepository = listingRepository;
-        this.residenceRepository = residenceRepository;
+        this.residenceProcessor = residenceProcessor;
         this.checkAuthentication = checkAuthentication;
         this.converter = converter;
     }
@@ -83,7 +84,7 @@ public class ListingService {
 
     public List<ListingResponseGetAll> getAllListings () {
         return listingRepository.findAll().stream()
-                .map(this::converter.toGetAllResponse)
+                .map(converter::toGetAllResponse)
                 .collect(Collectors.toList());
     }
 
@@ -199,7 +200,7 @@ public class ListingService {
             throw new ResourceNotFoundException("Did not find any listings between " + minPrice + " and " + maxPrice);
         }
         return listingRepository.findListingByListingPricePerNight(minPrice,maxPrice).stream()
-                .map(this::converter.toResponse)
+                .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -209,7 +210,7 @@ public class ListingService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return residenceRepository.findByHostId(hostId).stream()
-                .map(this::converter.toResponse)
+                .map(converter::toResponse)
                 .collect(Collectors.toList());
     }*/
 

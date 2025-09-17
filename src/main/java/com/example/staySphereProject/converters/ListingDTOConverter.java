@@ -1,5 +1,8 @@
-package com.example.staySphereProject.dto;
+package com.example.staySphereProject.converters;
 
+import com.example.staySphereProject.dto.ListingDTO;
+import com.example.staySphereProject.dto.ListingResponse;
+import com.example.staySphereProject.dto.ListingResponseGetAll;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.models.User;
