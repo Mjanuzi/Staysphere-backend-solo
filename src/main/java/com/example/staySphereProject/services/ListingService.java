@@ -78,7 +78,7 @@ public class ListingService {
 
 
 
-        return converter.toResponse(savedListing);
+        return converter.fromDTO(listing);
     }
 
     public List<ListingResponseGetAll> getAllListings () {
