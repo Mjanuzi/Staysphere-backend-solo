@@ -1,9 +1,5 @@
 package com.example.staySphereProject.services;
-import com.example.staySphereProject.dto.AvailabilityRequest;
-import com.example.staySphereProject.dto.AvailabilityResponse;
-import com.example.staySphereProject.dto.ListingDTO;
-import com.example.staySphereProject.dto.ListingResponse;
-import com.example.staySphereProject.dto.ListingResponseGetAll;
+import com.example.staySphereProject.dto.*;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Residence;
@@ -29,15 +25,17 @@ public class ListingService {
     private final ResidenceRepository residenceRepository;
     private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
+    private final ListingDTOConverter listingDTOConverter;
     //private final ReviewRepository reviewRepository;
 
     public ListingService(ListingRepository listingRepository, ResidenceRepository residenceRepository,
                           UserRepository userRepository,
-                          CheckAuthentication checkAuthentication) {
+                          CheckAuthentication checkAuthentication, ListingDTOConverter listingDTOConverter) {
         this.listingRepository = listingRepository;
         this.residenceRepository = residenceRepository;
         this.userRepository = userRepository;
         this.checkAuthentication = checkAuthentication;
+        this.listingDTOConverter = listingDTOConverter;
     }
 
     @Transactional
@@ -84,22 +82,22 @@ public class ListingService {
         User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
 
             //Creating new residence listing
-            Residence residence = new Residence();
-            residence.setHost(host);
-            residence.setListingTitle(listingDTO.getListingTitle());
-            residence.setListingDescription(listingDTO.getListingDescription());
-            residence.setListingPricePerNight(listingDTO.getListingPricePerNight());
-            residence.setListingGuestLimit(listingDTO.getGuestLimit());
-            residence.setListingImages(listingDTO.getListingImages());
-            residence.setLocation(listingDTO.getLocation());
+            Residence listing = new Residence();
+            listing.setHost(host);
+            listing.setListingTitle(listingDTO.getListingTitle());
+            listing.setListingDescription(listingDTO.getListingDescription());
+            listing.setListingPricePerNight(listingDTO.getListingPricePerNight());
+            listing.setListingGuestLimit(listingDTO.getGuestLimit());
+            listing.setListingImages(listingDTO.getListingImages());
+            listing.setLocation(listingDTO.getLocation());
 
             //standard values when creating an object
-            residence.setListingActive(true);
-            residence.setAvailable(new ArrayList<>());
-            residence.setReview(new ArrayList<>());
+            listing.setListingActive(true);
+            listing.setAvailable(new ArrayList<>());
+            listing.setReview(new ArrayList<>());
 
-            Listing savedResidence = listingRepository.save(residence);
-            return convertToDTO(savedResidence);
+            Listing savedListing = listingRepository.save(listing);
+            return convertToDTO(savedListing);
     }
 
     public List<ListingResponseGetAll> getAllListings () {
