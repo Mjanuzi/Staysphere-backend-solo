@@ -1,6 +1,7 @@
 package com.example.staySphereProject.services;
 
 import com.example.staySphereProject.dto.AvailabilityRequest;
+import com.example.staySphereProject.dto.AvailabilityResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.repository.ListingRepository;
@@ -51,12 +52,33 @@ public class AvailabilityService {
         return listingRepository.save(listing);
     }
 
+    //"https://stackoverflow.com/questions/51513447/is-hibernate-transactionalreadonly-true-on-read-query-a-bad-practice"
+    @Transactional(readOnly = true)
+    public List<AvailabilityResponse> getAvailabilityForListing(String listingId) {
+        Listing listing = findListingOrThrow(listingId);
+        return dateRangeService.convertToAvailabilityRanges(listing.getAvailable());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isDateRangeAvailable(String listingId, LocalDate startDate, LocalDate endDate) {
+        Listing listing = findListingOrThrow(listingId);
+
+        // Generate the requested date range
+        List<LocalDate> requestedDates = dateRangeService.generateDateRange(startDate, endDate);
+
+        // Check if all requested dates are available
+        return listing.getAvailable().containsAll(requestedDates);
+    }
+
+
 
     // Method to help find a specific listing
     private Listing findListingOrThrow(String listingId) {
         return listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found with ID: " + listingId));
     }
+
+
 
 
 }
