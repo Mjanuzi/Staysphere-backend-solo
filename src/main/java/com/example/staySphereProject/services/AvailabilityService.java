@@ -71,7 +71,6 @@ public class AvailabilityService {
     }
 
 
-
     // Method to help find a specific listing
     private Listing findListingOrThrow(String listingId) {
         return listingRepository.findById(listingId)
