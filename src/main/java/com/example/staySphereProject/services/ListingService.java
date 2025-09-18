@@ -62,33 +62,4 @@ public class ListingService {
         return listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found with ID: " + listingId));
     }
-
-
-    /*
-    public List<ListingResponse> getListingByPriceBetween(Double minPrice, Double maxPrice){
-        if (minPrice < 0 || maxPrice < 0) {
-            throw new ResourceNotFoundException("Listing Price cannot be negative");
-        }
-        if (minPrice > maxPrice) {
-            throw new ResourceNotFoundException("Listing Price cannot be greater than maxPrice");
-        }
-        List<Listing> listings = listingRepository.findListingByListingPricePerNight(minPrice, maxPrice);
-        if (listings.isEmpty()) {
-            throw new ResourceNotFoundException("Did not find any listings between " + minPrice + " and " + maxPrice);
-        }
-        return listingRepository.findListingByListingPricePerNight(minPrice,maxPrice).stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
-    }
-
-
-    public List<ListingResponse> getListingByHostId(String hostId) {
-                userRepository.findById(hostId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        return residenceRepository.findByHostId(hostId).stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
-    }*/
-
 }
