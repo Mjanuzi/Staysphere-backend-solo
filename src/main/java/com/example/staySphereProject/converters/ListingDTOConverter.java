@@ -109,7 +109,7 @@ public class ListingDTOConverter {
             Residence residence = (Residence) listing;
             return residence.getHost() != null ? residence.getHost().getId() : null;
         }
-        // For future Hotel implementations, return hotel-specific ID
+        // For future Hotel implementations, return hotel specific ID
         return null;
     }
 
@@ -118,7 +118,7 @@ public class ListingDTOConverter {
             Residence residence = (Residence) listing;
             return residence.getHost() != null ? residence.getHost().getUsername() : null;
         }
-        // For future Hotel implementations, return hotel-specific name
+        // For future Hotel implementations, return hotel specific name
         return null;
     }
 }
