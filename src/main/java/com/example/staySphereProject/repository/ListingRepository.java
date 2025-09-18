@@ -14,5 +14,8 @@ public interface ListingRepository extends MongoRepository<Listing, String> {
     @Query("{'listingPricePerNight': {$gte: ?0, $lte: ?1}}")
     List<Listing> findListingByListingPricePerNight(double min, double max);
 
-
+    // Query for finding listings by host ID
+    // This works for Residence listings that have a host field
+    @Query("{'host.$id': ?0}")
+    List<Listing> findByHostId(String hostId);
 }

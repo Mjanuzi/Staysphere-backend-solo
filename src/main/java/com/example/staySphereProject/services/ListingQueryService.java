@@ -4,6 +4,7 @@ import com.example.staySphereProject.converters.ListingDTOConverter;
 import com.example.staySphereProject.dto.ListingResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,20 @@ public class ListingQueryService {
             throw new ResourceNotFoundException(
                     "No listings found between " + minPrice + " and " + maxPrice);
         }
+
+        // Convert to response DTOs
+        return listings.stream()
+                .map(converter::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<ListingResponse> findByHostId(String hostId) {
+        // Validate that the host exists
+        User host = userRepository.findById(hostId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + hostId));
+
+        // Query listings for this host
+        List<Listing> listings = listingRepository.findByHostId(hostId);
 
         // Convert to response DTOs
         return listings.stream()
