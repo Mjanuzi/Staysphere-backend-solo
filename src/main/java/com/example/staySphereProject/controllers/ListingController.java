@@ -8,6 +8,7 @@ import com.example.staySphereProject.dto.AvailabilityResponse;
 import com.example.staySphereProject.dto.ListingResponseGetAll;
 
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.services.AvailabilityService;
 import com.example.staySphereProject.services.DateRangeService;
 import com.example.staySphereProject.services.ListingService;
 import jakarta.validation.Valid;
@@ -28,11 +29,11 @@ import java.util.List;
 public class ListingController {
 
     private final ListingService listingService;
-    private final DateRangeService dateRangeService;
+    private final AvailabilityService availabilityService;
 
-    public ListingController(ListingService listingService, DateRangeService dateRangeService) {
+    public ListingController(ListingService listingService, AvailabilityService availabilityService) {
         this.listingService = listingService;
-        this.dateRangeService = dateRangeService;
+        this.availabilityService = availabilityService;
     }
 
 
@@ -48,13 +49,13 @@ public class ListingController {
                                                    @RequestBody AvailabilityRequest request)
     {
             //@AuthenticationPrincipal UserDetails userDetail) {
-        Listing updatedListing = listingService.addAvailability(listingId, request);
+        Listing updatedListing = availabilityService.addAvailbility(listingId, request);
         return new ResponseEntity<>(updatedListing, HttpStatus.OK);
     }
 
     @GetMapping("/listings/{listingId}/availability")
     public ResponseEntity<List<AvailabilityResponse>> getAvailability(@PathVariable String listingId) {
-        List<AvailabilityResponse> availabilityList = listingService.g()
+        List<AvailabilityResponse> availabilityList = availabilityService.getAvailabilityForListing(listingId);
         return ResponseEntity.ok(availabilityList);
     }
 
