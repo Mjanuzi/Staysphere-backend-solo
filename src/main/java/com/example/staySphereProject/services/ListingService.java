@@ -25,34 +25,43 @@ public class ListingService {
     private final ResidenceProcessor residenceProcessor;
     private final CheckAuthentication checkAuthentication;
     private final ListingDTOConverter converter;
+    private final DateRangeService dateRangeService;
 
     public ListingService(ListingRepository listingRepository, ResidenceProcessor residenceProcessor,
-                          CheckAuthentication checkAuthentication, ListingDTOConverter converter) {
+                          CheckAuthentication checkAuthentication, ListingDTOConverter converter, DateRangeService dateRangeService) {
         this.listingRepository = listingRepository;
         this.residenceProcessor = residenceProcessor;
         this.checkAuthentication = checkAuthentication;
         this.converter = converter;
+        this.dateRangeService = dateRangeService;
     }
 
-    @Transactional
     public Listing addAvailability(String listingId, AvailabilityRequest request) {
-        Listing listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+        // Find the listing
+        Listing listing = findListingOrThrow(listingId);
 
+        // Check authentication (user must be the host)
         checkAuthentication.validateListingOwned(listing);
-        // Validate date range
-        validateDateRange(request.getStartDate(), request.getEndDate());
 
-        // Generate dates
-        List<LocalDate> datesToAdd = generateDateRange(request.getStartDate(), request.getEndDate());
+        // Validate the date range using DateRangeService
+        dateRangeService.validateDateRange(request.getStartDate(), request.getEndDate());
 
+        // Generate the date range
+        List<LocalDate> datesToAdd = dateRangeService.generateDateRange(
+                request.getStartDate(), request.getEndDate());
+
+        // Add dates to availability (using Set to avoid duplicates)
         Set<LocalDate> uniqueDates = new HashSet<>(listing.getAvailable());
         uniqueDates.addAll(datesToAdd);
         listing.setAvailable(new ArrayList<>(uniqueDates));
 
+        // Save and return
         return listingRepository.save(listing);
     }
 
+    
+
+    /*
     private void validateDateRange(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
@@ -70,7 +79,7 @@ public class ListingService {
             currentDate = currentDate.plusDays(1);
         }
         return dates;
-    }
+    }*/
 
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
@@ -189,7 +198,7 @@ public class ListingService {
      * @param listingId the listing ID
      * @return List of availability periods
      */
-    public List<AvailabilityResponse> getAvailabilityForListing(String listingId) {
+    /*public List<AvailabilityResponse> getAvailabilityForListing(String listingId) {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
         
@@ -223,5 +232,5 @@ public class ListingService {
         dateRanges.add(new AvailabilityResponse(rangeStart, rangeEnd));
         
         return dateRanges;
-    }
+    }*/
 }
