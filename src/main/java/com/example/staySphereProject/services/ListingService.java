@@ -1,16 +1,11 @@
 package com.example.staySphereProject.services;
-import com.example.staySphereProject.dto.AvailabilityRequest;
-import com.example.staySphereProject.dto.AvailabilityResponse;
-import com.example.staySphereProject.dto.ListingDTO;
-import com.example.staySphereProject.dto.ListingResponse;
-import com.example.staySphereProject.dto.ListingResponseGetAll;
+import com.example.staySphereProject.converters.ListingDTOConverter;
+import com.example.staySphereProject.dto.*;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
-import com.example.staySphereProject.repository.ResidenceRepository;
-import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,20 +19,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ListingService {
     private final ListingRepository listingRepository;
-    private final ResidenceRepository residenceRepository;
-    private final UserRepository userRepository;
+    private final ResidenceProcessor residenceProcessor;
     private final CheckAuthentication checkAuthentication;
-    //private final ReviewRepository reviewRepository;
+    private final ListingDTOConverter converter;
 
-    public ListingService(ListingRepository listingRepository, ResidenceRepository residenceRepository,
-                          UserRepository userRepository,
-                          CheckAuthentication checkAuthentication) {
+    public ListingService(ListingRepository listingRepository, ResidenceProcessor residenceProcessor,
+                          CheckAuthentication checkAuthentication, ListingDTOConverter converter) {
         this.listingRepository = listingRepository;
-        this.residenceRepository = residenceRepository;
-        this.userRepository = userRepository;
+        this.residenceProcessor = residenceProcessor;
         this.checkAuthentication = checkAuthentication;
+        this.converter = converter;
     }
 
     @Transactional
@@ -81,30 +75,12 @@ public class ListingService {
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
 
-        User host = checkAuthentication.validateAuthenticatedUser(listingDTO.getHostId());
-
-            //Creating new residence listing
-            Residence residence = new Residence();
-            residence.setHost(host);
-            residence.setListingTitle(listingDTO.getListingTitle());
-            residence.setListingDescription(listingDTO.getListingDescription());
-            residence.setListingPricePerNight(listingDTO.getListingPricePerNight());
-            residence.setListingGuestLimit(listingDTO.getGuestLimit());
-            residence.setListingImages(listingDTO.getListingImages());
-            residence.setLocation(listingDTO.getLocation());
-
-            //standard values when creating an object
-            residence.setListingActive(true);
-            residence.setAvailable(new ArrayList<>());
-            residence.setReview(new ArrayList<>());
-
-            Listing savedResidence = listingRepository.save(residence);
-            return convertToDTO(savedResidence);
+        return residenceProcessor.processListing(listingDTO);
     }
 
     public List<ListingResponseGetAll> getAllListings () {
         return listingRepository.findAll().stream()
-                .map(this::convertToDTOGetAll)
+                .map(converter::toGetAllResponse)
                 .collect(Collectors.toList());
     }
 
@@ -112,63 +88,27 @@ public class ListingService {
     public ListingResponse getListingById (String listingId){
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-        return convertToDTO(listing);
+        return converter.toResponse(listing);
     }
 
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
-        //Check if the listing exists
-        Listing existingListing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
-        //checks if the logged-in user is the host of existingListing
-        checkAuthentication.validateListingOwned(existingListing);
+        Listing existListing = findListingOrThrow(listingId);
+        checkAuthentication.validateListingOwned(existListing);
 
-        if (existingListing instanceof Residence) {
-            Residence residence = (Residence) existingListing;
+        return residenceProcessor.updateListing(listingId, listingDTO);
 
-            if(listingDTO.getHostId() != null){
-                User newHost = userRepository.findById(listingDTO.getHostId())
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-                residence.setHost(newHost);
-            }
-        }
-        if (listingDTO.getListingTitle() != null) {
-            existingListing.setListingTitle(listingDTO.getListingTitle());
-        }
-        if (listingDTO.getListingDescription() != null) {
-            existingListing.setListingDescription(listingDTO.getListingDescription());
-        }
-        if (listingDTO.getListingPricePerNight() != null) {
-            existingListing.setListingPricePerNight(listingDTO.getListingPricePerNight());
-        }
-        if (listingDTO.getGuestLimit() != null) {
-            existingListing.setListingGuestLimit(listingDTO.getGuestLimit());
-        }
-        if (listingDTO.getListingImages() != null) {
-            existingListing.setListingImages(listingDTO.getListingImages());
-        }
-        if (listingDTO.getLocation() != null) {
-            existingListing.setLocation(listingDTO.getLocation());
-        }
-        if (listingDTO.getListingActive() != null) {
-            existingListing.setListingActive(listingDTO.getListingActive());
-        }
-
-        Listing updatedListing = listingRepository.save(existingListing);
-        return convertToDTO(updatedListing);
     }
 
     public void deleteListing (String listingId){
-        Listing existingListing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
 
+        Listing existingListing = findListingOrThrow(listingId);
         checkAuthentication.validateListingOwned(existingListing);
-
-       listingRepository.delete(existingListing);
+        listingRepository.delete(existingListing);
     }
 
     //-------Hälp Mäthodz---------
-    private ListingResponse convertToDTO (Listing listing){
+    /*private ListingResponse convertToDTO (Listing listing){
         ListingResponse response = new ListingResponse();
         response.setListingId(listing.getListingId());
 
@@ -206,8 +146,8 @@ public class ListingService {
 
 
         return response;
-    }
-
+    }*/
+    /*
     public List<ListingResponse> getListingByPriceBetween(Double minPrice, Double maxPrice){
         if (minPrice < 0 || maxPrice < 0) {
             throw new ResourceNotFoundException("Listing Price cannot be negative");
@@ -220,7 +160,7 @@ public class ListingService {
             throw new ResourceNotFoundException("Did not find any listings between " + minPrice + " and " + maxPrice);
         }
         return listingRepository.findListingByListingPricePerNight(minPrice,maxPrice).stream()
-                .map(this::convertToDTO)
+                .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -230,8 +170,13 @@ public class ListingService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return residenceRepository.findByHostId(hostId).stream()
-                .map(this::convertToDTO)
+                .map(converter::toResponse)
                 .collect(Collectors.toList());
+    }*/
+
+    private Listing findListingOrThrow(String listingId) {
+        return listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found with ID: " + listingId));
     }
 
     /**

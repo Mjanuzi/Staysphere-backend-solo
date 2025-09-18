@@ -18,7 +18,10 @@ public abstract class Listing {
     @NotBlank(message = "You need to give a title")
     private String listingTitle;
 
+
+
     @NotNull
+    @Min(value = 10)
     private Double listingPricePerNight;
 
     @NotNull(message = "You Need to add atleast one guest")
@@ -88,14 +91,21 @@ public abstract class Listing {
         this.listingTitle = listingTitle;
     }
 
-    @NotNull
+    public @NotNull @Min(value = 10) Double getListingPricePerNight() {
+        return listingPricePerNight;
+    }
+
+    public void setListingPricePerNight(@NotNull @Min(value = 10) Double listingPricePerNight) {
+        this.listingPricePerNight = listingPricePerNight;
+    }
+   /* @NotNull
     public Double getListingPricePerNight() {
         return listingPricePerNight;
     }
 
     public void setListingPricePerNight(@NotNull Double listingPricePerNight) {
         this.listingPricePerNight = listingPricePerNight;
-    }
+    }*/
 
     public @NotNull(message = "You Need to add atleast one guest") @Min(value = 1) Integer getListingGuestLimit() {
         return listingGuestLimit;
@@ -146,6 +156,12 @@ public abstract class Listing {
     public final void validateReadyForPublish(){
         validateCommonFields();
         validateListingType();
+        validateBusinessRules();
+    }
+
+    public final void processListing(){
+        validateReadyForPublish();
+        applyDefaultValues();
     }
 
 
@@ -164,6 +180,33 @@ public abstract class Listing {
         }
         if (location == null || location.trim().isEmpty()){
             throw new IllegalArgumentException("You must provide a proper location for the listing");
+        }
+    }
+
+    protected void validateBusinessRules(){
+        // Common business rules for all listing types
+        if (listingPricePerNight > 10000.0) {
+            throw new IllegalArgumentException("Listing price cannot exceed 10,000 per night");
+        }
+        if (listingGuestLimit > 50) {
+            throw new IllegalArgumentException("Guest limit cannot exceed 50 people");
+        }
+
+    }
+
+    protected void applyDefaultValues(){
+        if (available == null) {
+            available = new ArrayList<>();
+        }
+        if (review == null) {
+            review = new ArrayList<>();
+        }
+        if (listingImages == null) {
+            listingImages = new ArrayList<>();
+        }
+        // Default to active if not set
+        if (!isBooked) {
+            listingActive = true;
         }
     }
 
