@@ -1,12 +1,16 @@
 package com.example.staySphereProject.services;
 
 
+import com.example.staySphereProject.dto.AvailabilityResponse;
 import com.example.staySphereProject.exeptions.ConflictException;
+import com.example.staySphereProject.exeptions.ResourceNotFoundException;
+import com.example.staySphereProject.models.Listing;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -46,15 +50,39 @@ public class DateRangeService {
         return dates;
     }
 
+    public List<AvailabilityResponse> convertToAvailabilityRanges(List<LocalDate> availableDates) {
+        if (availableDates == null || availableDates.isEmpty()) {
+            return new ArrayList<>();
+        }
 
+        // Sort the dates in ascending order
+        List<LocalDate> sortedDates = new ArrayList<>(availableDates);
+        Collections.sort(sortedDates);
 
+        // Convert individual dates to date ranges
+        List<AvailabilityResponse> dateRanges = new ArrayList<>();
+        LocalDate rangeStart = sortedDates.get(0);
+        LocalDate rangeEnd = rangeStart;
 
+        for (int i = 1; i < sortedDates.size(); i++) {
+            LocalDate currentDate = sortedDates.get(i);
 
+            // If the current date is one day after the previous end date, extend the range
+            if (currentDate.isEqual(rangeEnd.plusDays(1))) {
+                rangeEnd = currentDate;
+            } else {
+                // This date is not consecutive, so close the current range and start a new one
+                dateRanges.add(new AvailabilityResponse(rangeStart, rangeEnd));
+                rangeStart = currentDate;
+                rangeEnd = currentDate;
+            }
+        }
 
+        // Add the last range
+        dateRanges.add(new AvailabilityResponse(rangeStart, rangeEnd));
 
-
-
-
+        return dateRanges;
+    }
 
 
 }
