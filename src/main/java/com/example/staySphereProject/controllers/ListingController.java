@@ -8,6 +8,7 @@ import com.example.staySphereProject.dto.AvailabilityResponse;
 import com.example.staySphereProject.dto.ListingResponseGetAll;
 
 import com.example.staySphereProject.models.Listing;
+import com.example.staySphereProject.services.DateRangeService;
 import com.example.staySphereProject.services.ListingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -26,9 +28,11 @@ import java.util.List;
 public class ListingController {
 
     private final ListingService listingService;
+    private final DateRangeService dateRangeService;
 
-    public ListingController(ListingService listingService) {
+    public ListingController(ListingService listingService, DateRangeService dateRangeService) {
         this.listingService = listingService;
+        this.dateRangeService = dateRangeService;
     }
 
 
@@ -50,7 +54,7 @@ public class ListingController {
 
     @GetMapping("/listings/{listingId}/availability")
     public ResponseEntity<List<AvailabilityResponse>> getAvailability(@PathVariable String listingId) {
-        List<AvailabilityResponse> availabilityList = listingService.getAvailabilityForListing(listingId);
+        List<AvailabilityResponse> availabilityList = listingService.g()
         return ResponseEntity.ok(availabilityList);
     }
 
