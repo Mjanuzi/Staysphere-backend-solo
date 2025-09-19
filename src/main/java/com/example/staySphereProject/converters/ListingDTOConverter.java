@@ -73,6 +73,7 @@ public class ListingDTOConverter {
         return response;
     }
 
+
     public Listing applyUpdate(Listing existing, ListingDTO dto) {
         if (dto.getListingTitle() != null) {
             existing.setListingTitle(dto.getListingTitle());
