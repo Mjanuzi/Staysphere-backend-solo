@@ -92,4 +92,22 @@ public class BookingBuilder {
     }
 
 
+    // Validate and retrieve the listing we want to book
+    public BookingBuilder withListingValidation() {
+        if (bookingDTO == null) {
+            throw new IllegalStateException("Must call withBookingDetails() first");
+        }
+
+        // Retrieev and validate if listing exists
+        this.listing = listingRepository.findById(bookingDTO.getListingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        return this;
+    }
+
+
+
+
+
+
 }
