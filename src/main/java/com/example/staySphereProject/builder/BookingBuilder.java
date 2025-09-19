@@ -146,6 +146,19 @@ public class BookingBuilder {
         return booking;
     }
 
+    //Reset method so we can reuse the builder for multibple bookings
+    public BookingBuilder reset() {
+        this.bookingDTO = null;
+        this.startDate = null;
+        this.endDate = null;
+        this.requestedDates = null;
+        this.user = null;
+        this.listing = null;
+        this.totalCost = 0.0;
+        this.validated = false;
+        return this;
+    }
+
 
     //Validates the state of the builder before building
     private void validateBuilderState() {
