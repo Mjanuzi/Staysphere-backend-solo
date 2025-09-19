@@ -2,6 +2,7 @@ package com.example.staySphereProject.builder;
 
 import com.example.staySphereProject.converters.BookingDTOConverter;
 import com.example.staySphereProject.dto.BookingsDTO;
+import com.example.staySphereProject.exeptions.ConflictException;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
@@ -105,6 +106,23 @@ public class BookingBuilder {
         return this;
     }
 
+    //Availability validation
+    public BookingBuilder withAvailabilityValidation() {
+        if (listing == null || requestedDates == null) {
+            throw new IllegalStateException("Must call withListingValidation() and withBookingDetails() first");
+        }
+
+        // Check availability using the AvailabilityService
+        boolean isAvailable = availabilityService.isDateRangeAvailable(
+                listing.getListingId(), startDate, endDate);
+
+        if (!isAvailable) {
+            throw new ConflictException("Requested dates are not available");
+        }
+
+        this.validated = true;
+        return this;
+    }
 
 
 
