@@ -2,6 +2,8 @@ package com.example.staySphereProject.services;
 
 
 import com.example.staySphereProject.builder.BookingBuilder;
+import com.example.staySphereProject.dto.BookingsDTO;
+import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.repository.ListingRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,4 +17,17 @@ public class BookingHandler {
         this.builder = builder;
         this.listingRepository = listingRepository;
     }
+
+    //Standard booking creater for now
+    public Bookings createStandardBooking(BookingsDTO dto) {
+        return builder.reset()
+                .withBookingDetails(dto)
+                .withUserValidation()
+                .withListingValidation()
+                .withAvailabilityValidation()
+                .withCostCalculation()
+                .build();
+    }
+
+
 }
