@@ -4,6 +4,7 @@ import com.example.staySphereProject.converters.BookingDTOConverter;
 import com.example.staySphereProject.dto.BookingsDTO;
 import com.example.staySphereProject.exeptions.ConflictException;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
+import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
@@ -133,6 +134,36 @@ public class BookingBuilder {
                 startDate, endDate, listing.getListingPricePerNight());
 
         return this;
+    }
+
+    //Building step where we get all the validated data
+    public Bookings build() {
+        validateBuilderState();
+
+        // Use the converter to create the booking
+        Bookings booking = converter.fromDTO(bookingDTO, requestedDates, totalCost);
+
+        return booking;
+    }
+
+
+    //Validates the state of the builder before building
+    private void validateBuilderState() {
+        if (bookingDTO == null) {
+            throw new IllegalStateException("Must call withBookingDetails() before build()");
+        }
+        if (user == null) {
+            throw new IllegalStateException("Must call withUserValidation() before build()");
+        }
+        if (listing == null) {
+            throw new IllegalStateException("Must call withListingValidation() before build()");
+        }
+        if (!validated) {
+            throw new IllegalStateException("Must call withAvailabilityValidation() before build()");
+        }
+        if (totalCost <= 0) {
+            throw new IllegalStateException("Must call withCostCalculation() before build()");
+        }
     }
 
 
