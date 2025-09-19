@@ -12,6 +12,7 @@ import com.example.staySphereProject.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Component
@@ -65,4 +66,16 @@ public class BookingDTOConverter {
         return response;
     }
 
+    //Extracted UTC logic from creatBooking and made a method that is reuseable. Adjusting start and end date, timezone conversation.
+    public LocalDate[] convertDatesFromUTC(java.util.Date startDate, java.util.Date endDate) {
+        LocalDate adjustedStartDate = startDate.toInstant()
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate().plusDays(1);
+
+        LocalDate adjustedEndDate = endDate.toInstant()
+                .atZone(ZoneId.of("UTC"))
+                .toLocalDate().plusDays(1);
+
+        return new LocalDate[]{adjustedStartDate, adjustedEndDate};
+    }
 }
