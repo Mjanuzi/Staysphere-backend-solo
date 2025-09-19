@@ -29,5 +29,37 @@ public class BookingHandler {
                 .build();
     }
 
+    //Method that get results midway in the process, which is good when we get results in the workflow
+    public Object[] getBookingComponents(BookingsDTO dto) {
+        builder.reset()
+                .withBookingDetails(dto)
+                .withUserValidation()
+                .withListingValidation()
+                .withAvailabilityValidation()
+                .withCostCalculation();
+
+        return new Object[]{
+                builder.getUser(),
+                builder.getListing(),
+                builder.getTotalCost(),
+                builder.getRequestedDates()
+        };
+    }
+
+    // Pre validates a booking before it's built. We can use this as a confirm before building
+    public boolean validateBookingConstruction(BookingsDTO dto) {
+        try {
+            builder.reset()
+                    .withBookingDetails(dto)
+                    .withUserValidation()
+                    .withListingValidation()
+                    .withAvailabilityValidation()
+                    .withCostCalculation();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
 }

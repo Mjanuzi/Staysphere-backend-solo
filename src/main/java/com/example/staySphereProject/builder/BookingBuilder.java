@@ -179,6 +179,24 @@ public class BookingBuilder {
         }
     }
 
+    // Getters for BookingHandler
+
+    public User getUser() {
+        return user;
+    }
+
+    public Listing getListing() {
+        return listing;
+    }
+
+    public List<LocalDate> getRequestedDates() {
+        return requestedDates;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
 
 
 
