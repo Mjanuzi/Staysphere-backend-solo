@@ -28,10 +28,10 @@ public class BookingBuilder {
     private final CheckAuthentication checkAuthentication;
 
     //Mutable
-    private BookingsDTO bookingsDTO;
+    private BookingsDTO bookingDTO;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<LocalDate> requestDates;
+    private List<LocalDate> requestedDates;
     private User user;
     private Listing listing;
     private double totalCost;
@@ -52,6 +52,25 @@ public class BookingBuilder {
         this.userService = userService;
         this.listingRepository = listingRepository;
         this.checkAuthentication = checkAuthentication;
+    }
+
+    //Set booking details from DTO and converts dates
+    public BookingBuilder withBookingDetails(BookingsDTO dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("BookingsDTO cannot be null");
+        }
+
+        this.bookingDTO = dto;
+
+        // Convert dates using the converter to maintain consistency
+        LocalDate[] dates = converter.convertToLocalDates(dto);
+        this.startDate = dates[0];
+        this.endDate = dates[1];
+
+        // Generate requested dates using the DateRangeService
+        this.requestedDates = dateRangeService.generateDateRange(startDate, endDate);
+
+        return this;
     }
 
 
