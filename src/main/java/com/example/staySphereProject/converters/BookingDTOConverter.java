@@ -67,16 +67,20 @@ public class BookingDTOConverter {
     }
 
     //Extracted UTC logic from creatBooking and made a method that is reuseable. Adjusting start and end date, timezone conversation.
-    public LocalDate[] convertDatesFromUTC(java.util.Date startDate, java.util.Date endDate) {
-        LocalDate adjustedStartDate = startDate.toInstant()
+    public LocalDate[] convertToLocalDates(BookingsDTO dto) {
+        if (dto == null || dto.getStartDate() == null || dto.getEndDate() == null) {
+            throw new IllegalArgumentException("DTO and dates cannot be null");
+        }
+
+        LocalDate startDate = dto.getStartDate().toInstant()
                 .atZone(ZoneId.of("UTC"))
                 .toLocalDate().plusDays(1);
 
-        LocalDate adjustedEndDate = endDate.toInstant()
+        LocalDate endDate = dto.getEndDate().toInstant()
                 .atZone(ZoneId.of("UTC"))
                 .toLocalDate().plusDays(1);
 
-        return new LocalDate[]{adjustedStartDate, adjustedEndDate};
+        return new LocalDate[]{startDate, endDate};
     }
 
     // Updated validation of existing booking compared to our last updateBooking
