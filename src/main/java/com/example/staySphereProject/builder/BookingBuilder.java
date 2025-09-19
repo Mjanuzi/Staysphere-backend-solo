@@ -2,9 +2,11 @@ package com.example.staySphereProject.builder;
 
 import com.example.staySphereProject.converters.BookingDTOConverter;
 import com.example.staySphereProject.dto.BookingsDTO;
+import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.ListingRepository;
+import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.services.AvailabilityService;
 import com.example.staySphereProject.services.CostCalculationService;
 import com.example.staySphereProject.services.DateRangeService;
@@ -23,7 +25,7 @@ public class BookingBuilder {
     private final CostCalculationService costCalculationService;
     private final DateRangeService dateRangeService;
     private final AvailabilityService availabilityService;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final ListingRepository listingRepository;
     private final CheckAuthentication checkAuthentication;
 
@@ -42,14 +44,14 @@ public class BookingBuilder {
                           CostCalculationService costCalculationService,
                           DateRangeService dateRangeService,
                           AvailabilityService availabilityService,
-                          UserService userService,
+                          UserRepository userRepository,
                           ListingRepository listingRepository,
                           CheckAuthentication checkAuthentication) {
         this.converter = converter;
         this.costCalculationService = costCalculationService;
         this.dateRangeService = dateRangeService;
         this.availabilityService = availabilityService;
-        this.userService = userService;
+        this.userRepository = userRepository;
         this.listingRepository = listingRepository;
         this.checkAuthentication = checkAuthentication;
     }
@@ -69,6 +71,22 @@ public class BookingBuilder {
 
         // Generate requested dates using the DateRangeService
         this.requestedDates = dateRangeService.generateDateRange(startDate, endDate);
+
+        return this;
+    }
+
+    // Validate and get the user making the booking
+    public BookingBuilder withUserValidation() {
+        if (bookingDTO == null) {
+            throw new IllegalStateException("Must call withBookingDetails() first");
+        }
+
+        // Validate authentication
+        checkAuthentication.validateAuthenticatedUser(bookingDTO.getUserId());
+
+        // Retrieve and validate user exists
+        this.user = userRepository.findById(bookingDTO.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return this;
     }
