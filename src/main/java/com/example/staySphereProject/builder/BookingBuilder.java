@@ -11,7 +11,6 @@ import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.services.AvailabilityService;
 import com.example.staySphereProject.services.CostCalculationService;
 import com.example.staySphereProject.services.DateRangeService;
-import com.example.staySphereProject.services.UserService;
 import com.example.staySphereProject.util.CheckAuthentication;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,7 @@ public class BookingBuilder {
 
     //Immutable dependdencies
     private final BookingDTOConverter converter;
-    private final CostCalculationService costCalculationService;
+    private final CostCalculationService costCalculator;
     private final DateRangeService dateRangeService;
     private final AvailabilityService availabilityService;
     private final UserRepository userRepository;
@@ -42,14 +41,14 @@ public class BookingBuilder {
 
 
     public BookingBuilder(BookingDTOConverter converter,
-                          CostCalculationService costCalculationService,
+                          CostCalculationService costCalculator,
                           DateRangeService dateRangeService,
                           AvailabilityService availabilityService,
                           UserRepository userRepository,
                           ListingRepository listingRepository,
                           CheckAuthentication checkAuthentication) {
         this.converter = converter;
-        this.costCalculationService = costCalculationService;
+        this.costCalculator = costCalculator;
         this.dateRangeService = dateRangeService;
         this.availabilityService = availabilityService;
         this.userRepository = userRepository;
@@ -121,6 +120,18 @@ public class BookingBuilder {
         }
 
         this.validated = true;
+        return this;
+    }
+
+    //Caulculate total cost for booking
+    public BookingBuilder withCostCalculation() {
+        if (listing == null || startDate == null || endDate == null) {
+            throw new IllegalStateException("Must call withListingValidation() and withBookingDetails() first");
+        }
+
+        this.totalCost = costCalculator.calculateBookingCost(
+                startDate, endDate, listing.getListingPricePerNight());
+
         return this;
     }
 
