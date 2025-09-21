@@ -3,12 +3,10 @@ package com.example.staySphereProject.services;
 import com.example.staySphereProject.converters.BookingDTOConverter;
 import com.example.staySphereProject.dto.BookingsDTO;
 import com.example.staySphereProject.dto.BookingsResponse;
-import com.example.staySphereProject.exeptions.ConflictException;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.models.Listing;
 import com.example.staySphereProject.models.Residence;
-import com.example.staySphereProject.models.User;
 import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
 import com.example.staySphereProject.repository.ResidenceRepository;
@@ -21,11 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
