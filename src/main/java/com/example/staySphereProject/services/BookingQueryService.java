@@ -49,6 +49,29 @@ public class BookingQueryService {
         this.checkAuthentication = checkAuthentication;
     }
 
+    public List<BookingsResponse> findBookingsByHostId(String hostId, String sortOrder) {
+        // Validate host exists and authenticate
+        validateUserExists(hostId);
+        checkAuthentication.validateAuthenticatedUser(hostId);
+
+        // listings for this host
+        List<Residence> hostListings = residenceRepository.findByHostId(hostId);
+        List<String> listingIds = hostListings.stream()
+                .map(Listing::getListingId)
+                .collect(Collectors.toList());
+
+        // bookings for hosts listings
+        List<Bookings> bookings = bookingsRepository.findByListingIdIn(listingIds);
+
+        // Sorting method
+        List<Bookings> sortedBookings = applySorting(bookings, sortOrder);
+
+        // Convert to response
+        return sortedBookings.stream()
+                .map(converter::toResponse)
+                .collect(Collectors.toList());
+    }
+
     public List<BookingsResponse> findBookingsByUserId(String userId, String sortOrder) {
         // Validate user exists
         validateUserExists(userId);

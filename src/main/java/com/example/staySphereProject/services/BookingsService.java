@@ -116,24 +116,7 @@ public class BookingsService {
 
     @Transactional(readOnly = true)
     public List<BookingsResponse> getHostBookings(String hostId, String sortOrder) {
-        List<Residence> hostListings = residenceRepository.findByHostId(hostId);
-        List<String> listingIds = hostListings.stream()
-                .map(Listing::getListingId)
-                .collect(Collectors.toList());
-        List<Bookings> bookings = bookingsRepository.findByListingIdIn(listingIds);
-
-        checkAuthentication.validateAuthenticatedUser(hostId);
-
-        // Sort bookings
-        Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
-        if ("desc".equalsIgnoreCase(sortOrder)) {
-            comparator = comparator.reversed();
-        }
-        bookings.sort(comparator);
-
-        return bookings.stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
+        return queryService.findBookingsByHostId(hostId, sortOrder);
     }
 
     @Transactional(readOnly = true)
