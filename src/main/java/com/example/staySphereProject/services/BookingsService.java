@@ -121,6 +121,7 @@ public class BookingsService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<BookingsResponse> getHostBookings(String hostId, String sortOrder) {
         List<Residence> hostListings = residenceRepository.findByHostId(hostId);
         List<String> listingIds = hostListings.stream()
@@ -138,10 +139,11 @@ public class BookingsService {
         bookings.sort(comparator);
 
         return bookings.stream()
-                .map(this::convertToDTO)
+                .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<BookingsResponse> getUserBookings(String userId, String sortOrder) {
         if (!userRepository.existsById(userId)) {
             throw new IllegalArgumentException("User not found");
@@ -158,7 +160,7 @@ public class BookingsService {
         bookings.sort(comparator);
 
         return bookings.stream()
-                .map(this::convertToDTO)
+                .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
 
