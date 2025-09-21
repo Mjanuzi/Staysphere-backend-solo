@@ -6,48 +6,40 @@ import com.example.staySphereProject.dto.BookingsResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.models.Listing;
-import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
-import com.example.staySphereProject.repository.ResidenceRepository;
-import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class BookingsService {
+
+    // Immutable dependencies
     private final BookingsRepository bookingsRepository;
     private final ListingRepository listingRepository;
-    private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
-    private final ResidenceRepository residenceRepository;
     private final BookingDTOConverter converter;
     private final BookingHandler handler;
+    private final BookingQueryService queryService;
 
     public BookingsService(BookingsRepository bookingsRepository,
                            ListingRepository listingRepository,
-                           UserRepository userRepository,
                            CheckAuthentication checkAuthentication,
-                           ResidenceRepository residenceRepository,
                            BookingDTOConverter converter,
-                           BookingHandler handler) {
+                           BookingHandler handler,
+                           BookingQueryService queryService) {
         this.bookingsRepository = bookingsRepository;
         this.listingRepository = listingRepository;
-        this.userRepository = userRepository;
         this.checkAuthentication = checkAuthentication;
-        this.residenceRepository = residenceRepository;
         this.converter = converter;
         this.handler = handler;
+        this.queryService = queryService;
     }
 
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
@@ -60,6 +52,7 @@ public class BookingsService {
         Bookings savedBooking = bookingsRepository.save(booking);
         return converter.toResponse(savedBooking);
     }
+    // Part of basic crud and direct access
     @Transactional(readOnly = true)
     public BookingsResponse getBookingById(String bookingId) {
         Bookings booking = bookingsRepository.findById(bookingId)
@@ -69,6 +62,7 @@ public class BookingsService {
 
         return converter.toResponse(booking);
     }
+    //Part of basic crud and access for admin roles
     @Transactional(readOnly = true)
     public List<BookingsResponse> getAllBookings() {
         List<Bookings> bookings = bookingsRepository.findAll();
@@ -77,85 +71,23 @@ public class BookingsService {
                 .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
+
+    // complex BookingQuery therefore we delegate
     @Transactional(readOnly = true)
     public List<BookingsResponse> getBookingsByListingId(String listingId) {
-        // Verify listing exists
-        if (!listingRepository.existsById(listingId)) {
-            throw new ResourceNotFoundException("Listing not found");
-        }
-
-        // Get the authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-
-        // Get the listing to check ownership
-        Listing listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-
-        // Only allow listing owner or admin to see the bookings
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        boolean isOwner = false;
-        if(listing instanceof Residence) {
-            Residence residence = (Residence) listing;
-            isOwner = residence.getHost().getUsername().equals(currentUsername);
-        }
-
-        if (!isAdmin && !isOwner) {
-            throw new AccessDeniedException("You do not have permission to view these bookings");
-        }
-
-        // Get bookings for this listing
-        List<Bookings> bookings = bookingsRepository.findByListingId(listingId);
-
-        // Convert to response DTOs using converter
-        return bookings.stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
+        return queryService.findBookingsByListingId(listingId);
     }
 
-
+    // complex BookingQuery therefore we delegate
     @Transactional(readOnly = true)
     public List<BookingsResponse> getHostBookings(String hostId, String sortOrder) {
-        List<Residence> hostListings = residenceRepository.findByHostId(hostId);
-        List<String> listingIds = hostListings.stream()
-                .map(Listing::getListingId)
-                .collect(Collectors.toList());
-        List<Bookings> bookings = bookingsRepository.findByListingIdIn(listingIds);
-
-        checkAuthentication.validateAuthenticatedUser(hostId);
-
-        // Sort bookings
-        Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
-        if ("desc".equalsIgnoreCase(sortOrder)) {
-            comparator = comparator.reversed();
-        }
-        bookings.sort(comparator);
-
-        return bookings.stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
+        return queryService.findBookingsByHostId(hostId, sortOrder);
     }
 
+    // complex BookingQuery therefore we delegate
     @Transactional(readOnly = true)
     public List<BookingsResponse> getUserBookings(String userId, String sortOrder) {
-        if (!userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("User not found");
-        }
-        List<Bookings> bookings = bookingsRepository.findByUserId(userId);
-
-        checkAuthentication.validateAuthenticatedUser(userId);
-
-        // Sort bookings
-        Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
-        if ("desc".equalsIgnoreCase(sortOrder)) {
-            comparator = comparator.reversed();
-        }
-        bookings.sort(comparator);
-
-        return bookings.stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
+        return queryService.findBookingsByUserId(userId, sortOrder);
     }
 
     public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
