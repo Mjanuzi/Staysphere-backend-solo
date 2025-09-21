@@ -164,15 +164,28 @@ public class BookingsService {
                 .collect(Collectors.toList());
     }
 
+    public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
+        Bookings existingBooking = bookingsRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-    private List<LocalDate> generateDateRange(LocalDate startDate, LocalDate endDate) {
-        List<LocalDate> dates = new ArrayList<>();
-        LocalDate currentDate = startDate;
-        while (currentDate.isBefore(endDate)) {
-            dates.add(currentDate);
-            currentDate = currentDate.plusDays(1);
-        }
-        return dates;
+        checkAuthentication.validateAuthenticatedUser(bookingsDTO.getUserId());
+
+        // Store original dates for restore
+        List<LocalDate> originalDates = existingBooking.getBookedDates();
+        String listingId = existingBooking.getListingId();
+
+        // Use handler to handle complex update construct with availability restore
+        Bookings updatedBooking = handler.createUpdatedBooking(bookingsDTO, originalDates, listingId);
+
+        // Copy the ID from existing booking
+        updatedBooking.setBookingID(existingBooking.getBookingID());
+
+        // Update listing availability by removing new booked dates
+        updateListingAvailability(listingId, updatedBooking.getBookedDates(), false);
+
+        // Save updated booking and convert to response
+        Bookings savedBooking = bookingsRepository.save(updatedBooking);
+        return converter.toResponse(savedBooking);
     }
 
     public void deleteBooking(String bookingId) {
@@ -180,105 +193,6 @@ public class BookingsService {
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         bookingsRepository.deleteById(existingBooking.getBookingID());
-    }
-
-
-
-
-    /**
-     Convert Bookings to BookingsResponse DTO
-     Resolve user/listing relationship
-     Friendly message to customer
-     Combining data from user and listing
-    **/
-    private BookingsResponse convertToDTO(Bookings booking) {
-        BookingsResponse response = new BookingsResponse();
-        response.setBookingID(booking.getBookingID());
-        response.setUserId(booking.getUserId());
-
-        User user = userRepository.findById(booking.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        response.setListingId(booking.getListingId());
-        Listing listing = listingRepository.findById(booking.getListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-
-        response.setBookingName(user.getUsername() + ", I would like to wish you a pleasant stay at " + listing.getListingTitle() + "!");
-        if(listing instanceof Residence) {
-            Residence residence = (Residence) listing;
-            response.setHostName("Kind Regards, " + residence.getHost().getUsername());
-        }
-        response.setBookingDate(booking.getBookingDate());
-        response.setStartDate(booking.getStartDate());
-        response.setEndDate(booking.getEndDate());
-        response.setTotalCost(booking.getTotalCost());
-        response.setStatus(booking.isStatus());
-        response.setPending(booking.isPending());
-
-        return response;
-    }
-
-    /** Will try to explain what we do step by step in createBooking.
-        1. Validate that user/listing exist
-        2. Convert dates to UTC timezone
-        3. Generate date range for start and end
-        4. Check if listing got available date.
-        5  Calculate cost
-        6. Update listing available dates
-        7. Save Booking and convert to responseDTO
-     **/
-    @Transactional
-
-
-    /**
-     Step by step for updateBooking
-     1. Restore original dates to availability
-     2. Validate new dates against current availability
-     3. Update cost calculation
-     4. Update and save.
-    **/
-    @Transactional
-    public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
-        Bookings existingBooking = bookingsRepository.findById(bookingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
-
-        Listing listing = listingRepository.findById(existingBooking.getListingId())
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-
-        checkAuthentication.validateAuthenticatedUser(bookingsDTO.getUserId());
-
-        List<LocalDate> originalDates = existingBooking.getBookedDates();
-
-        LocalDate newStart = bookingsDTO.getStartDate().toInstant()
-                .atZone(ZoneId.of("UTC"))
-                .toLocalDate().plusDays(1);
-        LocalDate newEnd = bookingsDTO.getEndDate().toInstant()
-                .atZone(ZoneId.of("UTC"))
-                .toLocalDate().plusDays(1);
-
-        List<LocalDate> newDates = generateDateRange(newStart, newEnd);
-
-        listing.getAvailable().addAll(originalDates);
-
-        if (!listing.getAvailable().containsAll(newDates)) {
-            throw new ConflictException("New dates are not available");
-        }
-
-
-        listing.getAvailable().removeAll(newDates);
-        listingRepository.save(listing);
-
-        existingBooking.setBookedDates(newDates); // Update tracked dates
-        existingBooking.setBookingDate(bookingsDTO.getBookingDate());
-        existingBooking.setStartDate(bookingsDTO.getStartDate());
-        existingBooking.setEndDate(bookingsDTO.getEndDate());
-        existingBooking.setStatus(bookingsDTO.isStatus());
-        existingBooking.setPending(bookingsDTO.isPending());
-        existingBooking.setTotalCost(
-                ChronoUnit.DAYS.between(newStart, newEnd) * listing.getListingPricePerNight()
-        );
-
-        return convertToDTO(bookingsRepository.save(existingBooking));
     }
 
     //Method to help update listings available list by removing once you do a booking
