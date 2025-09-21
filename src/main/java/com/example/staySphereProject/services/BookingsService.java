@@ -26,28 +26,27 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class BookingsService {
+
+    // Immutable dependencies
     private final BookingsRepository bookingsRepository;
     private final ListingRepository listingRepository;
-    private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
-    private final ResidenceRepository residenceRepository;
     private final BookingDTOConverter converter;
     private final BookingHandler handler;
+    private final BookingQueryService queryService;
 
     public BookingsService(BookingsRepository bookingsRepository,
                            ListingRepository listingRepository,
-                           UserRepository userRepository,
                            CheckAuthentication checkAuthentication,
-                           ResidenceRepository residenceRepository,
                            BookingDTOConverter converter,
-                           BookingHandler handler) {
+                           BookingHandler handler,
+                           BookingQueryService queryService) {
         this.bookingsRepository = bookingsRepository;
         this.listingRepository = listingRepository;
-        this.userRepository = userRepository;
         this.checkAuthentication = checkAuthentication;
-        this.residenceRepository = residenceRepository;
         this.converter = converter;
         this.handler = handler;
+        this.queryService = queryService;
     }
 
     public BookingsResponse createBooking(BookingsDTO bookingsDTO) {
@@ -139,23 +138,7 @@ public class BookingsService {
 
     @Transactional(readOnly = true)
     public List<BookingsResponse> getUserBookings(String userId, String sortOrder) {
-        if (!userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("User not found");
-        }
-        List<Bookings> bookings = bookingsRepository.findByUserId(userId);
-
-        checkAuthentication.validateAuthenticatedUser(userId);
-
-        // Sort bookings
-        Comparator<Bookings> comparator = Comparator.comparing(Bookings::getStartDate);
-        if ("desc".equalsIgnoreCase(sortOrder)) {
-            comparator = comparator.reversed();
-        }
-        bookings.sort(comparator);
-
-        return bookings.stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
+        return queryService.findBookingsByUserId(userId, sortOrder);
     }
 
     public BookingsResponse updateBooking(String bookingId, BookingsDTO bookingsDTO) {
