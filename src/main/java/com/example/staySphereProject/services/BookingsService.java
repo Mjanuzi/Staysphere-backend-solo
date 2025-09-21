@@ -6,20 +6,13 @@ import com.example.staySphereProject.dto.BookingsResponse;
 import com.example.staySphereProject.exeptions.ResourceNotFoundException;
 import com.example.staySphereProject.models.Bookings;
 import com.example.staySphereProject.models.Listing;
-import com.example.staySphereProject.models.Residence;
 import com.example.staySphereProject.repository.BookingsRepository;
 import com.example.staySphereProject.repository.ListingRepository;
-import com.example.staySphereProject.repository.ResidenceRepository;
-import com.example.staySphereProject.repository.UserRepository;
 import com.example.staySphereProject.util.CheckAuthentication;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
