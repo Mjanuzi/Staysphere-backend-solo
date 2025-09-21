@@ -75,7 +75,42 @@ public class BookingsService {
                 .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
+    @Transactional(readOnly = true)
+    public List<BookingsResponse> getBookingsByListingId(String listingId) {
+        // Verify listing exists
+        if (!listingRepository.existsById(listingId)) {
+            throw new ResourceNotFoundException("Listing not found");
+        }
 
+        // Get the authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        // Get the listing to check ownership
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        // Only allow listing owner or admin to see the bookings
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isOwner = false;
+        if(listing instanceof Residence) {
+            Residence residence = (Residence) listing;
+            isOwner = residence.getHost().getUsername().equals(currentUsername);
+        }
+
+        if (!isAdmin && !isOwner) {
+            throw new AccessDeniedException("You do not have permission to view these bookings");
+        }
+
+        // Get bookings for this listing
+        List<Bookings> bookings = bookingsRepository.findByListingId(listingId);
+
+        // Convert to response DTOs using converter
+        return bookings.stream()
+                .map(converter::toResponse)
+                .collect(Collectors.toList());
+    }
     public BookingsResponse getBookingById(String bookingId) {
         Bookings booking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
@@ -145,41 +180,7 @@ public class BookingsService {
     }
 
 
-    public List<BookingsResponse> getBookingsByListingId(String listingId) {
-        // Verify listing exists
-        if (!listingRepository.existsById(listingId)) {
-            throw new ResourceNotFoundException("Listing not found");
-        }
-        
-        // Get the authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        
-        // Get the listing to check ownership
-        Listing listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-        
-        // Only allow listing owner or admin to see the bookings
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-                boolean isOwner = false;
-                if(listing instanceof Residence) {
-                    Residence residence = (Residence) listing;
-                    isOwner = residence.getHost().getUsername().equals(currentUsername);
-                }
-        
-        if (!isAdmin && !isOwner) {
-            throw new AccessDeniedException("You do not have permission to view these bookings");
-        }
-        
-        // Get bookings for this listing
-        List<Bookings> bookings = bookingsRepository.findByListingId(listingId);
-        
-        // Convert to response DTOs
-        return bookings.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
+
 
     /**
      Convert Bookings to BookingsResponse DTO
