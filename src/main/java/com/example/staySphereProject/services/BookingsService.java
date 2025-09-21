@@ -1,5 +1,6 @@
 package com.example.staySphereProject.services;
 
+import com.example.staySphereProject.converters.BookingDTOConverter;
 import com.example.staySphereProject.dto.BookingsDTO;
 import com.example.staySphereProject.dto.BookingsResponse;
 import com.example.staySphereProject.exeptions.ConflictException;
@@ -29,20 +30,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BookingsService {
     private final BookingsRepository bookingsRepository;
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
     private final CheckAuthentication checkAuthentication;
     private final ResidenceRepository residenceRepository;
+    private final BookingDTOConverter converter;
+    private final BookingHandler handler;
 
-    public BookingsService(BookingsRepository bookingsRepository, ListingRepository listingRepository, UserRepository userRepository, CheckAuthentication checkAuthentication, ResidenceRepository residenceRepository) {
+    public BookingsService(BookingsRepository bookingsRepository,
+                           ListingRepository listingRepository,
+                           UserRepository userRepository,
+                           CheckAuthentication checkAuthentication,
+                           ResidenceRepository residenceRepository,
+                           BookingDTOConverter converter,
+                           BookingHandler handler) {
         this.bookingsRepository = bookingsRepository;
         this.listingRepository = listingRepository;
         this.userRepository = userRepository;
         this.checkAuthentication = checkAuthentication;
         this.residenceRepository = residenceRepository;
+        this.converter = converter;
+        this.handler = handler;
     }
+
 
     public BookingsResponse getBookingById(String bookingId) {
         Bookings booking = bookingsRepository.findById(bookingId)
