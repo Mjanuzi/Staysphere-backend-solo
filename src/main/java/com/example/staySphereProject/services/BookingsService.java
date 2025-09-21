@@ -59,6 +59,7 @@ public class BookingsService {
         Bookings savedBooking = bookingsRepository.save(booking);
         return converter.toResponse(savedBooking);
     }
+    // Part of basic crud and direct access
     @Transactional(readOnly = true)
     public BookingsResponse getBookingById(String bookingId) {
         Bookings booking = bookingsRepository.findById(bookingId)
@@ -68,6 +69,7 @@ public class BookingsService {
 
         return converter.toResponse(booking);
     }
+    //Part of basic crud and access for admin roles
     @Transactional(readOnly = true)
     public List<BookingsResponse> getAllBookings() {
         List<Bookings> bookings = bookingsRepository.findAll();
@@ -76,49 +78,20 @@ public class BookingsService {
                 .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
+
+    // complex BookingQuery therefore we delegate
     @Transactional(readOnly = true)
     public List<BookingsResponse> getBookingsByListingId(String listingId) {
-        // Verify listing exists
-        if (!listingRepository.existsById(listingId)) {
-            throw new ResourceNotFoundException("Listing not found");
-        }
-
-        // Get the authenticated user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-
-        // Get the listing to check ownership
-        Listing listing = listingRepository.findById(listingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
-
-        // Only allow listing owner or admin to see the bookings
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        boolean isOwner = false;
-        if(listing instanceof Residence) {
-            Residence residence = (Residence) listing;
-            isOwner = residence.getHost().getUsername().equals(currentUsername);
-        }
-
-        if (!isAdmin && !isOwner) {
-            throw new AccessDeniedException("You do not have permission to view these bookings");
-        }
-
-        // Get bookings for this listing
-        List<Bookings> bookings = bookingsRepository.findByListingId(listingId);
-
-        // Convert to response DTOs using converter
-        return bookings.stream()
-                .map(converter::toResponse)
-                .collect(Collectors.toList());
+        return queryService.findBookingsByListingId(listingId);
     }
 
-
+    // complex BookingQuery therefore we delegate
     @Transactional(readOnly = true)
     public List<BookingsResponse> getHostBookings(String hostId, String sortOrder) {
         return queryService.findBookingsByHostId(hostId, sortOrder);
     }
 
+    // complex BookingQuery therefore we delegate
     @Transactional(readOnly = true)
     public List<BookingsResponse> getUserBookings(String userId, String sortOrder) {
         return queryService.findBookingsByUserId(userId, sortOrder);

@@ -49,6 +49,30 @@ public class BookingQueryService {
         this.checkAuthentication = checkAuthentication;
     }
 
+    public List<BookingsResponse> findBookingsByListingId(String listingId) {
+        // Validate listing exists
+        validateListingExists(listingId);
+
+        // Get the authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        // Get the listing to check ownership
+        Listing listing = listingRepository.findById(listingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
+
+        // Validate ownership or admin access
+        validateListingAccess(listing, currentUsername, authentication);
+
+        // Query bookings for this listing
+        List<Bookings> bookings = bookingsRepository.findByListingId(listingId);
+
+        // Convert to response DTOs
+        return bookings.stream()
+                .map(converter::toResponse)
+                .collect(Collectors.toList());
+    }
+
     public List<BookingsResponse> findBookingsByHostId(String hostId, String sortOrder) {
         // Validate host exists and authenticate
         validateUserExists(hostId);
@@ -90,6 +114,8 @@ public class BookingQueryService {
                 .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
+
+
 
 
 
