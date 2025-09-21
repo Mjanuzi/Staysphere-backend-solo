@@ -66,6 +66,16 @@ public class BookingsService {
         Bookings savedBooking = bookingsRepository.save(booking);
         return converter.toResponse(savedBooking);
     }
+
+    @Transactional(readOnly = true)
+    public List<BookingsResponse> getAllBookings() {
+        List<Bookings> bookings = bookingsRepository.findAll();
+
+        return bookings.stream()
+                .map(converter::toResponse)
+                .collect(Collectors.toList());
+    }
+
     public BookingsResponse getBookingById(String bookingId) {
         Bookings booking = bookingsRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
@@ -134,14 +144,6 @@ public class BookingsService {
         bookingsRepository.deleteById(existingBooking.getBookingID());
     }
 
-
-    public List<BookingsResponse> getAllBookings() {
-        List<Bookings> bookings = bookingsRepository.findAll();
-
-        return bookings.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
 
     public List<BookingsResponse> getBookingsByListingId(String listingId) {
         // Verify listing exists
