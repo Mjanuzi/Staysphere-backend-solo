@@ -66,7 +66,15 @@ public class BookingsService {
         Bookings savedBooking = bookingsRepository.save(booking);
         return converter.toResponse(savedBooking);
     }
+    @Transactional(readOnly = true)
+    public BookingsResponse getBookingById(String bookingId) {
+        Bookings booking = bookingsRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
+        checkAuthentication.validateAuthenticatedUser(booking.getUserId());
+
+        return converter.toResponse(booking);
+    }
     @Transactional(readOnly = true)
     public List<BookingsResponse> getAllBookings() {
         List<Bookings> bookings = bookingsRepository.findAll();
@@ -111,14 +119,7 @@ public class BookingsService {
                 .map(converter::toResponse)
                 .collect(Collectors.toList());
     }
-    public BookingsResponse getBookingById(String bookingId) {
-        Bookings booking = bookingsRepository.findById(bookingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        checkAuthentication.validateAuthenticatedUser(bookingId);
-
-        return convertToDTO(booking);
-    }
 
     public List<BookingsResponse> getHostBookings(String hostId, String sortOrder) {
         List<Residence> hostListings = residenceRepository.findByHostId(hostId);
