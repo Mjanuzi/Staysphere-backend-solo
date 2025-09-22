@@ -66,12 +66,12 @@ public class ListingController {
         return ResponseEntity.ok(listings);
     }
 
-  /* @GetMapping("/gethostbyid/{userId}")
+   @GetMapping("/gethostbyid/{userId}")
     public ResponseEntity<List<ListingResponse>> getListingByHostId(@PathVariable String userId) {
         List<ListingResponse> listings = listingService.getListingByHostId(userId);
         return ResponseEntity.ok(listings);
 
-    }*/
+    }
 
     @GetMapping("/getbyid/{listingId}")
     public ResponseEntity<ListingResponse> getListingById(@PathVariable String listingId) {
@@ -91,11 +91,11 @@ public class ListingController {
         return ResponseEntity.noContent().build();
     }
 
-    /*@GetMapping("/all/pricebetween")
+    @GetMapping("/all/pricebetween")
     public ResponseEntity<List<ListingResponse>> getListingsByPrice(
             @RequestParam("minPrice") Double minPrice,
             @RequestParam("maxPrice") Double maxPrice){
-        List<ListingResponse> listings = listingService.getListingByPriceBetween(minPrice,maxPrice);
+        List<ListingResponse> listings = listingService.getListingsByPriceBetween(minPrice,maxPrice);
 
         return ResponseEntity.ok(listings);
     }
@@ -110,5 +110,5 @@ public class ListingController {
         
         List<ListingResponse> listings = listingService.getListingByHostId(userId);
         return ResponseEntity.ok(listings);
-    }*/
+    }
 }

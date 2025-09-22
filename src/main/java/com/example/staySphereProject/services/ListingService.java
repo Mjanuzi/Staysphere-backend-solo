@@ -32,6 +32,7 @@ public class ListingService {
         return residenceProcessor.processListing(listingDTO);
     }
 
+    @Transactional(readOnly = true)
     public List<ListingResponseGetAll> getAllListings () {
         return listingRepository.findAll().stream()
                 .map(converter::toGetAllResponse)
@@ -39,6 +40,7 @@ public class ListingService {
     }
 
     //get listing by id
+    @Transactional(readOnly = true)
     public ListingResponse getListingById (String listingId){
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
@@ -46,12 +48,12 @@ public class ListingService {
     }
 
     @Transactional(readOnly = true)
-    public List<ListingResponse> getByPriceRange (Double minPrice, Double maxPrice){
+    public List<ListingResponse> getListingsByPriceBetween (Double minPrice, Double maxPrice){
         return queryService.findByPriceRange(minPrice, maxPrice);
     }
 
     @Transactional(readOnly = true)
-    public List<ListingResponse> findByHostId(String hostId){
+    public List<ListingResponse> getListingByHostId(String hostId){
         return queryService.findByHostId(hostId);
     }
 
