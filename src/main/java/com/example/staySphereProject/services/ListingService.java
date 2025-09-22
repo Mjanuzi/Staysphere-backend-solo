@@ -17,14 +17,15 @@ public class ListingService {
     private final ResidenceProcessor residenceProcessor;
     private final CheckAuthentication checkAuthentication;
     private final ListingDTOConverter converter;
+    private final ListingQueryService queryService;
 
     public ListingService(ListingRepository listingRepository, ResidenceProcessor residenceProcessor,
-                          CheckAuthentication checkAuthentication, ListingDTOConverter converter) {
+                          CheckAuthentication checkAuthentication, ListingDTOConverter converter, ListingQueryService queryService) {
         this.listingRepository = listingRepository;
         this.residenceProcessor = residenceProcessor;
         this.checkAuthentication = checkAuthentication;
         this.converter = converter;
-
+        this.queryService = queryService;
     }
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
@@ -42,6 +43,16 @@ public class ListingService {
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
         return converter.toResponse(listing);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListingResponse> getByPriceRange (Double minPrice, Double maxPrice){
+        return queryService.findByPriceRange(minPrice, maxPrice);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListingResponse> findByHostId(String hostId){
+        return queryService.findByHostId(hostId);
     }
 
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
