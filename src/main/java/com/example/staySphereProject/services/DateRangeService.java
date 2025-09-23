@@ -83,16 +83,4 @@ public class DateRangeService {
 
         return dateRanges;
     }
-
-    // Check if a specific date overlaps with any dates in a list
-    public boolean hasDateOverlap(LocalDate startDate, LocalDate endDate, List<LocalDate> existingDates) {
-        if (existingDates == null || existingDates.isEmpty()) {
-            return false;
-        }
-
-        List<LocalDate> rangeToCheck = generateDateRange(startDate, endDate);
-        return existingDates.stream().anyMatch(rangeToCheck::contains);
-    }
-
-
 }

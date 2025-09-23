@@ -17,20 +17,22 @@ public class ListingService {
     private final ResidenceProcessor residenceProcessor;
     private final CheckAuthentication checkAuthentication;
     private final ListingDTOConverter converter;
+    private final ListingQueryService queryService;
 
     public ListingService(ListingRepository listingRepository, ResidenceProcessor residenceProcessor,
-                          CheckAuthentication checkAuthentication, ListingDTOConverter converter) {
+                          CheckAuthentication checkAuthentication, ListingDTOConverter converter, ListingQueryService queryService) {
         this.listingRepository = listingRepository;
         this.residenceProcessor = residenceProcessor;
         this.checkAuthentication = checkAuthentication;
         this.converter = converter;
-
+        this.queryService = queryService;
     }
     //Register listing
     public ListingResponse createListing(ListingDTO listingDTO) {
         return residenceProcessor.processListing(listingDTO);
     }
 
+    @Transactional(readOnly = true)
     public List<ListingResponseGetAll> getAllListings () {
         return listingRepository.findAll().stream()
                 .map(converter::toGetAllResponse)
@@ -38,10 +40,21 @@ public class ListingService {
     }
 
     //get listing by id
+    @Transactional(readOnly = true)
     public ListingResponse getListingById (String listingId){
         Listing listing = listingRepository.findById(listingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Listing not found"));
         return converter.toResponse(listing);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListingResponse> getListingsByPriceBetween (Double minPrice, Double maxPrice){
+        return queryService.findByPriceRange(minPrice, maxPrice);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ListingResponse> getListingByHostId(String hostId){
+        return queryService.findByHostId(hostId);
     }
 
     public ListingResponse patchListing (String listingId, ListingDTO listingDTO){
