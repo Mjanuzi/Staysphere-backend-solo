@@ -41,22 +41,6 @@ public class BookingHandler {
         return createStandardBooking(dto);
     }
 
-    //Method that get results midway in the process, which is good when we get results in the workflow
-    public Object[] getBookingComponents(BookingsDTO dto) {
-        builder.reset()
-                .withBookingDetails(dto)
-                .withUserValidation()
-                .withListingValidation()
-                .withAvailabilityValidation()
-                .withCostCalculation();
-
-        return new Object[]{
-                builder.getUser(),
-                builder.getListing(),
-                builder.getTotalCost(),
-                builder.getRequestedDates()
-        };
-    }
 
     private void restoreAvailability(String listingId, List<LocalDate> datesToRestore) {
         if (datesToRestore == null || datesToRestore.isEmpty()) {
@@ -69,21 +53,6 @@ public class BookingHandler {
         // Add the original dates back to availability
         listing.getAvailable().addAll(datesToRestore);
         listingRepository.save(listing);
-    }
-
-    // Pre validates a booking before it's built. We can use this as a confirm before building
-    public boolean validateBookingConstruction(BookingsDTO dto) {
-        try {
-            builder.reset()
-                    .withBookingDetails(dto)
-                    .withUserValidation()
-                    .withListingValidation()
-                    .withAvailabilityValidation()
-                    .withCostCalculation();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
 

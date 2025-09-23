@@ -88,14 +88,6 @@ public class ResidenceProcessor extends AbstractListingProcessor {
 
         return response;
     }
-
-    private void verifyHostEligibility(User host) {
-        //This is a start but in the future we might add that a host must have uploaded profile picture
-        if(host.getEmail() == null || host.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Residence host must have an email address");
-        }
-
-    }
 }
 
 

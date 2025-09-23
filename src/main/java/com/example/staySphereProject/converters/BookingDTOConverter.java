@@ -82,27 +82,4 @@ public class BookingDTOConverter {
 
         return new LocalDate[]{startDate, endDate};
     }
-
-    // Updated validation of existing booking compared to our last updateBooking
-    public Bookings applyUpdate(Bookings existing, BookingsDTO dto,
-                                List<LocalDate> newBookedDates, double newTotalCost) {
-        if (dto.getBookingDate() != null) {
-            existing.setBookingDate(dto.getBookingDate());
-        }
-        if (dto.getStartDate() != null) {
-            existing.setStartDate(dto.getStartDate());
-        }
-        if (dto.getEndDate() != null) {
-            existing.setEndDate(dto.getEndDate());
-        }
-        if (newBookedDates != null) {
-            existing.setBookedDates(newBookedDates);
-        }
-
-        existing.setTotalCost(newTotalCost);
-        existing.setStatus(dto.isStatus());
-        existing.setPending(dto.isPending());
-
-        return existing;
-    }
 }
