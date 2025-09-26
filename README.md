@@ -8,30 +8,32 @@ I det här projektet har vi fokuserat på **refaktorering och optimering av befi
 
 ##  Hur man bygger och kör projektet
 
-### Förutsättningar
+### Tech stack
 - Java 17+  
 - Maven  
-- MongoDB (lokalt eller i molnet)  
+- MongoDB  
 
 ### Kör igång
 1. Klona repot:
    ```bash
    git clone https://github.com/<StaySphere-Project>
-   cd staysphere-backend
-2. Starta projeket 
+2. Öppna Projektet i IntelliJ
+3. Starta projeket 
     ```bash
      Run the 'StaySphereProjectApplication'(Main) file 
 
 ### Principer & mönster
 #### Vid refaktoreringen har vi tillämpat flera designprinciper och mönster för att uppnå bättre struktur:
 
-- Single Responsibility Principle (SRP): Varje klass/service har ett tydligt och avgränsat ansvar.
+- **Single Responsibility Principle (SRP)**: Varje klass/service har ett tydligt och avgränsat ansvar.
 
-- Template Method Pattern: För att kunna hantera olika typer av boenden (hotell, privata listings) på ett enhetligt men flexibelt sätt.
+- **Template Method Pattern**: För att kunna hantera olika typer av boenden (hotell, privata listings) på ett enhetligt men flexibelt sätt.
 
-- Strategy Pattern: Möjliggör utbytbar logik, exempelvis för olika filter eller valideringsregler.
+- **Builder Pattern**: Används för att möjliggöra att hosts kan lägga till extra tjänster i samband med bokningar, t.ex. städavgift för husdjur eller cykeluthyrning.  
 
-- Clean Architecture: Separering mellan affärslogik, dataåtkomst och API-lager för framtidssäkerhet.
+- **Open/Closed Principle**: Används tillsammans med Template Method Pattern för att skapa en parent-klass som inte förändras.  
+  Nya boendetyper och funktioner implementeras istället genom child-klasser, vilket gör systemet utbyggbart utan att ändra befintlig kod.  
+  Detta gäller både i `ListingMethod` (olika boendetyper) och i `ListingProcessor` (valideringar och funktioner).  
 
 ### UML-diagram
 
@@ -39,11 +41,10 @@ I det här projektet har vi fokuserat på **refaktorering och optimering av befi
 
   - Klassdiagram: Översikt över systemets entiteter, deras relationer och ansvarsområden.
     
-  - Sekvensdiagram: Visar flödet för centrala use cases som bokning och hantering av listings.
+  - Sekvensdiagram: Visar flödet för centrala use cases av bokning processen.
     
   - Use Case-diagram: Ger en övergripande bild av systemets aktörer och deras interaktioner.
     [Hoppa till UML-diagram](https://app.diagrams.net/#G1TB9EcJWsZpQ4blyUWf9_ynuVNCXWChM9#%7B%22pageId%22%3A%22fZKKRFcfot3JoDX8hNPE%22%7D)
-    (OBS Måste öppnas via Drawio)
     
  ---
 
