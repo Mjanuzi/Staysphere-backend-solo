@@ -42,7 +42,7 @@ I det här projektet har vi fokuserat på **refaktorering och optimering av befi
   - Sekvensdiagram: Visar flödet för centrala use cases som bokning och hantering av listings.
     
   - Use Case-diagram: Ger en övergripande bild av systemets aktörer och deras interaktioner.
-    [Hoppa till UML-diagram](https://drive.google.com/file/d/1TB9EcJWsZpQ4blyUWf9_ynuVNCXWChM9/view?usp=sharing)
+    [Hoppa till UML-diagram](https://app.diagrams.net/#G1TB9EcJWsZpQ4blyUWf9_ynuVNCXWChM9#%7B%22pageId%22%3A%22fZKKRFcfot3JoDX8hNPE%22%7D)
     (OBS Måste öppnas via Drawio)
     
  ---
