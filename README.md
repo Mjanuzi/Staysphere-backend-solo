@@ -20,7 +20,7 @@ I det här projektet har vi fokuserat på **refaktorering och optimering av befi
    cd staysphere-backend
 2. Starta projeket 
     ```bash
-     (Hur man kör projektet)
+     Run the 'StaySphereProjectApplication'(Main) file 
 
 ### Principer & mönster
 #### Vid refaktoreringen har vi tillämpat flera designprinciper och mönster för att uppnå bättre struktur:
