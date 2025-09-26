@@ -33,8 +33,9 @@ I det här projektet har vi fokuserat på **refaktorering och optimering av befi
 
 - Clean Architecture: Separering mellan affärslogik, dataåtkomst och API-lager för framtidssäkerhet.
 
-  ### UML-diagram
-  #### Vi har dokumenterat systemets struktur med UML för att visualisera design och refaktorering:
+### UML-diagram
+
+#### Vi har dokumenterat systemets struktur med UML för att visualisera design och refaktorering:
 
   - Klassdiagram: Översikt över systemets entiteter, deras relationer och ansvarsområden.
     
@@ -43,3 +44,15 @@ I det här projektet har vi fokuserat på **refaktorering och optimering av befi
   - Use Case-diagram: Ger en övergripande bild av systemets aktörer och deras interaktioner.
     [Hoppa till UML-diagram](https://drive.google.com/file/d/1TB9EcJWsZpQ4blyUWf9_ynuVNCXWChM9/view?usp=sharing)
     (OBS Måste öppnas via Drawio)
+    
+ ---
+
+##  Postman-samling
+
+För att enklare kunna testa och förstå API:et har vi skapat en **Postman-samling** med färdiga requests.  
+Samlingen innehåller exempel för autentisering, CRUD-operationer på listings samt bokningar.  
+
+### Öppna 
+- [Postman-dokumentation](https://documenter.getpostman.com/view/40894272/2sAYkHnHkB)  
+
+
