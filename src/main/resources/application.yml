@@ -1,8 +1,8 @@
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://mergimjanuzi:iRtTLTjZt8Jmw0z7@mergimcluster.ffqai.mongodb.net/
+      uri: ${MONGODB_URI}
 
 jwt:
-  secret: hfaiehfisehfosndfejndfeswljrfeowfnjehwbewios4ngvhtrwglp4rkledf
+  secret: ${JWT_SECRET}
   expirationMs: 360000000.
