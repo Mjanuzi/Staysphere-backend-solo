@@ -48,7 +48,7 @@ cd StaySphere-Project
 Create a `.env` file in the project root with the following variables:
 
 ```properties
-MONGODB_URI=mongodb+srv://your-username:your-password@cluster.mongodb.net/?appName=YourCluster
+MONGODB_URI=mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER>.mongodb.net/
 JWT_SECRET=your-secret-key-here
 ```
 
